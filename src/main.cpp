@@ -1,21 +1,24 @@
 ﻿#include <iostream>
-#include "Person.h"
+
 #include "User.h"
 #include <windows.h>
-using namespace std;
+#include <UserManager.h>
 #include <iostream>
 #include <string>
+using namespace std;
 
 // 函数声明
 void showMainMenu();
 
 void userLogin();
 
+void studentRegister();
+
 void adminMenu();
 
-void studentMenu();
-
 void manageDormitories();
+
+void studentLoginMenu();
 
 void manageUsers();
 
@@ -29,6 +32,10 @@ void requestRoomChange();
 
 void submitRepairRequest();
 
+void adminLogin();
+
+void studentLogin();
+
 void viewNotifications();
 
 // 主程序入口
@@ -37,18 +44,26 @@ int main()
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
     int choice;
+    UserManager userManager; // 创建用户管理对象
 
     while (true)
     {
-        showMainMenu();
+        cout << "\n---- 主菜单 ----\n";
+        cout << "1. 学生登录\n";
+        cout << "2. 管理员登录\n";
+        cout << "3. 退出\n";
+        cout << "请输入你的选择: ";
         cin >> choice;
 
         switch (choice)
         {
             case 1:
-                userLogin(); // 进入登录界面
+                studentLoginMenu(); // 学生登录
                 break;
             case 2:
+                adminLogin(); // 管理员登录
+                break;
+            case 3:
                 cout << "退出程序...\n";
                 return 0;
             default:
@@ -57,38 +72,89 @@ int main()
     }
 }
 
-void showMainMenu()
+void studentLoginMenu()
 {
-    cout << "\n---- 主菜单 ----\n";
-    cout << "1. 登录\n";
-    cout << "2. 退出\n";
+    int choice;
+    cout << "\n---- 学生菜单 ----\n";
+    cout << "1. 学生登录\n";
+    cout << "2. 学生注册\n";
     cout << "请输入你的选择: ";
-}
+    cin >> choice;
 
-void userLogin()
-{
-    int roleChoice;
-    cout << "\n---- 登录 ----\n";
-    cout << "请选择角色:\n";
-    cout << "1. 管理员\n";
-    cout << "2. 学生\n";
-    cout << "请输入你的选择: ";
-    cin >> roleChoice;
-
-    switch (roleChoice)
+    switch (choice)
     {
         case 1:
-            cout << "管理员登录成功！\n";
-            adminMenu(); // 跳转到管理员菜单
+            studentLogin(); // 学生登录
             break;
         case 2:
-            cout << "学生登录成功！\n";
-            studentMenu(); // 跳转到学生菜单
+            studentRegister(); // 学生注册
             break;
         default:
-            cout << "无效选择，请重新登录。\n";
+            cout << "无效选择，请重新输入。\n";
             break;
     }
+}
+
+void studentLogin()
+{
+    string studentID, password;
+    cout << "\n---- 学生登录 ----\n";
+    cout << "请输入学号: ";
+    cin >> studentID;
+    cout << "请输入密码: ";
+    cin >> password;
+
+    // if (userManager.loginUser(studentID, password))
+    // {
+    cout << "学生登录成功！\n"; // 假设登录成功
+    // 这里跳转到学生菜单
+    // studentLoginMenu();
+    // } else
+    // {
+    //     cout << "登录失败，学号或密码错误！\n";
+    // }
+}
+
+// 管理员登录功能
+void adminLogin()
+{
+    string adminID, password;
+    cout << "\n---- 管理员登录 ----\n";
+    cout << "请输入管理员ID: ";
+    cin >> adminID;
+    cout << "请输入密码: ";
+    cin >> password;
+
+    // 在这里你可以根据管理员ID和密码验证管理员身份
+    // 例如，调用 userManager.loginUser(adminID, password) 检查是否为管理员
+    cout << "管理员登录成功！\n"; // 假设登录成功
+    // 这里跳转到管理员菜单
+    adminMenu();
+}
+
+void studentRegister()
+{
+    string studentID, password, name, gender, contactInfo;
+    cout << "\n---- 学生注册 ----\n";
+    cout << "请输入学号: ";
+    cin >> studentID;
+    cout << "请输入密码: ";
+    cin >> password;
+    cout << "请输入姓名: ";
+    cin >> name;
+    cout << "请输入性别: ";
+    cin >> gender;
+    cout << "请输入联系方式: ";
+    cin >> contactInfo;
+
+    cout << studentID << password << name << gender << contactInfo << endl;
+    // if (userManager.registerUser(studentID, password, name, gender, contactInfo)) {
+    //     cout << "学生注册成功！\n";  // 假设注册成功
+    //     // 这里跳转到学生菜单
+    //     // studentLoginMenu();
+    // } else {
+    //     cout << "注册失败，可能是学号已存在。\n";
+    // }
 }
 
 void adminMenu()

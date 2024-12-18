@@ -1,28 +1,28 @@
-// UserManager.h
-
 #ifndef USERMANAGER_H
 #define USERMANAGER_H
 
-#include <sqlite3.h>
 #include <string>
-#include <iostream>
+#include <map>
+#include "User.h"
+#include <sqlite3.h>
 
-class UserManager {
-public:
-    UserManager(const std::string& dbFile);   // 构造函数
-    ~UserManager();                           // 析构函数
-
-    // 用户管理操作
-    bool createUser(const std::string& username, const std::string& password);
-    bool loginUser(const std::string& username, const std::string& password);
-    bool userExists(const std::string& username);
-
+class UserManager
+{
 private:
-    sqlite3* db;                             // SQLite数据库连接
-    std::string dbFile;                      // 数据库文件路径
+    sqlite3 *db; // SQLite数据库连接
+public:
+    UserManager(); // 构造函数，初始化数据库
+    ~UserManager(); // 析构函数，关闭数据库连接
 
-    // 创建用户表
-    bool createTableIfNotExists();
+    bool registerStudent(const std::string &studentID, const std::string &password,
+                         const std::string &name, const std::string &gender, const std::string &contactInfo);
+
+    bool isUserExists(const std::string &userID);
+
+    User *loginUser(const std::string &userID, const std::string &password);
+
+    void loadUsers(); // 可以根据需要实现加载用户
+    void saveUsers(); // 可以根据需要实现保存用户
 };
 
 #endif // USERMANAGER_H
