@@ -1,5 +1,5 @@
 ﻿#include <iostream>
-
+#include <Database.h>
 #include "User.h"
 #include <windows.h>
 #include <UserManager.h>
@@ -45,6 +45,32 @@ int main()
     SetConsoleCP(CP_UTF8);
     int choice;
     UserManager userManager; // 创建用户管理对象
+    Database db("../data/dormitory.db");
+    // 插入示例数据
+    // std::string insertDataSQL = R"(
+    //     INSERT INTO users (userID, name, gender, password, contactInfo, isCheckedIn, isAdmin)
+    //     VALUES
+    //     ('S001', '张三', '男', 'password123', '13800000001', 1, 0),
+    //     ('S002', '李四', '女', 'password456', '13800000002', 0, 0),
+    //     ('S003', '王五', '男', 'password789', '13800000003', 1, 0),
+    //     ('A001', '管理员1', '女', 'admin123', '13800000010', 1, 1),
+    //     ('A002', '管理员2', '男', 'admin456', '13800000011', 0, 1);
+    // )";
+    //
+    // if (db.execute(insertDataSQL))
+    // {
+    //     std::cout << "示例数据插入成功！" << std::endl;
+    // }
+
+    // 查询数据（查看所有用户信息）
+    string querySQL = "SELECT * FROM users;";
+    db.Query(querySQL);
+
+
+    // if (db.user_insert("S029", "Alice43", "女", "passw@rd789", "13800000004", 1, 0))
+    // {
+    //     std::cout << "示例数据插入成功！" << std::endl;
+    // }
 
     while (true)
     {

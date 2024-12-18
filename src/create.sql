@@ -2,10 +2,10 @@ CREATE TABLE users
 (
     userID      TEXT PRIMARY KEY,  -- 用户ID（学号或用户名）
     name        TEXT NOT NULL,     -- 姓名
-    sex         TEXT NOT NULL,     -- 性别
+    gender      TEXT NOT NULL,     -- 性别
     password    TEXT NOT NULL,     -- 密码
     contactInfo TEXT,              -- 联系方式
-    is_homed    INTEGER DEFAULT 0, -- 是否入住（0表示没有，1表示有）
+    isCheckedIn INTEGER DEFAULT 0, -- 是否入住（0表示没有，1表示有）
     isAdmin     INTEGER DEFAULT 0  -- 是否为管理员（0表示学生，1表示管理员）
 );
 CREATE TABLE dormitories

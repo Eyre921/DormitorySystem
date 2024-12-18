@@ -30,6 +30,8 @@ set(SOURCE_FILES
         src/Person.cpp
         src/User.cpp
         src/User.h
+        src/Database.cpp
+        src/Database.h
         # SQLite 源文件
 )
 
