@@ -1,4 +1,4 @@
-ToolSet: 11.0 w64 (local)@D:\Program Files\JetBrains\CLion 2024.1.4\bin\mingw
+ToolSet: 11.0 w64 (local)@D:\Program Files\MinGW
 Ninja: 1.12.1@D:\Program Files\JetBrains\CLion 2024.1.4\bin\ninja\win\x64\ninja.exe
 Options: 
 

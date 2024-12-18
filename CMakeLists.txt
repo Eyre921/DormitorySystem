@@ -47,4 +47,5 @@ target_link_libraries(DormitoryManagementSystem)
 # 如果需要调试或发布版本，请添加相应的构建配置
 set_target_properties(DormitoryManagementSystem PROPERTIES
         DEBUG_POSTFIX "_d"  # 调试版本后缀（可选）
+        RELEASE_POSTFIX "_release"  # 发行版本后缀（可选）
 )
