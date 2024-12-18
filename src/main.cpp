@@ -14,6 +14,8 @@ void userLogin();
 
 void studentRegister();
 
+void studentMenu();
+
 void adminMenu();
 
 void manageDormitories();
@@ -134,7 +136,7 @@ void studentLogin()
     // {
     cout << "学生登录成功！\n"; // 假设登录成功
     // 这里跳转到学生菜单
-    // studentLoginMenu();
+    studentMenu();
     // } else
     // {
     //     cout << "登录失败，学号或密码错误！\n";
