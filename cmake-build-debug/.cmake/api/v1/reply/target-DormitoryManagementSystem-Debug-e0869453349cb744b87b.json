@@ -45,7 +45,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : " -Wall -Wextra -g -std=gnu++17 -fdiagnostics-color=always"
+					"fragment" : " -Wall -Wextra -g -std=gnu++1z -fdiagnostics-color=always"
 				}
 			],
 			"includes" : 
