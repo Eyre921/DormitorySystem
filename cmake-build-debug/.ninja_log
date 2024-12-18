@@ -1,14 +1,14 @@
 # ninja log v6
-31	160	7561086501545915	CMakeFiles/DormitoryManagementSystem.dir/src/ReportManager.cpp.obj	5b7b830c5e84d810
-21	161	7561086501455182	CMakeFiles/DormitoryManagementSystem.dir/src/QueryManager.cpp.obj	173aadf818d1ceb8
-12	151	7561086501363041	CMakeFiles/DormitoryManagementSystem.dir/src/DormitoryManager.cpp.obj	dd44819cc1f7d41c
-37	157	7561086501616135	CMakeFiles/DormitoryManagementSystem.dir/src/RoomManager.cpp.obj	6a8bc9696d96dc88
-18	159	7561086501412934	CMakeFiles/DormitoryManagementSystem.dir/src/NotificationManager.cpp.obj	b5f4eed1a21a36f
-25	158	7561086501498215	CMakeFiles/DormitoryManagementSystem.dir/src/RepairManager.cpp.obj	f7f4a9767216d80c
-42	174	7561086501662506	CMakeFiles/DormitoryManagementSystem.dir/src/UserManager.cpp.obj	68ad6fbeccb1b36a
-11	2361	7561096746490599	CMakeFiles/DormitoryManagementSystem.dir/src/main.cpp.obj	2693b552a966482a
-48	8260	7561086501714478	CMakeFiles/DormitoryManagementSystem.dir/sqlite3/sqlite3.c.obj	b950b61af276b9f6
-2	298	7562108334668774	build.ninja	87311108787cef01
-2362	2622	7561096769992729	DormitoryManagementSystem_d.exe	a2c3bfe33527e51f
-53	655	7561086501776340	CMakeFiles/DormitoryManagementSystem.dir/src/Person.cpp.obj	7d239131c69826a0
-26	738	7561096213709081	CMakeFiles/DormitoryManagementSystem.dir/src/User.cpp.obj	9dec719cfd53cb96
+13	273	7562105949365640	CMakeFiles/DormitoryManagementSystem.dir/src/DormitoryManager.cpp.obj	cb53afec2cc7b36f
+20	274	7562105949445621	CMakeFiles/DormitoryManagementSystem.dir/src/QueryManager.cpp.obj	63597de32a126ff0
+32	278	7562105949555621	CMakeFiles/DormitoryManagementSystem.dir/src/ReportManager.cpp.obj	59a36a39ef397a14
+38	274	7562105949625632	CMakeFiles/DormitoryManagementSystem.dir/src/RoomManager.cpp.obj	cb2ffd1020839a4a
+17	270	7562105949415617	CMakeFiles/DormitoryManagementSystem.dir/src/NotificationManager.cpp.obj	8cc6dd79c19caf5f
+25	275	7562105949485835	CMakeFiles/DormitoryManagementSystem.dir/src/RepairManager.cpp.obj	74ae3ee84d9e02b5
+43	274	7562105949675736	CMakeFiles/DormitoryManagementSystem.dir/src/UserManager.cpp.obj	13995db40f92811e
+6	723	7562105949299462	CMakeFiles/DormitoryManagementSystem.dir/src/main.cpp.obj	b40a676cf3ef131f
+50	9710	7562105949745636	CMakeFiles/DormitoryManagementSystem.dir/sqlite3/sqlite3.c.obj	ec382966919b9435
+6	351	7562108988261248	build.ninja	87311108787cef01
+9710	10017	7562106046342785	DormitoryManagementSystem_d.exe	8aff898a788815e6
+56	622	7562105949805893	CMakeFiles/DormitoryManagementSystem.dir/src/Person.cpp.obj	3c36cbdf83744a06
+62	621	7562105949865622	CMakeFiles/DormitoryManagementSystem.dir/src/User.cpp.obj	5340d27d6cec4174
