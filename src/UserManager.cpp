@@ -17,9 +17,10 @@ UserManager::UserManager() : db("../data/dormitory.db")
 }
 
 // 用户登录
-bool UserManager::loginUser(const string &userID, const string &password)
+bool UserManager::loginUser(const string &userID, const string &password, const string &isAdmin)
 {
-    string sql = "SELECT * FROM users WHERE userID = '" + userID + "' AND password = '" + password + "';";
+    string sql = "SELECT * FROM users WHERE userID = '" + userID + "' AND password = '" + password + "' AND isAdmin = '"
+                 + isAdmin + "';";
 
     if (db.Query(sql))
     {

@@ -16,7 +16,7 @@ public:
     UserManager();
 
     // 用户登录
-    bool loginUser(const std::string &userID, const std::string &password);
+    bool loginUser(const string &userID, const string &password, const string &isAdmin);
 
     // 用户注册
     bool registerUser(const std::string &userID, const std::string &password, const std::string &name,

@@ -110,7 +110,7 @@ void studentLogin()
     cin >> password;
 
     // 调用 UserManager 中的 loginUser 方法，验证登录
-    if (userManager->loginUser(studentID, password))
+    if (userManager->loginUser(studentID, password, "0"))
     {
         studentMenu(); // 登录成功后跳转到学生菜单
     } else
@@ -130,7 +130,7 @@ void adminLogin()
     cout << "请输入密码: ";
     cin >> password;
 
-    if (userManager->loginUser(adminID, password))
+    if (userManager->loginUser(adminID, password, "1"))
     {
         adminMenu();;
     } else
