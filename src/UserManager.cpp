@@ -58,4 +58,13 @@ void UserManager::getAllUsers()
     db.Query("SELECT * FROM users;");
 }
 
-// 检查用户是否存在
+
+void UserManager::Query(string &SQL)
+{
+    db.Query(SQL);
+}
+
+void UserManager::execute(string &SQL)
+{
+    db.execute(SQL);
+}

@@ -22,9 +22,12 @@ public:
     bool registerUser(const std::string &userID, const std::string &password, const std::string &name,
                       const std::string &gender, const std::string &contactInfo, bool isCheckedIn, bool isAdmin);
 
+    void UserManager::execute(string &SQL);
 
     // 获取所有用户
     void getAllUsers();
+
+    void UserManager::Query(string &SQL);
 
     // 检查用户是否存在
 };
