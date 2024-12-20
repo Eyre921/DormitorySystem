@@ -7,7 +7,7 @@ using namespace std;
 UserManager::UserManager() : db("../data/dormitory.db")
 {
     // 直接在这里指定数据库路径
-    // 在这里，你可以进行数据库的初始化（例如创建表等操作）
+    // 在这里，可以进行数据库的初始化（例如创建表等操作）
     // if (!db.execute(
     //     "CREATE TABLE IF NOT EXISTS users (userID TEXT PRIMARY KEY, name TEXT, gender TEXT, password TEXT, contactInfo TEXT, isCheckedIn INTEGER DEFAULT 0, isAdmin INTEGER DEFAULT 0);"))
     // {
