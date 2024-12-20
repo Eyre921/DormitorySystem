@@ -22,7 +22,7 @@ bool UserManager::loginUser(const string &userID, const string &password, const 
     string sql = "SELECT * FROM users WHERE userID = '" + userID + "' AND password = '" + password + "' AND isAdmin = '"
                  + isAdmin + "';";
 
-    if (db.Query(sql))
+    if (db.QueryExists(sql))
     {
         cout << "登录成功！";
         return true; // 登录成功
@@ -67,4 +67,34 @@ void UserManager::Query(string &SQL)
 void UserManager::execute(string &SQL)
 {
     db.execute(SQL);
+}
+
+bool UserManager::queryExists(string &SQL)
+{
+    return db.QueryExists(SQL);
+}
+
+bool UserManager::dormitoryExistsByName(const string &dormitoryName)
+{
+    // 模拟查询语句
+    string sql = "SELECT * FROM dormitories WHERE name = '" + dormitoryName + "';";
+
+    // 调用查询函数来检查数据库中是否已有该宿舍楼名称
+    if (db.QueryExists(sql))
+    {
+        return true; // 如果返回 true，表示该宿舍楼名称已存在
+    } else
+    {
+        return false; // 如果没有找到，表示该宿舍楼名称不存在
+    }
+}
+
+int UserManager::getDormitoryIDByName(const string &dormitoryName)
+{
+    return db.getDormitoryIDByName(dormitoryName);
+}
+
+bool UserManager::hasStudentsInDormitoryRooms(const string &checkRoomsSql)
+{
+    return db.hasStudentsInDormitoryRooms(checkRoomsSql);
 }

@@ -19,15 +19,8 @@ include_directories(
 # 添加源文件
 set(SOURCE_FILES
         src/main.cpp
-        src/DormitoryManager.cpp
-        src/NotificationManager.cpp
-        src/QueryManager.cpp
-        src/RepairManager.cpp
-        src/ReportManager.cpp
-        src/RoomManager.cpp
         src/UserManager.cpp
         sqlite3/sqlite3.c
-        src/Person.cpp
         src/Database.cpp
         src/Database.h
         # SQLite 源文件

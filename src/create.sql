@@ -12,7 +12,8 @@ CREATE TABLE dormitories
 (
     dormitoryID INTEGER PRIMARY KEY AUTOINCREMENT, -- 宿舍楼ID（自增）
     name        TEXT NOT NULL,                     -- 宿舍楼名称
-    sex         TEXT NOT NULL                      -- 性别
+    sex         TEXT NOT NULL,                     -- 性别
+    position    TEXT
 );
 CREATE TABLE rooms
 (

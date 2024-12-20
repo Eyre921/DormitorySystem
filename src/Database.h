@@ -21,9 +21,13 @@ public:
     // 执行非查询 SQL（如 INSERT, UPDATE, DELETE）
     bool execute(const string &sql);
 
-
-    // 使用 sqlite3 命令行工具执行查询并格式化输出
     bool Query(const string &sql);
+
+    bool QueryExists(const std::string &sql);
+
+    int getDormitoryIDByName(const string &dormitoryName);
+
+    bool hasStudentsInDormitoryRooms(const string &checkRoomsSql);
 };
 
 #endif // DATABASE_H

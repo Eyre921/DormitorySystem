@@ -1,2 +1,2 @@
-SELECT *
-FROM users
+ALTER TABLE dormitories
+    ADD COLUMN position TEXT;

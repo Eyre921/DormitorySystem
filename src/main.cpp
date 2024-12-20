@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <UserManager.h>
 #include <iostream>
+#include <limits>
 #include <string>
 using namespace std;
 
@@ -14,11 +15,17 @@ void userLogin();
 
 void studentRegister();
 
-void studentMenu();
+void studentMenu(string &stuID);
 
 void adminMenu();
 
 void manageDormitories();
+
+void addDormitory();
+
+void deleteDormitory();
+
+void viewDormitories();
 
 void studentLoginMenu();
 
@@ -28,7 +35,7 @@ void generateReports();
 
 void handleRepairRequests();
 
-void viewDormitoryInfo();
+void viewDormitoryInfo(string &stuID);
 
 void requestRoomChange();
 
@@ -83,6 +90,7 @@ void studentLoginMenu()
     cout << "\n---- 学生菜单 ----\n";
     cout << "1. 学生登录\n";
     cout << "2. 学生注册\n";
+    cout << "3. 退出\n";
     cout << "请输入你的选择: ";
     cin >> choice;
 
@@ -94,6 +102,8 @@ void studentLoginMenu()
         case 2:
             studentRegister(); // 学生注册
             break;
+        case 3:
+            return;
         default:
             cout << "无效选择，请重新输入。\n";
             break;
@@ -112,7 +122,7 @@ void studentLogin()
     // 调用 UserManager 中的 loginUser 方法，验证登录
     if (userManager->loginUser(studentID, password, "0"))
     {
-        studentMenu(); // 登录成功后跳转到学生菜单
+        studentMenu(studentID); // 登录成功后跳转到学生菜单
     } else
     {
         cout << "学号或密码错误！\n";
@@ -193,7 +203,7 @@ void adminMenu()
     }
 }
 
-void studentMenu()
+void studentMenu(string &stuID)
 {
     int choice;
     while (true)
@@ -210,7 +220,7 @@ void studentMenu()
         switch (choice)
         {
             case 1:
-                viewDormitoryInfo(); // 查看宿舍楼和房间信息
+                viewDormitoryInfo(stuID); // 查看宿舍楼和房间信息
                 break;
             case 2:
                 requestRoomChange(); // 请求换房
@@ -247,16 +257,13 @@ void manageDormitories()
         switch (choice)
         {
             case 1:
-                // TODO: 添加宿舍楼
-                cout << "添加宿舍楼 - 功能开发中。\n";
+                addDormitory();
                 break;
             case 2:
-                // TODO: 删除宿舍楼
-                cout << "删除宿舍楼 - 功能开发中。\n";
+                deleteDormitory();
                 break;
             case 3:
-                // TODO: 查看宿舍楼信息
-                cout << "查看宿舍楼信息 - 功能开发中。\n";
+                viewDormitories();
                 break;
             case 4:
                 return;
@@ -264,6 +271,139 @@ void manageDormitories()
                 cout << "无效选择，请重新输入。\n";
         }
     }
+}
+
+void addDormitory()
+{
+    string dormitoryName, sex, position;
+    int roomCount, bedCount;
+
+    // 输入宿舍楼名称并检查是否已存在
+    cout << "请输入宿舍楼名称：";
+    while (true)
+    {
+        getline(cin, dormitoryName);
+        if (!dormitoryName.empty())
+        {
+            if (userManager->dormitoryExistsByName(dormitoryName))
+            {
+                cout << "宿舍楼名称已存在，请重新输入一个唯一的名称：";
+            } else
+            {
+                break;
+            }
+        } else
+        {
+            cout << "宿舍楼名称不能为空，请输入：";
+        }
+    }
+
+    // 输入宿舍楼性别并验证
+    cout << "请输入宿舍楼性别（男/女）：";
+    while (true)
+    {
+        cin >> sex;
+        if (sex == "男" || sex == "女")
+        {
+            break;
+        } else
+        {
+            cout << "性别输入无效，请输入 '男' 或 '女'：";
+        }
+    }
+
+    // 输入宿舍楼位置
+    cout << "请输入宿舍楼位置：";
+    cin.ignore(); // 忽略前一个输入留下的换行符
+    getline(cin, position);
+
+    // 插入宿舍楼信息
+    string sql = "INSERT INTO dormitories (name, sex, position) VALUES ('" + dormitoryName + "', '" + sex + "', '" +
+                 position + "');";
+    userManager->execute(sql);
+
+    // 获取新插入的宿舍楼ID（这里假设为1）
+    int dormitoryID = userManager->getDormitoryIDByName(dormitoryName);
+
+    // 输入房间数量和床位数
+    cout << "请输入房间数量：";
+    cin >> roomCount;
+    cout << "请输入每个房间的床位数：";
+    cin >> bedCount;
+
+    // 自动生成房间
+    for (int i = 1; i <= roomCount; i++)
+    {
+        string roomNumber = "N" + to_string(i); // 自动生成房间号，形如 R1, R2, ...
+
+        // 构造SQL语句插入房间信息
+        string roomSql = "INSERT INTO rooms (dormitoryID, roomNumber, capacity) VALUES (" + to_string(dormitoryID) +
+                         ", '" + roomNumber + "', " + to_string(bedCount) + ");";
+        userManager->execute(roomSql);
+    }
+
+    cout << "宿舍楼和房间信息添加成功！\n";
+}
+
+void deleteDormitory()
+{
+    string dormitoryName;
+
+    // 检查宿舍楼名称输入是否存在
+    cout << "请输入要删除的宿舍楼名称：";
+    while (true)
+    {
+        getline(cin, dormitoryName); // 使用getline()读取宿舍楼名称
+
+        if (!dormitoryName.empty())
+        {
+            // 检查宿舍楼是否存在
+            if (userManager->dormitoryExistsByName(dormitoryName))
+            {
+                break; // 存在，跳出循环
+            } else
+            {
+                cout << "宿舍楼名称不存在，请重新输入有效的名称：";
+            }
+        } else
+        {
+            cout << "宿舍楼名称不能为空，请重新输入：";
+        }
+    }
+
+    // 检查宿舍楼是否有房间有学生入住
+    string checkRoomsSql =
+            "SELECT roomID FROM rooms WHERE dormitoryID = (SELECT dormitoryID FROM dormitories WHERE name = '" +
+            dormitoryName + "') AND occupied > 0;";
+    if (userManager->hasStudentsInDormitoryRooms(checkRoomsSql))
+    {
+        cout << "该宿舍楼下有房间已被学生入住。请先处理这些学生的退宿，直到房间为空。\n";
+        return; // 如果有学生入住，返回，不删除宿舍楼
+    }
+
+    // 构造SQL语句来删除宿舍楼
+    string sql = "DELETE FROM dormitories WHERE name = '" + dormitoryName + "';";
+
+    // 执行SQL语句
+    userManager->execute(sql);
+
+    cout << "宿舍楼 '" << dormitoryName << "' 删除成功。\n";
+}
+
+void viewDormitories()
+{
+    // 构造SQL语句
+    string sql = R"(
+            SELECT d.name, d.sex, d.position,
+                   COUNT(r.roomID) AS 房间数,
+                   SUM(CASE WHEN r.living_status = '已满' THEN 1 ELSE 0 END) AS full_count
+            FROM dormitories d
+            LEFT JOIN rooms r ON d.dormitoryID = r.dormitoryID
+            GROUP BY d.dormitoryID;
+        )";
+
+    // 执行SQL语句
+    userManager->Query(sql);
 }
 
 // 管理员管理用户
@@ -301,6 +441,7 @@ void manageUsers()
         }
     }
 }
+
 
 // 管理员生成报表
 void generateReports()
@@ -365,9 +506,29 @@ void handleRepairRequests()
 }
 
 // 学生查看宿舍信息
-void viewDormitoryInfo()
+void viewDormitoryInfo(string &stuID)
 {
-    cout << "查看宿舍楼和房间信息 - 功能开发中。\n";
+    string sql = "SELECT "
+                 "    d.name AS dormitory_name,           -- 宿舍楼名称\n"
+                 "    r.roomNumber AS room_number,        -- 房间号\n"
+                 "    r.capacity AS room_capacity,       -- 房间容量\n"
+                 "    r.occupied AS room_occupied,       -- 已入住人数\n"
+                 "    r.living_status AS room_status,    -- 房间状态\n"
+                 "    r.repair_status AS repair_status   -- 维修状态\n"
+                 "FROM "
+                 "    student_rooms sr\n"
+                 "JOIN "
+                 "    rooms r ON sr.roomID = r.roomID   -- 连接房间表\n"
+                 "JOIN "
+                 "    dormitories d ON r.dormitoryID = d.dormitoryID -- 连接宿舍楼表\n"
+                 "JOIN "
+                 "    users u ON sr.studentID = u.userID -- 连接学生表\n"
+                 "WHERE "
+                 "    u.userID = '" + stuID + "';"; // 使用学生ID作为参数传递
+
+    // 调用Query方法，执行SQL查询
+
+    userManager->Query(sql);
 }
 
 // 学生请求换房

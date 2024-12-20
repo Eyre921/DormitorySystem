@@ -85,15 +85,93 @@ bool Database::Query(const std::string &sql)
         return true;
     } else if (result == SQLITE_DONE)
     {
-        cout << "查询没有结果。\n"; // 查询没有结果
         return false;
     } else
     {
         cerr << "执行查询失败: " << sqlite3_errmsg(db) << endl;
         return false;
     }
-
     sqlite3_finalize(stmt); // 释放 SQL 语句
     return true;
 }
 
+bool Database::QueryExists(const std::string &sql)
+{
+    sqlite3_stmt *stmt;
+
+    // 准备 SQL 语句
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, 0) != SQLITE_OK)
+    {
+        cerr << "SQL 语句编译失败: " << sqlite3_errmsg(db) << endl;
+        return false;
+    }
+
+    // 执行查询操作
+    int result = sqlite3_step(stmt);
+
+    // 处理查询结果
+    if (result == SQLITE_ROW)
+    {
+        return true;
+    } else if (result == SQLITE_DONE)
+    {
+        return false;
+    } else
+    {
+        cerr << "执行查询失败: " << sqlite3_errmsg(db) << endl;
+        return false;
+    }
+    sqlite3_finalize(stmt); // 释放 SQL 语句
+    return true;
+}
+
+int Database::getDormitoryIDByName(const string &dormitoryName)
+{
+    sqlite3_stmt *stmt;
+    string sql = "SELECT dormitoryID FROM dormitories WHERE name = ?";
+
+    // 准备 SQL 查询语句
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, 0) != SQLITE_OK)
+    {
+        cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;
+        return -1; // 返回无效ID
+    }
+
+    // 绑定参数（宿舍楼名称）
+    sqlite3_bind_text(stmt, 1, dormitoryName.c_str(), -1, SQLITE_STATIC);
+
+    // 执行查询并获取结果
+    int dormitoryID = -1; // 默认为 -1，表示未找到
+    if (sqlite3_step(stmt) == SQLITE_ROW)
+    {
+        dormitoryID = sqlite3_column_int(stmt, 0); // 获取查询结果中的 dormitoryID
+    }
+
+    // 清理
+    sqlite3_finalize(stmt);
+
+    return dormitoryID;
+}
+
+bool Database::hasStudentsInDormitoryRooms(const string &checkRoomsSql)
+{
+    sqlite3_stmt *stmt;
+    int studentCount = 0;
+
+    // 执行 SQL 查询，检查是否有学生入住
+    if (sqlite3_prepare_v2(db, checkRoomsSql.c_str(), -1, &stmt, 0) != SQLITE_OK)
+    {
+        cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;
+        return false;
+    }
+
+    // 执行查询并获取结果
+    while (sqlite3_step(stmt) == SQLITE_ROW)
+    {
+        studentCount++;
+    }
+
+    // 如果 studentCount > 0，表示有学生入住
+    sqlite3_finalize(stmt);
+    return studentCount > 0;
+}
