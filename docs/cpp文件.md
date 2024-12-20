@@ -13,7 +13,8 @@
 
 **细则：**
 
-- 创建 `UserManager`、`DormitoryManager`、`RoomManager`、`QueryManager`、`NotificationManager`、`ReportManager`、`RepairManager` 对象。
+- 创建 `UserManager`、`DormitoryManager`、`RoomManager`、`QueryManager`、`NotificationManager`、`ReportManager`、
+  `RepairManager` 对象。
 - 加载数据库（如果使用 SQLite 或文件存储）并初始化数据。
 - 用户登录界面，验证用户名和密码。
 - 根据用户权限选择功能模块（管理员或普通用户）。
@@ -31,7 +32,7 @@
 
 **细则：**
 
-- 使用 `std::vector<User>` 存储所有用户信息。
+- 使用 `vector<User>` 存储所有用户信息。
 - 实现用户注册功能，输入用户名、密码，判断用户名是否已存在。
 - 实现删除用户功能，删除指定用户名的用户。
 - 实现更新用户信息功能，允许修改密码或其他信息。
@@ -49,7 +50,7 @@
 
 **细则：**
 
-- 使用 `std::vector<Room>` 存储所有房间数据。
+- 使用 `vector<Room>` 存储所有房间数据。
 - 实现 `addDormitoryBuilding`：根据宿舍楼名称和房间数量生成新的宿舍楼，并添加房间。
 - 实现 `removeDormitoryBuilding`：删除指定宿舍楼及其中的所有房间。
 - 实现 `updateDormitoryBuilding`：更新宿舍楼的位置信息。
@@ -68,7 +69,7 @@
 
 **细则：**
 
-- 使用 `std::vector<User>` 存储已入住的学生信息，关联宿舍房间。
+- 使用 `vector<User>` 存储已入住的学生信息，关联宿舍房间。
 - 实现 `assignRoomToStudent`：根据房间的可用性分配房间给学生。
 - 实现 `cancelRoomAssignment`：退宿功能，将学生从房间中移除，恢复房间可用状态。
 - 实现 `applyForRoomChange`：学生申请换房时，检查目标房间是否可用并进行分配。
@@ -128,7 +129,7 @@
 
 **细则：**
 
-- 使用 `std::vector<RepairRequest>` 存储所有的维修请求信息。
+- 使用 `vector<RepairRequest>` 存储所有的维修请求信息。
 - 实现 `submitRepairRequest`：提交新的维修请求，记录维修内容和状态（待处理、处理中、已完成）。
 - 实现 `getRepairStatus`：查询指定维修请求的状态。
 - 实现 `completeRepair`：完成维修请求，更新状态为“已完成”。
@@ -138,21 +139,21 @@
 ### **功能实现的顺序和注意事项：**
 
 1. **用户登录与权限管理：**
-    
+
     - 先实现 `UserManager` 中的用户管理功能，确保用户能够成功注册、登录和验证身份。
     - 登录后，根据用户角色（管理员或普通用户）选择不同的功能模块。
 2. **宿舍管理和房间管理：**
-    
+
     - 接着实现宿舍和房间的管理功能，确保能够添加、删除、更新宿舍楼和房间信息。
     - 房间分配和退宿功能应紧跟其后，确保每个房间的状态可以正确更新。
 3. **查询功能：**
-    
+
     - 完成查询模块的功能，确保用户能够查看所有房间的状态，查询自己或他人的信息。
 4. **通知与报表功能：**
-    
+
     - 通知模块和报表功能可以根据需要逐步实现。通知模块的细节可以在后续版本中完善，报表功能可以集中在管理员界面进行设计。
 5. **维修管理：**
-    
+
     - 维修功能要与房间管理密切结合，用户在使用过程中可能会涉及到报修操作，确保该功能完整。
 
 ---

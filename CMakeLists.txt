@@ -28,8 +28,6 @@ set(SOURCE_FILES
         src/UserManager.cpp
         sqlite3/sqlite3.c
         src/Person.cpp
-        src/User.cpp
-        src/User.h
         src/Database.cpp
         src/Database.h
         # SQLite 源文件

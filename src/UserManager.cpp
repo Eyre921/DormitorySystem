@@ -1,120 +1,60 @@
 #include "UserManager.h"
 #include <iostream>
-#include <sqlite3.h>
 
-UserManager::UserManager()
+using namespace std;
+
+// 构造函数，自动连接数据库
+UserManager::UserManager() : db("../data/dormitory.db")
 {
-    // 打开或创建数据库
-    int rc = sqlite3_open("../data/dormitory.db", &db);
-    if (rc)
+    // 直接在这里指定数据库路径
+    // 在这里，你可以进行数据库的初始化（例如创建表等操作）
+    // if (!db.execute(
+    //     "CREATE TABLE IF NOT EXISTS users (userID TEXT PRIMARY KEY, name TEXT, gender TEXT, password TEXT, contactInfo TEXT, isCheckedIn INTEGER DEFAULT 0, isAdmin INTEGER DEFAULT 0);"))
+    // {
+    //     cout << "数据库创建失败！\n";
+    //     exit(1); // 如果数据库创建失败，退出程序
+    // }
+}
+
+// 用户登录
+bool UserManager::loginUser(const string &userID, const string &password)
+{
+    string sql = "SELECT * FROM users WHERE userID = '" + userID + "' AND password = '" + password + "';";
+
+    if (db.Query(sql))
     {
-        std::cerr << "无法打开数据库: " << sqlite3_errmsg(db) << std::endl;
-        exit(1);
+        cout << "登录成功！";
+        return true; // 登录成功
+    }
+    cout << "登录失败！";
+    return false; // 登录失败
+}
+
+// 用户注册
+bool UserManager::registerUser(const string &userID, const string &password, const string &name, const string &gender,
+                               const string &contactInfo, bool isCheckedIn, bool isAdmin)
+{
+    // 构造插入语句
+    string sql = "INSERT INTO users (userID, name, gender, password, contactInfo, isCheckedIn, isAdmin) "
+                 "VALUES ('" + userID + "', '" + name + "', '" + gender + "', '" + password + "', '" + contactInfo +
+                 "', " + to_string(isCheckedIn) + ", " + to_string(isAdmin) + ");";
+
+    // 尝试执行插入操作
+    if (db.execute(sql))
+    {
+        cout << "用户注册成功！\n";
+        return true;
+    } else
+    {
+        cout << "用户注册失败，可能是账号已存在。\n";
+        return false; // 插入失败
     }
 }
 
-UserManager::~UserManager()
+// 获取所有用户
+void UserManager::getAllUsers()
 {
-    sqlite3_close(db); // 关闭数据库
+    db.Query("SELECT * FROM users;");
 }
 
-// 注册学生
-bool UserManager::registerStudent(const std::string &studentID, const std::string &password,
-                                  const std::string &name, const std::string &gender, const std::string &contactInfo)
-{
-    if (isUserExists(studentID))
-    {
-        std::cout << "该学号已被注册！\n";
-        return false; // 用户已存在
-    }
-
-    // SQL语句
-    std::string sql = "INSERT INTO students (studentID, password, name, gender, contactInfo) VALUES (?, ?, ?, ?, ?);";
-
-    sqlite3_stmt *stmt;
-    int rc = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr);
-    if (rc != SQLITE_OK)
-    {
-        std::cerr << "SQL语句编译失败: " << sqlite3_errmsg(db) << std::endl;
-        return false;
-    }
-
-    sqlite3_bind_text(stmt, 1, studentID.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, password.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 3, name.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 4, gender.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 5, contactInfo.c_str(), -1, SQLITE_STATIC);
-
-    rc = sqlite3_step(stmt);
-    if (rc != SQLITE_DONE)
-    {
-        std::cerr << "插入数据失败: " << sqlite3_errmsg(db) << std::endl;
-        sqlite3_finalize(stmt);
-        return false;
-    }
-
-    sqlite3_finalize(stmt);
-    std::cout << "学生注册成功！\n";
-    return true;
-}
-
-// 检查用户是否已存在
-bool UserManager::isUserExists(const std::string &userID)
-{
-    std::string sql = "SELECT COUNT(*) FROM students WHERE studentID = ?;";
-    sqlite3_stmt *stmt;
-
-    int rc = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr);
-    if (rc != SQLITE_OK)
-    {
-        std::cerr << "SQL语句编译失败: " << sqlite3_errmsg(db) << std::endl;
-        return false;
-    }
-
-    sqlite3_bind_text(stmt, 1, userID.c_str(), -1, SQLITE_STATIC);
-    rc = sqlite3_step(stmt);
-    if (rc != SQLITE_ROW)
-    {
-        std::cerr << "查询失败: " << sqlite3_errmsg(db) << std::endl;
-        sqlite3_finalize(stmt);
-        return false;
-    }
-
-    int count = sqlite3_column_int(stmt, 0);
-    sqlite3_finalize(stmt);
-
-    return count > 0; // 如果返回值大于0，表示用户存在
-}
-
-// 登录用户（可以扩展到管理员登录）
-User *UserManager::loginUser(const std::string &userID, const std::string &password)
-{
-    std::string sql = "SELECT * FROM students WHERE studentID = ? AND password = ?;";
-    sqlite3_stmt *stmt;
-
-    int rc = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr);
-    if (rc != SQLITE_OK)
-    {
-        std::cerr << "SQL语句编译失败: " << sqlite3_errmsg(db) << std::endl;
-        return nullptr;
-    }
-
-    sqlite3_bind_text(stmt, 1, userID.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, password.c_str(), -1, SQLITE_STATIC);
-
-    rc = sqlite3_step(stmt);
-    if (rc != SQLITE_ROW)
-    {
-        std::cerr << "登录失败: 用户ID或密码错误！\n";
-        sqlite3_finalize(stmt);
-        return nullptr;
-    }
-
-    // 用户登录成功
-    std::string name = (const char *) sqlite3_column_text(stmt, 2);
-    bool isAdmin = sqlite3_column_int(stmt, 4); // 假设数据库有管理员字段
-    User *user = new User(userID, name, password, "", isAdmin); // 创建用户对象（简化处理）
-    sqlite3_finalize(stmt);
-
-    return user;
-}
+// 检查用户是否存在

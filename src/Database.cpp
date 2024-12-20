@@ -1,16 +1,18 @@
 #include "Database.h"
 #include <cstdlib>  // for system()
+#include <vector>
+using namespace std;
 
 // 构造函数，打开数据库
-Database::Database(const std::string &dbPath)
+Database::Database(const string &dbPath)
 {
     if (sqlite3_open(dbPath.c_str(), &db))
     {
-        std::cerr << "无法打开数据库: " << sqlite3_errmsg(db) << std::endl;
+        cerr << "无法打开数据库: " << sqlite3_errmsg(db) << endl;
         db = nullptr;
     } else
     {
-        std::cout << "数据库连接成功！" << std::endl;
+        cout << "数据库连接成功！" << endl;
     }
 }
 
@@ -20,23 +22,23 @@ Database::~Database()
     if (db)
     {
         sqlite3_close(db);
-        std::cout << "数据库已关闭！" << std::endl;
+        cout << "数据库已关闭！" << endl;
     }
 }
 
 // 执行非查询 SQL（如 INSERT, UPDATE, DELETE）
-bool Database::execute(const std::string &sql)
+bool Database::execute(const string &sql)
 {
     if (db == nullptr)
     {
-        std::cerr << "数据库未连接！" << std::endl;
+        cerr << "数据库未连接！" << endl;
         return false;
     }
 
     char *errMsg = nullptr;
     if (sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &errMsg) != SQLITE_OK)
     {
-        std::cerr << "SQL 执行失败: " << errMsg << std::endl;
+        cerr << "SQL 执行失败: " << errMsg << endl;
         sqlite3_free(errMsg);
         return false;
     }
@@ -44,43 +46,54 @@ bool Database::execute(const std::string &sql)
 }
 
 
-// 使用 sqlite3 命令行工具执行查询并格式化输出
+// 查询
 bool Database::Query(const std::string &sql)
 {
-    if (db == nullptr)
+    sqlite3_stmt *stmt;
+
+    // 准备 SQL 语句
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, 0) != SQLITE_OK)
     {
-        std::cerr << "数据库未连接！" << std::endl;
+        cerr << "SQL 语句编译失败: " << sqlite3_errmsg(db) << endl;
         return false;
     }
 
-    // 定义数据库文件路径
-    std::string dbFile = "../data/dormitory.db"; // SQLite 数据库文件路径
+    // 执行查询操作
+    int result = sqlite3_step(stmt);
 
-    // 构造命令行指令
-    std::string command = "sqlite3 -header -column " + dbFile + " \"" + sql + "\"";
-
-    // 使用 system() 调用 sqlite3 命令行工具执行查询
-    int result = system(command.c_str());
-
-    // 判断命令执行是否成功
-    if (result != 0)
+    // 处理查询结果
+    if (result == SQLITE_ROW)
     {
-        std::cerr << "执行 SQL 查询失败！" << std::endl;
+        // 获取列数
+        int columnCount = sqlite3_column_count(stmt);
+
+        // 打印查询结果
+        cout << "查询结果:\n";
+        while (result == SQLITE_ROW)
+        {
+            for (int i = 0; i < columnCount; ++i)
+            {
+                const char *columnName = sqlite3_column_name(stmt, i); // 获取列名
+                const char *columnValue = reinterpret_cast<const char *>(sqlite3_column_text(stmt, i)); // 获取列值
+
+                // 打印列名和对应的值
+                cout << columnName << ": " << (columnValue ? columnValue : "NULL") << "  ";
+            }
+            cout << endl; // 打印一行数据后换行
+            result = sqlite3_step(stmt); // 继续执行下一行
+        }
+        return true;
+    } else if (result == SQLITE_DONE)
+    {
+        cout << "查询没有结果。\n"; // 查询没有结果
+        return false;
+    } else
+    {
+        cerr << "执行查询失败: " << sqlite3_errmsg(db) << endl;
         return false;
     }
 
+    sqlite3_finalize(stmt); // 释放 SQL 语句
     return true;
 }
 
-bool Database::user_insert(const std::string &userID, const std::string &name, const std::string &gender,
-                           const std::string &password, const std::string &contactInfo, int isCheckedIn, int isAdmin)
-{
-    // 构造 INSERT SQL 语句
-    std::string sql = "INSERT INTO users (userID, name, gender, password, contactInfo, isCheckedIn, isAdmin) "
-                      "VALUES ('" + userID + "', '" + name + "', '" + gender + "', '" + password + "', '" + contactInfo
-                      + "', "
-                      + std::to_string(isCheckedIn) + ", " + std::to_string(isAdmin) + ");";
-
-    // 使用通用的 execute 执行插入操作
-    return execute(sql);
-}

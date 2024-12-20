@@ -119,13 +119,6 @@ build CMakeFiles/DormitoryManagementSystem.dir/src/Person.cpp.obj: CXX_COMPILER_
   OBJECT_DIR = CMakeFiles\DormitoryManagementSystem.dir
   OBJECT_FILE_DIR = CMakeFiles\DormitoryManagementSystem.dir\src
 
-build CMakeFiles/DormitoryManagementSystem.dir/src/User.cpp.obj: CXX_COMPILER__DormitoryManagementSystem_unscanned_Debug D$:/Eyre/C++/DormitorySystem/src/User.cpp || cmake_object_order_depends_target_DormitoryManagementSystem
-  DEP_FILE = CMakeFiles\DormitoryManagementSystem.dir\src\User.cpp.obj.d
-  FLAGS = -Wall -Wextra -g -std=gnu++1z -fdiagnostics-color=always
-  INCLUDES = -ID:/Eyre/C++/DormitorySystem/src -ID:/Eyre/C++/DormitorySystem/sqlite3
-  OBJECT_DIR = CMakeFiles\DormitoryManagementSystem.dir
-  OBJECT_FILE_DIR = CMakeFiles\DormitoryManagementSystem.dir\src
-
 build CMakeFiles/DormitoryManagementSystem.dir/src/Database.cpp.obj: CXX_COMPILER__DormitoryManagementSystem_unscanned_Debug D$:/Eyre/C++/DormitorySystem/src/Database.cpp || cmake_object_order_depends_target_DormitoryManagementSystem
   DEP_FILE = CMakeFiles\DormitoryManagementSystem.dir\src\Database.cpp.obj.d
   FLAGS = -Wall -Wextra -g -std=gnu++1z -fdiagnostics-color=always
@@ -141,7 +134,7 @@ build CMakeFiles/DormitoryManagementSystem.dir/src/Database.cpp.obj: CXX_COMPILE
 #############################################
 # Link the executable DormitoryManagementSystem_d.exe
 
-build DormitoryManagementSystem_d.exe: CXX_EXECUTABLE_LINKER__DormitoryManagementSystem_Debug CMakeFiles/DormitoryManagementSystem.dir/src/main.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/DormitoryManager.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/NotificationManager.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/QueryManager.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/RepairManager.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/ReportManager.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/RoomManager.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/UserManager.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/sqlite3/sqlite3.c.obj CMakeFiles/DormitoryManagementSystem.dir/src/Person.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/User.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/Database.cpp.obj
+build DormitoryManagementSystem_d.exe: CXX_EXECUTABLE_LINKER__DormitoryManagementSystem_Debug CMakeFiles/DormitoryManagementSystem.dir/src/main.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/DormitoryManager.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/NotificationManager.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/QueryManager.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/RepairManager.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/ReportManager.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/RoomManager.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/UserManager.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/sqlite3/sqlite3.c.obj CMakeFiles/DormitoryManagementSystem.dir/src/Person.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/Database.cpp.obj
   FLAGS = -Wall -Wextra -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\DormitoryManagementSystem.dir

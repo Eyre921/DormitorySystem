@@ -1,12 +1,13 @@
 ﻿#include <iostream>
 #include <Database.h>
+#include "User.h"
 #include <windows.h>
 #include <UserManager.h>
 #include <iostream>
 #include <string>
 using namespace std;
 
-UserManager *userManager = nullptr; // 只声明指针，初始化将在 main 函数中进行
+
 // 函数声明
 void showMainMenu();
 
@@ -40,22 +41,42 @@ void studentLogin();
 
 void viewNotifications();
 
-
 // 主程序入口
 int main()
 {
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
     int choice;
-    userManager = new UserManager(); // 这里会自动连接数据库
-    userManager->getAllUsers();
 
+    UserManager user; // 创建用户管理对象
+    // 插入示例数据
+    // string insertDataSQL = R"(
+    //     INSERT INTO users (userID, name, gender, password, contactInfo, isCheckedIn, isAdmin)
+    //     VALUES
+    //     ('S001', '张三', '男', 'password123', '13800000001', 1, 0),
+    //     ('S002', '李四', '女', 'password456', '13800000002', 0, 0),
+    //     ('S003', '王五', '男', 'password789', '13800000003', 1, 0),
+    //     ('A001', '管理员1', '女', 'admin123', '13800000010', 1, 1),
+    //     ('A002', '管理员2', '男', 'admin456', '13800000011', 0, 1);
+    // )";
+    //
+    // if (db.execute(insertDataSQL))
+    // {
+    //     cout << "示例数据插入成功！" << endl;
+    // }
+
+    // 查询数据（查看所有用户信息）
+
+    // if (db.user_insert("S029", "Alice43", "女", "passw@rd789", "13800000004", 1, 0))
+    // {
+    //     cout << "示例数据插入成功！" << endl;
+    // }
 
     while (true)
     {
         cout << "\n---- 主菜单 ----\n";
-        cout << "1. 学生菜单\n";
-        cout << "2. 管理员菜单\n";
+        cout << "1. 学生登录\n";
+        cout << "2. 管理员登录\n";
         cout << "3. 退出\n";
         cout << "请输入你的选择: ";
         cin >> choice;
@@ -100,7 +121,7 @@ void studentLoginMenu()
     }
 }
 
-void studentLogin()
+void studentLogin(Database &db)
 {
     string studentID, password;
     cout << "\n---- 学生登录 ----\n";
@@ -109,13 +130,16 @@ void studentLogin()
     cout << "请输入密码: ";
     cin >> password;
 
-    // 调用 UserManager 中的 loginUser 方法，验证登录
-    if (userManager->loginUser(studentID, password))
+    UserManager userManager;
+
+    // 调用 UserManager 的 loginUser 方法，传递数据库连接和用户输入的学号、密码
+    if (userManager.loginUser(db, studentID, password))
     {
+        cout << "学生登录成功！\n"; // 登录成功
         studentMenu(); // 登录成功后跳转到学生菜单
     } else
     {
-        cout << "学号或密码错误！\n";
+        cout << "登录失败，学号或密码错误！\n"; // 登录失败
     }
 }
 
@@ -125,18 +149,16 @@ void adminLogin()
 {
     string adminID, password;
     cout << "\n---- 管理员登录 ----\n";
-    cout << "请输入管理员账号: ";
+    cout << "请输入管理员ID: ";
     cin >> adminID;
     cout << "请输入密码: ";
     cin >> password;
 
-    if (userManager->loginUser(adminID, password))
-    {
-        adminMenu();;
-    } else
-    {
-        cout << "账号或密码错误！\n";
-    }
+    // 在这里你可以根据管理员ID和密码验证管理员身份
+    // 例如，调用 userManager.loginUser(adminID, password) 检查是否为管理员
+    cout << "管理员登录成功！\n"; // 假设登录成功
+    // 这里跳转到管理员菜单
+    adminMenu();
 }
 
 void studentRegister()
@@ -153,7 +175,15 @@ void studentRegister()
     cin >> gender;
     cout << "请输入联系方式: ";
     cin >> contactInfo;
-    userManager->registerUser(studentID, password, name, gender, contactInfo, 0, 0);
+
+    cout << studentID << password << name << gender << contactInfo << endl;
+    // if (userManager.registerUser(studentID, password, name, gender, contactInfo)) {
+    //     cout << "学生注册成功！\n";  // 假设注册成功
+    //     // 这里跳转到学生菜单
+    //     // studentLoginMenu();
+    // } else {
+    //     cout << "注册失败，可能是学号已存在。\n";
+    // }
 }
 
 void adminMenu()
