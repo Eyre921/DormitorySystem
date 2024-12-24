@@ -31,6 +31,8 @@ void studentLoginMenu();
 
 void manageUsers();
 
+void arrangeAccommodation();
+
 void generateReports();
 
 void handleRepairRequests();
@@ -122,6 +124,24 @@ void studentLogin()
     // 调用 UserManager 中的 loginUser 方法，验证登录
     if (userManager->loginUser(studentID, password, "0"))
     {
+        int str_len = studentID.size();
+        if (str_len < 6)
+        {
+            if (studentID == password)
+            {
+                //进入修改密码界面
+                cout << "您的密码是默认密码，请修改\n";
+                userManager->UserPasswordChange(studentID);
+            }
+        } else
+        {
+            if (studentID.substr(str_len - 6, 6) == password)
+            {
+                //进入修改密码界面
+                cout << "您的密码是默认密码，请修改\n";
+                userManager->UserPasswordChange(studentID);
+            }
+        }
         studentMenu(studentID); // 登录成功后跳转到学生菜单
     } else
     {
@@ -372,9 +392,13 @@ void deleteDormitory()
     }
 
     // 检查宿舍楼是否有房间有学生入住
-    string checkRoomsSql =
-            "SELECT roomID FROM rooms WHERE dormitoryID = (SELECT dormitoryID FROM dormitories WHERE name = '" +
-            dormitoryName + "') AND occupied > 0;";
+    string checkRoomsSql = R"(
+        SELECT 1
+        FROM rooms r
+        JOIN dormitories d ON r.dormitoryID = d.dormitoryID
+        WHERE d.name = ')" + dormitoryName + "' AND r.occupied > 0 LIMIT 1;)";
+    userManager->Query(checkRoomsSql);
+    // 调用 UserManager 的方法，检查是否有学生入住
     if (userManager->hasStudentsInDormitoryRooms(checkRoomsSql))
     {
         cout << "该宿舍楼下有房间已被学生入住。请先处理这些学生的退宿，直到房间为空。\n";
@@ -396,7 +420,7 @@ void viewDormitories()
     string sql = R"(
             SELECT d.name, d.sex, d.position,
                    COUNT(r.roomID) AS 房间数,
-                   SUM(CASE WHEN r.living_status = '已满' THEN 1 ELSE 0 END) AS full_count
+                   SUM(CASE WHEN r.living_status = '已满' THEN 1 ELSE 0 END) AS 是否已满
             FROM dormitories d
             LEFT JOIN rooms r ON d.dormitoryID = r.dormitoryID
             GROUP BY d.dormitoryID;
@@ -405,6 +429,7 @@ void viewDormitories()
     // 执行SQL语句
     userManager->Query(sql);
 }
+
 
 // 管理员管理用户
 void manageUsers()
@@ -416,7 +441,8 @@ void manageUsers()
         cout << "1. 添加用户\n";
         cout << "2. 删除用户\n";
         cout << "3. 查看用户信息\n";
-        cout << "4. 返回上一级\n";
+        cout << "4. 安排住宿\n";
+        cout << "0. 返回上一级\n";
         cout << "请输入你的选择: ";
         cin >> choice;
 
@@ -424,7 +450,42 @@ void manageUsers()
         {
             case 1:
                 // TODO: 添加用户
-                cout << "添加用户 - 功能开发中。\n";
+                //cout << "添加用户 - 功能开发中。\n";★
+                int new_num;
+                cout << "请输入需要添加的用户数量（输入0返回上一级）：";
+                cin >> new_num;
+                if (new_num == 0)
+                {
+                    return;
+                } else
+                {
+                    for (int i = 1; i <= new_num; i++)
+                    {
+                        string userID;
+                        cout << "请输入第" << i << "位用户的学号：";
+                        cin >> userID;
+                        int str_len = userID.size();
+                        string password;
+                        if (str_len <= 6)
+                        {
+                            password = userID;
+                        } else
+                        {
+                            //默认密码为学号后6位
+                            password = userID.substr(str_len - 6, 6);
+                        }
+                        string name;
+                        cout << "请输入第" << i << "位用户的姓名：";
+                        cin >> name;
+                        string gender;
+                        cout << "请输入第" << i << "位用户的性别：";
+                        cin >> gender;
+                        string contactInfo;
+                        cout << "请输入第" << i << "位用户的联系方式：";
+                        cin >> contactInfo;
+                        userManager->registerUser(userID, password, name, gender, contactInfo, 0, 0);
+                    }
+                }
                 break;
             case 2:
                 // TODO: 删除用户
@@ -434,7 +495,7 @@ void manageUsers()
                 // TODO: 查看用户信息
                 cout << "查看用户信息 - 功能开发中。\n";
                 break;
-            case 4:
+            case 0:
                 return;
             default:
                 cout << "无效选择，请重新输入。\n";
@@ -442,6 +503,46 @@ void manageUsers()
     }
 }
 
+void arrangeAccommodation()
+{
+    string studentID;
+    while (!userManager->studentExistsByID(studentID))
+    {
+        getline(cin, studentID);
+        cout << "输入";
+    }
+    string dormitoryName;
+
+    // // 1. 获取用户输入学号和宿舍楼名称
+    // cout << "请输入学号：";
+    // cin >> studentID;
+
+    cout << "请输入宿舍楼名称：";
+    getline(cin, dormitoryName);
+
+    // 2. 查询宿舍楼下所有空房间号（已入住为0）
+
+    string query = "SELECT r.roomID, r.roomNumber, r.capacity, r.occupied "
+                   "FROM rooms r "
+                   "JOIN dormitories d ON r.dormitoryID = d.dormitoryID "
+                   "WHERE d.name = '" + dormitoryName + "' "
+                   "AND r.occupied < r.capacity;";
+    // 使用 Query 查询空闲房间
+    userManager->Query(query);
+
+    string roomChoice;
+    cout << "请输入您选择的房间号：";
+    cin >> roomChoice;
+    string insert_room = "INSERT INTO student_rooms (studentID, roomID) "
+                         "SELECT '" + studentID + "', r.roomID "
+                         "FROM rooms r "
+                         "JOIN dormitories d ON r.dormitoryID = d.dormitoryID "
+                         "WHERE d.name = '" + dormitoryName + "' "
+                         "AND r.roomNumber = '" + roomChoice + "' "
+                         "AND r.occupied < r.capacity;";
+    userManager->execute(insert_room);
+    cout << "插入成功";
+}
 
 // 管理员生成报表
 void generateReports()

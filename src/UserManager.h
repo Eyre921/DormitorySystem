@@ -39,6 +39,10 @@ public:
 
     bool hasStudentsInDormitoryRooms(const string &checkRoomsSql);
 
+    bool studentExistsByID(const string &ID);
+
+    bool UserPasswordChange(const string &userID);
+
     // 检查用户是否存在
 };
 

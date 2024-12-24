@@ -89,6 +89,20 @@ bool UserManager::dormitoryExistsByName(const string &dormitoryName)
     }
 }
 
+bool UserManager::studentExistsByID(const string &ID)
+{
+    // 模拟查询语句
+    string sql = "SELECT * FROM users WHERE userID = '" + ID + "';";
+
+    if (db.QueryExists(sql))
+    {
+        return true;
+    } else
+    {
+        return false;
+    }
+}
+
 int UserManager::getDormitoryIDByName(const string &dormitoryName)
 {
     return db.getDormitoryIDByName(dormitoryName);
@@ -97,4 +111,23 @@ int UserManager::getDormitoryIDByName(const string &dormitoryName)
 bool UserManager::hasStudentsInDormitoryRooms(const string &checkRoomsSql)
 {
     return db.hasStudentsInDormitoryRooms(checkRoomsSql);
+}
+
+bool UserManager::UserPasswordChange(const string &userID)
+{
+    cout << "请输入新密码:";
+    string newPassword;
+    cin >> newPassword;
+    // 构造插入语句
+    string sql = "UPDATE users SET password = " + newPassword + " WHERE userID = " + userID + ";";
+    // 尝试执行插入操作
+    if (db.execute(sql))
+    {
+        cout << "密码修改成功！\n";
+        return true;
+    } else
+    {
+        cout << "密码修改失败……\n";
+        return false; // 插入失败
+    }
 }
