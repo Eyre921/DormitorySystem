@@ -43,6 +43,11 @@ public:
 
     bool UserPasswordChange(const string &userID);
 
+    void arrangeAccommodation();
+
+    void arrangeCheckOut();
+
+
     // 检查用户是否存在
 };
 

@@ -8,10 +8,10 @@ using namespace std;
 
 class Database
 {
-private:
-    sqlite3 *db; // 数据库连接
-
 public:
+    sqlite3 *db; // 数据库连接
+    sqlite3_stmt *stmt;
+
     // 构造函数，打开数据库
     Database(const string &dbPath);
 
@@ -28,6 +28,10 @@ public:
     int getDormitoryIDByName(const string &dormitoryName);
 
     bool hasStudentsInDormitoryRooms(const string &checkRoomsSql);
+
+    void updateRoomStatus();
+
+    string getQueryResult(int columnIndex);
 };
 
 #endif // DATABASE_H

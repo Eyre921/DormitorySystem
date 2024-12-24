@@ -6,6 +6,7 @@ using namespace std;
 // 构造函数，自动连接数据库
 UserManager::UserManager() : db("../data/dormitory.db")
 {
+    db.updateRoomStatus();
     // 直接在这里指定数据库路径
     // 在这里，可以进行数据库的初始化（例如创建表等操作）
     // if (!db.execute(
@@ -93,14 +94,7 @@ bool UserManager::studentExistsByID(const string &ID)
 {
     // 模拟查询语句
     string sql = "SELECT * FROM users WHERE userID = '" + ID + "';";
-
-    if (db.QueryExists(sql))
-    {
-        return true;
-    } else
-    {
-        return false;
-    }
+    return db.QueryExists(sql);
 }
 
 int UserManager::getDormitoryIDByName(const string &dormitoryName)
@@ -115,11 +109,11 @@ bool UserManager::hasStudentsInDormitoryRooms(const string &checkRoomsSql)
 
 bool UserManager::UserPasswordChange(const string &userID)
 {
-    cout << "请输入新密码:";
     string newPassword;
+    cout << "请输入新密码:";
     cin >> newPassword;
     // 构造插入语句
-    string sql = "UPDATE users SET password = " + newPassword + " WHERE userID = " + userID + ";";
+    string sql = "UPDATE users SET password = '" + newPassword + "' WHERE userID = " + userID + ";";
     // 尝试执行插入操作
     if (db.execute(sql))
     {
@@ -131,3 +125,386 @@ bool UserManager::UserPasswordChange(const string &userID)
         return false; // 插入失败
     }
 }
+
+
+void UserManager::arrangeAccommodation()
+{
+    string studentID;
+    while (true)
+    {
+        // 输入学号
+        cout << "请输入学号(输入exit可返回)：";
+        getline(cin, studentID);
+        if (studentID == "exit")
+        {
+            return;
+        }
+        // 检查学号是否存在
+        string checkStudentQuery = "SELECT 1 FROM users WHERE userID = '" + studentID + "' AND isAdmin = 0;";
+        if (!queryExists(checkStudentQuery))
+        {
+            // 学号不存在
+            cout << "学号不存在，请重新输入。\n";
+            continue;
+        }
+
+        // 检查是否已经入住
+        string checkCheckedInQuery = "SELECT isCheckedIn FROM users WHERE userID = '" + studentID +
+                                     "'AND isCheckedIn = 1;";
+        if (queryExists(checkCheckedInQuery))
+        {
+            // 学生已经入住
+            cout << "该学生已经入住，请重新选择其他学生。\n";
+            continue;
+        }
+
+        break; // 如果学号存在且未入住，则退出循环，继续后续操作
+    }
+    string free_dorm =
+            "SELECT d.name AS dormitoryName, d.sex, d.position, r.roomID, r.roomNumber, r.capacity, r.occupied "
+            "FROM dormitories d "
+            "JOIN rooms r ON d.dormitoryID = r.dormitoryID "
+            "WHERE r.occupied < r.capacity "
+            "AND r.repair_status = '正常' "
+            "ORDER BY d.name, r.roomNumber;";
+    Query(free_dorm);
+    string dormitoryName;
+    while (true)
+    {
+        cout << "请输入宿舍楼名称：" << endl;
+        getline(cin, dormitoryName);
+        if (dormitoryName == "exit")
+        {
+            return;
+        }
+        string queryAvailableRooms = "SELECT r.roomID, r.roomNumber, r.capacity, r.occupied "
+                                     "FROM rooms r "
+                                     "JOIN dormitories d ON r.dormitoryID = d.dormitoryID "
+                                     "WHERE d.name = '" + dormitoryName + "' "
+                                     "AND r.occupied < r.capacity;";
+
+        // 使用 queryExists 来检查宿舍楼是否存在并且有空房间
+        if (!queryExists(queryAvailableRooms))
+        {
+            cout << "宿舍楼名称不正确或没有空房间，请重新输入。\n";
+            continue;
+        }
+        break;
+    }
+
+    // 查询宿舍楼下所有空房间号（已入住为0）
+
+    string query = "SELECT r.roomNumber, r.capacity, r.occupied "
+                   "FROM rooms r "
+                   "JOIN dormitories d ON r.dormitoryID = d.dormitoryID "
+                   "WHERE d.name = '" + dormitoryName + "' "
+                   "AND r.occupied < r.capacity;";
+    // 使用 Query 查询空闲房间
+    Query(query);
+
+    string roomChoice;
+    while (true)
+    {
+        cout << "请输入您选择的房间号：";
+        getline(cin, roomChoice);
+        if (roomChoice == "exit")
+        {
+            return;
+        }
+
+
+        string queryRoomExists = "SELECT 1 FROM rooms r "
+                                 "JOIN dormitories d ON r.dormitoryID = d.dormitoryID "
+                                 "WHERE d.name = '" + dormitoryName + "' "
+                                 "AND r.roomNumber = '" + roomChoice + "' "
+                                 "AND r.occupied < r.capacity;";
+
+        // 使用 queryExists 来检查房间号是否存在并且可用
+        if (!queryExists(queryRoomExists))
+        {
+            cout << "房间号不正确或已满，请重新输入。\n";
+            continue;; // 如果房间无效，返回并重新开始
+        }
+        break;
+    }
+
+    string insert_room = "INSERT INTO student_rooms (studentID, roomID) "
+                         "SELECT '" + studentID + "', r.roomID "
+                         "FROM rooms r "
+                         "JOIN dormitories d ON r.dormitoryID = d.dormitoryID "
+                         "WHERE d.name = '" + dormitoryName + "' "
+                         "AND r.roomNumber = '" + roomChoice + "' "
+                         "AND r.occupied < r.capacity;";
+    execute(insert_room);
+
+    string recordType = "入住"; // 固定为入住操作
+    string eventTime = "CURRENT_TIMESTAMP"; // 默认使用当前时间
+
+    // 插入入住记录
+    // 获取备注信息
+    string note;
+    cout << "请输入入住备注（可选，按回车跳过）: ";
+    getline(cin, note);
+
+    string insert_check_in = "INSERT INTO check_in_out_records (studentID, roomID, eventTime, recordType, note) "
+                             "VALUES ('" + studentID + "', (SELECT r.roomID FROM rooms r "
+                             "JOIN dormitories d ON r.dormitoryID = d.dormitoryID "
+                             "WHERE d.name = '" + dormitoryName + "' "
+                             "AND r.roomNumber = '" + roomChoice + "' "
+                             "AND r.occupied < r.capacity LIMIT 1), " + eventTime + ", '" + recordType + "', '" + note +
+                             "');";
+
+    string updateCheckInStatus = "UPDATE users SET isCheckedIn = 1 WHERE userID = '" + studentID + "';";
+    execute(updateCheckInStatus);
+    // 执行插入操作
+    execute(insert_check_in);
+
+    cout << "住宿安排成功" << endl;
+    db.updateRoomStatus();
+}
+
+// void UserManager::arrangeCheckOut()
+// {
+//     string studentID;
+//     string studentName; // 获取学生名字
+//     string dormitoryName; // 获取宿舍楼名称
+//     string roomNumber; // 获取房间号
+//     while (true)
+//     {
+//         // 输入学号
+//         cout << "请输入学号(输入exit可返回)：";
+//         getline(cin, studentID);
+//         if (studentID == "exit")
+//         {
+//             return;
+//         }
+//         // 检查学号是否存在
+//         string checkStudentQuery = "SELECT 1 FROM users WHERE userID = '" + studentID + "' AND isAdmin = 0;";
+//         if (!queryExists(checkStudentQuery))
+//         {
+//             // 学号不存在
+//             cout << "学号不存在，请重新输入。\n";
+//             continue;
+//         }
+//
+//         // 检查是否已入住
+//         string checkCheckedInQuery = "SELECT isCheckedIn FROM users WHERE userID = '" + studentID +
+//                                      "' AND isCheckedIn = 1;";
+//         if (!queryExists(checkCheckedInQuery))
+//         {
+//             // 学生未入住
+//             cout << "该学生尚未入住，无法执行退宿操作。\n";
+//             continue;
+//         }
+//
+//         break; // 如果学号存在且已入住，则退出循环，继续后续操作
+//     }
+//
+//     string getStudentRoomQuery = "SELECT u.name AS studentName, d.name AS dormitoryName, r.roomNumber "
+//                                  "FROM users u "
+//                                  "JOIN student_rooms sr ON u.userID = sr.studentID "
+//                                  "JOIN rooms r ON sr.roomID = r.roomID "
+//                                  "JOIN dormitories d ON r.dormitoryID = d.dormitoryID "
+//                                  "WHERE u.userID = '" + studentID + "';";
+//
+//     // 执行查询
+//     db.Query(getStudentRoomQuery);
+//
+//     // 获取查询结果并遍历输出
+//     while (sqlite3_step(db.stmt) == SQLITE_ROW)
+//     {
+//         // 通过 getQueryResult 获取每一列数据
+//         studentName = db.getQueryResult(0); // 获取学生名字
+//         dormitoryName = db.getQueryResult(1); // 获取宿舍楼名称
+//         roomNumber = db.getQueryResult(2); // 获取房间号
+//
+//         // 输出当前住宿信息
+//         cout << "学生 " << studentName << " (" << studentID << ") 当前住宿在 "
+//                 << dormitoryName << " 宿舍楼的 " << roomNumber << " 房间。\n";
+//     }
+//
+//     // 询问用户是否确认退宿
+//     string confirmation;
+//     while (true)
+//     {
+//         cout << "确认退宿操作？(yes/no)：";
+//         getline(cin, confirmation);
+//         if (confirmation == "yes")
+//         {
+//             break;
+//         } else if (confirmation == "no")
+//         {
+//             cout << "退宿操作已取消。\n";
+//             return;
+//         } else
+//         {
+//             cout << "无效输入，请输入 'yes' 或 'no'。\n";
+//         }
+//     }
+//
+//     // 获取退宿备注信息
+//     string note;
+//     cout << "请输入退宿备注（可选，按回车跳过）: ";
+//     getline(cin, note);
+//
+//     // 获取当前时间作为退宿时间
+//     string eventTime = "CURRENT_TIMESTAMP"; // 使用数据库的时间
+//
+//     // 插入退宿记录到 check_in_out_records 表
+//     string insert_check_out = "INSERT INTO check_in_out_records (studentID, roomID, eventTime, recordType, note) "
+//                               "VALUES ('" + studentID + "', (SELECT r.roomID FROM rooms r "
+//                               "JOIN dormitories d ON r.dormitoryID = d.dormitoryID "
+//                               "WHERE d.name = '" + dormitoryName + "' "
+//                               "AND r.roomNumber = '" + roomNumber + "' "
+//                               "AND r.occupied > 0 LIMIT 1), " + eventTime + ", '退宿', '" + note + "');";
+//
+//     // 执行插入退宿记录操作
+//     execute(insert_check_out);
+//
+//     // 更新学生的入住状态：将 isCheckedIn 设置为 0，表示学生已退宿
+//     string updateCheckOutStatus = "UPDATE users SET isCheckedIn = 0 WHERE userID = '" + studentID + "';";
+//     execute(updateCheckOutStatus);
+//
+//     // 更新房间的占用人数
+//     string updateRoomStatus = "UPDATE rooms SET occupied = occupied - 1 WHERE roomID = "
+//                               "(SELECT roomID FROM student_rooms WHERE studentID = '" + studentID + "');";
+//     execute(updateRoomStatus);
+//
+//     // 删除学生与房间的关系记录
+//     string deleteRoomAssignment = "DELETE FROM student_rooms WHERE studentID = '" + studentID + "';";
+//     execute(deleteRoomAssignment);
+//
+//     cout << "退宿操作成功，学生 " << studentID << " 已从 " << dormitoryName << " 宿舍楼的 " << roomNumber << " 房间退宿。\n";
+// }
+
+void UserManager::arrangeCheckOut()
+{
+    string studentID;
+    string studentName; // 获取学生名字
+    string dormitoryName; // 获取宿舍楼名称
+    string roomNumber; // 获取房间号
+
+    while (true)
+    {
+        // 输入学号
+        cout << "请输入学号(输入exit可返回)：";
+        getline(cin, studentID);
+        if (studentID == "exit")
+        {
+            return;
+        }
+
+        // 检查学号是否存在
+        string checkStudentQuery = "SELECT 1 FROM users WHERE userID = '" + studentID + "' AND isAdmin = 0;";
+        if (!queryExists(checkStudentQuery))
+        {
+            cout << "学号不存在，请重新输入。\n";
+            continue;
+        }
+
+        // 检查是否已入住
+        string checkCheckedInQuery = "SELECT isCheckedIn FROM users WHERE userID = '" + studentID +
+                                     "' AND isCheckedIn = 1;";
+        if (!queryExists(checkCheckedInQuery))
+        {
+            // 学生未入住
+            cout << "该学生尚未入住，无法执行退宿操作。\n";
+            continue;
+        }
+
+        break; // 如果学号存在且已入住，则退出循环，继续后续操作
+    }
+
+    // 2. 获取学生的宿舍信息
+    string getStudentRoomQuery = "SELECT u.name AS studentName, d.name AS dormitoryName, r.roomNumber "
+                                 "FROM users u "
+                                 "JOIN student_rooms sr ON u.userID = sr.studentID "
+                                 "JOIN rooms r ON sr.roomID = r.roomID "
+                                 "JOIN dormitories d ON r.dormitoryID = d.dormitoryID "
+                                 "WHERE u.userID = '" + studentID + "';";
+
+    // 执行查询
+    db.Query(getStudentRoomQuery);
+
+    // 获取查询结果并输出
+    while (sqlite3_step(db.stmt) == SQLITE_ROW)
+    {
+        studentName = db.getQueryResult(0); // 获取学生名字
+        dormitoryName = db.getQueryResult(1); // 获取宿舍楼名称
+        roomNumber = db.getQueryResult(2); // 获取房间号
+
+        // 输出当前住宿信息
+        cout << "学生 " << studentName << " (" << studentID << ") 当前住宿在 "
+                << dormitoryName << " 宿舍楼的 " << roomNumber << " 房间。\n";
+    }
+
+    // 3. 询问用户是否确认退宿
+    string confirmation;
+    while (true)
+    {
+        cout << "确认退宿操作？(yes/no)：";
+        getline(cin, confirmation);
+        if (confirmation == "yes")
+        {
+            break;
+        } else if (confirmation == "no")
+        {
+            cout << "退宿操作已取消。\n";
+            return;
+        } else
+        {
+            cout << "无效输入，请输入 'yes' 或 'no'。\n";
+        }
+    }
+
+    // 4. 获取退宿备注信息
+    string note;
+    cout << "请输入退宿备注（可选，按回车跳过）: ";
+    getline(cin, note);
+
+    // 获取当前时间作为退宿时间
+    string eventTime = "CURRENT_TIMESTAMP"; // 使用数据库的时间
+
+    // 5. 获取房间ID，确保返回有效值
+    string getRoomIDQuery = "SELECT r.roomID FROM rooms r "
+                            "JOIN dormitories d ON r.dormitoryID = d.dormitoryID "
+                            "WHERE d.name = '" + dormitoryName + "' AND r.roomNumber = '" + roomNumber +
+                            "'  LIMIT 1;";
+
+    db.Query(getRoomIDQuery);
+
+    int roomID = 0;
+    while (sqlite3_step(db.stmt) == SQLITE_ROW)
+    {
+        roomID = sqlite3_column_int(db.stmt, 0); // 获取 roomID
+    }
+
+    if (roomID == 0)
+    {
+        cout << "无法找到对应的房间，可能是房间已满或房间信息不匹配。\n";
+        return;
+    }
+
+    // 6. 插入退宿记录到 check_in_out_records 表
+    string insertCheckOutQuery = "INSERT INTO check_in_out_records (studentID, roomID, eventTime, recordType, note) "
+                                 "VALUES ('" + studentID + "', " + to_string(roomID) + ", CURRENT_TIMESTAMP, '退宿', '" +
+                                 note + "');";
+
+    execute(insertCheckOutQuery);
+
+    // 7. 更新学生的入住状态：将 isCheckedIn 设置为 0
+    string updateCheckOutStatusQuery = "UPDATE users SET isCheckedIn = 0 WHERE userID = '" + studentID + "';";
+    execute(updateCheckOutStatusQuery);
+
+
+    // 9. 删除学生与房间的关系记录
+    string deleteRoomAssignmentQuery = "DELETE FROM student_rooms WHERE studentID = '" + studentID + "';";
+    execute(deleteRoomAssignmentQuery);
+
+    // 10. 调用 db.updateRoomStatus 来更新房间的状态和占用人数
+    db.updateRoomStatus();
+
+    cout << "退宿操作成功，学生 " << studentID << " 已从 " << dormitoryName << " 宿舍楼的 " << roomNumber << " 房间退宿。\n";
+}
+
+
