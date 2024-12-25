@@ -51,6 +51,8 @@ public:
 
     string Get_ID();
 
+    void checkUserInfo(const string &userID);
+
     // 检查用户是否存在
 };
 

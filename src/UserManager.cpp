@@ -125,7 +125,6 @@ bool UserManager::UserPasswordChange(const string &userID)
     }
 }
 
-
 void UserManager::arrangeAccommodation()
 {
     string studentID = Get_ID();
@@ -386,5 +385,48 @@ string UserManager::Get_ID()
         }
 
         return studentID; // 如果学号存在且未入住，则退出循环，继续后续操作
+    }
+}
+
+void UserManager::checkUserInfo(const string &userID)
+{
+    bool flag = IsStudentCheckedIn(userID); //查询的同学是否已经入住
+    if (flag == false)
+    {
+        string sql = "SELECT "
+                     "    u.userID AS 学号,           -- 学生学号\n"
+                     "    u.name AS 姓名,           -- 学生名称\n"
+                     "    u.gender AS 性别,           -- 学生性别\n"
+                     "    u.password AS 密码,           -- 学生密码\n"
+                     "    u.contactInfo AS 联系方式           -- 学生联系方式\n"
+                     "FROM "
+                     "    users u \n"
+                     "WHERE "
+                     "    u.userID = '" + userID + "';"; // 使用学生ID作为参数传递
+        // 调用Query方法，执行SQL查询
+        Query(sql);
+        cout << "\n该学生暂未入住，建议尽快安排入住\n";
+    } else
+    {
+        string sql = "SELECT "
+                     "    u.userID AS 学号,           -- 学生学号\n"
+                     "    u.name AS 姓名,           -- 学生名称\n"
+                     "    u.gender AS 性别,           -- 学生性别\n"
+                     "    u.password AS 密码,           -- 学生密码\n"
+                     "    u.contactInfo AS 联系方式,           -- 学生联系方式\n"
+                     "    d.name AS 宿舍楼,           -- 宿舍楼名称\n"
+                     "    r.roomNumber AS 房间号        -- 房间号\n"
+                     "FROM "
+                     "    student_rooms sr\n"
+                     "JOIN "
+                     "    rooms r ON sr.roomID = r.roomID   -- 连接房间表\n"
+                     "JOIN "
+                     "    dormitories d ON r.dormitoryID = d.dormitoryID -- 连接宿舍楼表\n"
+                     "JOIN "
+                     "    users u ON sr.studentID = u.userID -- 连接学生表\n"
+                     "WHERE "
+                     "    u.userID = '" + userID + "';"; // 使用学生ID作为参数传递
+        // 调用Query方法，执行SQL查询
+        Query(sql);
     }
 }

@@ -496,10 +496,10 @@ void manageUsers()
                 cout << "删除用户 - 功能开发中。\n";
                 break;
             case 3:
-                cout << "请输入学号:\n";
+                cin.ignore();
                 ID = userManager->Get_ID();
                 if (ID == "exit") break;
-                checkUserInfo(ID);
+                userManager->checkUserInfo(ID);
                 break;
             case 4:
                 cin.ignore();
@@ -530,48 +530,7 @@ void manageUsers()
 }
 
 // 查看用户信息
-void checkUserInfo(const string &userID)
-{
-    bool flag = userManager->IsStudentCheckedIn(userID); //查询的同学是否已经入住
-    if (flag == false)
-    {
-        string sql = "SELECT "
-                     "    u.userID AS 学号,           -- 学生学号\n"
-                     "    u.name AS 姓名,           -- 学生名称\n"
-                     "    u.gender AS 性别,           -- 学生性别\n"
-                     "    u.password AS 密码,           -- 学生密码\n"
-                     "    u.contactInfo AS 联系方式           -- 学生联系方式\n"
-                     "FROM "
-                     "    users u \n"
-                     "WHERE "
-                     "    u.userID = '" + userID + "';"; // 使用学生ID作为参数传递
-        // 调用Query方法，执行SQL查询
-        userManager->Query(sql);
-        cout << "\n该学生暂未入住，建议尽快安排入住\n";
-    } else
-    {
-        string sql = "SELECT "
-                     "    u.userID AS 学号,           -- 学生学号\n"
-                     "    u.name AS 姓名,           -- 学生名称\n"
-                     "    u.gender AS 性别,           -- 学生性别\n"
-                     "    u.password AS 密码,           -- 学生密码\n"
-                     "    u.contactInfo AS 联系方式,           -- 学生联系方式\n"
-                     "    d.name AS 宿舍楼,           -- 宿舍楼名称\n"
-                     "    r.roomNumber AS 房间号        -- 房间号\n"
-                     "FROM "
-                     "    student_rooms sr\n"
-                     "JOIN "
-                     "    rooms r ON sr.roomID = r.roomID   -- 连接房间表\n"
-                     "JOIN "
-                     "    dormitories d ON r.dormitoryID = d.dormitoryID -- 连接宿舍楼表\n"
-                     "JOIN "
-                     "    users u ON sr.studentID = u.userID -- 连接学生表\n"
-                     "WHERE "
-                     "    u.userID = '" + userID + "';"; // 使用学生ID作为参数传递
-        // 调用Query方法，执行SQL查询
-        userManager->Query(sql);
-    }
-}
+
 
 // 管理员生成报表
 void generateReports()
