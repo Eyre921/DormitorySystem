@@ -497,8 +497,8 @@ void manageUsers()
                 break;
             case 3:
                 cout << "请输入学号:\n";
-                cin.ignore();
-                getline(cin, ID);
+                ID = userManager->Get_ID();
+                if (ID == "exit") break;
                 checkUserInfo(ID);
                 break;
             case 4:
@@ -509,29 +509,16 @@ void manageUsers()
                 cin.ignore();
                 while (true)
                 {
-                    // 输入学号
-                    cout << "请输入学号(输入exit可返回)：";
-                    getline(cin, ID);
-                    if (ID == "exit")
-                    {
-                        return;
-                    }
-                    // 检查学号是否存在
-                    if (!userManager->IDExists(ID))
-                    {
-                        cout << "学号不存在，请重新输入。\n";
-                        continue;
-                    }
-                    // 检查是否已入住
+                    ID = userManager->Get_ID();
+                    // 检查是否已经入住
                     if (!userManager->IsStudentCheckedIn(ID))
                     {
-                        // 学生未入住
-                        cout << "该学生尚未入住，无法执行退宿操作。\n";
+                        cout << "该学生未入住，请重新选择其他学生。\n";
                         continue;
                     }
-
-                    break; // 如果学号存在且已入住，则退出循环，继续后续操作
+                    break; // 如果学号存在且未入住，则退出循环，继续后续操作
                 }
+                if (ID == "exit") break;
                 userManager->arrangeCheckOut(ID);
                 break;
             case 0:
@@ -545,50 +532,44 @@ void manageUsers()
 // 查看用户信息
 void checkUserInfo(const string &userID)
 {
-    if (!userManager->studentExistsByID(userID))
+    bool flag = userManager->IsStudentCheckedIn(userID); //查询的同学是否已经入住
+    if (flag == false)
     {
-        cout << "用户不存在\n";
+        string sql = "SELECT "
+                     "    u.userID AS 学号,           -- 学生学号\n"
+                     "    u.name AS 姓名,           -- 学生名称\n"
+                     "    u.gender AS 性别,           -- 学生性别\n"
+                     "    u.password AS 密码,           -- 学生密码\n"
+                     "    u.contactInfo AS 联系方式           -- 学生联系方式\n"
+                     "FROM "
+                     "    users u \n"
+                     "WHERE "
+                     "    u.userID = '" + userID + "';"; // 使用学生ID作为参数传递
+        // 调用Query方法，执行SQL查询
+        userManager->Query(sql);
+        cout << "\n该学生暂未入住，建议尽快安排入住\n";
     } else
     {
-        bool flag = userManager->IsStudentCheckedIn(userID); //查询的同学是否已经入住
-        if (flag == false)
-        {
-            string sql = "SELECT "
-                         "    u.userID AS 学号,           -- 学生学号\n"
-                         "    u.name AS 姓名,           -- 学生名称\n"
-                         "    u.gender AS 性别,           -- 学生性别\n"
-                         "    u.password AS 密码,           -- 学生密码\n"
-                         "    u.contactInfo AS 联系方式           -- 学生联系方式\n"
-                         "FROM "
-                         "    users u \n"
-                         "WHERE "
-                         "    u.userID = '" + userID + "';"; // 使用学生ID作为参数传递
-            // 调用Query方法，执行SQL查询
-            userManager->Query(sql);
-            cout << "\n该学生暂未入住，建议尽快安排入住\n";
-        } else
-        {
-            string sql = "SELECT "
-                         "    u.userID AS 学号,           -- 学生学号\n"
-                         "    u.name AS 姓名,           -- 学生名称\n"
-                         "    u.gender AS 性别,           -- 学生性别\n"
-                         "    u.password AS 密码,           -- 学生密码\n"
-                         "    u.contactInfo AS 联系方式,           -- 学生联系方式\n"
-                         "    d.name AS 宿舍楼,           -- 宿舍楼名称\n"
-                         "    r.roomNumber AS 房间号        -- 房间号\n"
-                         "FROM "
-                         "    student_rooms sr\n"
-                         "JOIN "
-                         "    rooms r ON sr.roomID = r.roomID   -- 连接房间表\n"
-                         "JOIN "
-                         "    dormitories d ON r.dormitoryID = d.dormitoryID -- 连接宿舍楼表\n"
-                         "JOIN "
-                         "    users u ON sr.studentID = u.userID -- 连接学生表\n"
-                         "WHERE "
-                         "    u.userID = '" + userID + "';"; // 使用学生ID作为参数传递
-            // 调用Query方法，执行SQL查询
-            userManager->Query(sql);
-        }
+        string sql = "SELECT "
+                     "    u.userID AS 学号,           -- 学生学号\n"
+                     "    u.name AS 姓名,           -- 学生名称\n"
+                     "    u.gender AS 性别,           -- 学生性别\n"
+                     "    u.password AS 密码,           -- 学生密码\n"
+                     "    u.contactInfo AS 联系方式,           -- 学生联系方式\n"
+                     "    d.name AS 宿舍楼,           -- 宿舍楼名称\n"
+                     "    r.roomNumber AS 房间号        -- 房间号\n"
+                     "FROM "
+                     "    student_rooms sr\n"
+                     "JOIN "
+                     "    rooms r ON sr.roomID = r.roomID   -- 连接房间表\n"
+                     "JOIN "
+                     "    dormitories d ON r.dormitoryID = d.dormitoryID -- 连接宿舍楼表\n"
+                     "JOIN "
+                     "    users u ON sr.studentID = u.userID -- 连接学生表\n"
+                     "WHERE "
+                     "    u.userID = '" + userID + "';"; // 使用学生ID作为参数传递
+        // 调用Query方法，执行SQL查询
+        userManager->Query(sql);
     }
 }
 

@@ -49,6 +49,8 @@ public:
 
     bool IDExists(const string &studentID);
 
+    string Get_ID();
+
     // 检查用户是否存在
 };
 
