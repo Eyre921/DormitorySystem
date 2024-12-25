@@ -3,8 +3,6 @@
 
 #include "Database.h"
 
-#include <string>
-#include <vector>
 
 class UserManager
 {
@@ -22,14 +20,14 @@ public:
     bool registerUser(const std::string &userID, const std::string &password, const std::string &name,
                       const std::string &gender, const std::string &contactInfo, bool isCheckedIn, bool isAdmin);
 
-    void execute(string &SQL);
+    void execute(const string &SQL);
 
     // 获取所有用户
     void getAllUsers();
 
-    void Query(string &SQL);
+    void Query(const string &SQL);
 
-    bool queryExists(string &SQL);
+    bool queryExists(const string &SQL);
 
     bool QueryExists(const std::string &sql);
 

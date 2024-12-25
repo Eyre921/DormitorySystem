@@ -1,12 +1,12 @@
 CREATE TABLE users
 (
-    userID      TEXT PRIMARY KEY,  -- 用户ID（学号或用户名）
-    name        TEXT NOT NULL,     -- 姓名
-    gender      TEXT NOT NULL,     -- 性别
-    password    TEXT NOT NULL,     -- 密码
-    contactInfo TEXT,              -- 联系方式
-    isCheckedIn INTEGER DEFAULT 0, -- 是否入住（0表示没有，1表示有）
-    isAdmin     INTEGER DEFAULT 0  -- 是否为管理员（0表示学生，1表示管理员）
+    userID      TEXT PRIMARY KEY,                             -- 用户ID（学号或用户名）
+    name        TEXT                                NOT NULL, -- 姓名
+    gender      TEXT CHECK (gender IN ('男', '女')) NOT NULL, -- 性别
+    password    TEXT                                NOT NULL, -- 密码
+    contactInfo TEXT,                                         -- 联系方式
+    isCheckedIn INTEGER DEFAULT 0,                            -- 是否入住（0表示没有，1表示有）
+    isAdmin     INTEGER DEFAULT 0                             -- 是否为管理员（0表示学生，1表示管理员）
 );
 CREATE TABLE dormitories
 (
@@ -18,11 +18,10 @@ CREATE TABLE dormitories
 CREATE TABLE rooms
 (
     roomID        INTEGER PRIMARY KEY AUTOINCREMENT, -- 房间ID（自增）
-    dormitoryID   INTEGER NOT NULL,                  -- 所属宿舍楼ID（外键）
-    roomNumber    TEXT    NOT NULL,                  -- 房间号
-    capacity      INTEGER NOT NULL,                  -- 房间容量
-    occupied      INTEGER DEFAULT 0,                 -- 已入住人数
-    living_status TEXT    DEFAULT '未满',            -- 房间状态（未满、已满）
+    dormitoryID   INTEGER           NOT NULL,        -- 所属宿舍楼ID（外键）
+    roomNumber    TEXT              NOT NULL,        -- 房间号
+    capacity      INTEGER           NOT NULL,        -- 房间容量
+    occupied      INTEGER DEFAULT 0 NOT NULL,        -- 已入住人数
     repair_status TEXT    DEFAULT '正常',            -- 房间状态（正常、维修中）
     FOREIGN KEY (dormitoryID) REFERENCES dormitories (dormitoryID)
 );

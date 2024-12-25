@@ -1,8 +1,6 @@
 ﻿#include <iostream>
-#include <Database.h>
 #include <windows.h>
 #include <UserManager.h>
-#include <iostream>
 #include <limits>
 #include <string>
 using namespace std;
@@ -15,7 +13,7 @@ void userLogin();
 
 void studentRegister();
 
-void studentMenu(string &stuID);
+void studentMenu(const string &stuID);
 
 void adminMenu();
 
@@ -36,7 +34,7 @@ void generateReports();
 
 void handleRepairRequests();
 
-void viewDormitoryInfo(string &stuID);
+void viewDormitoryInfo(const string &stuID);
 
 void requestRoomChange();
 
@@ -57,33 +55,34 @@ int main()
     int choice;
     userManager = new UserManager(); // 自动连接数据库
     // userManager->getAllUsers();
-    adminMenu();
-    // userManager->arrangeAccommodation();
-    // userManager->arrangeCheckOut();
-    // while (true)
-    // {
-    //     cout << "\n---- 主菜单 ----\n";
-    //     cout << "1. 学生菜单\n";
-    //     cout << "2. 管理员菜单\n";
-    //     cout << "3. 退出\n";
-    //     cout << "请输入你的选择: ";
-    //     cin >> choice;
-    //
-    //     switch (choice)
-    //     {
-    //         case 1:
-    //             studentLoginMenu(); // 学生登录
-    //             break;
-    //         case 2:
-    //             adminLogin(); // 管理员登录
-    //             break;
-    //         case 3:
-    //             cout << "退出程序...\n";
-    //             return 0;
-    //         default:
-    //             cout << "无效选择，请重新输入。\n";
-    //     }
-    // }
+    //adminMenu();
+    //userManager->arrangeAccommodation();
+    //userManager->arrangeCheckOut();
+
+    while (true)
+    {
+        cout << "\n---- 主菜单 ----\n";
+        cout << "1. 学生菜单\n";
+        cout << "2. 管理员菜单\n";
+        cout << "3. 退出\n";
+        cout << "请输入你的选择: ";
+        cin >> choice;
+
+        switch (choice)
+        {
+            case 1:
+                studentLoginMenu(); // 学生登录
+                break;
+            case 2:
+                adminLogin(); // 管理员登录
+                break;
+            case 3:
+                cout << "退出程序...\n";
+                return 0;
+            default:
+                cout << "无效选择，请重新输入。\n";
+        }
+    }
 }
 
 void studentLoginMenu()
@@ -183,7 +182,7 @@ void studentRegister()
     cin >> gender;
     cout << "请输入联系方式: ";
     cin >> contactInfo;
-    userManager->registerUser(studentID, password, name, gender, contactInfo, 0, 0);
+    userManager->registerUser(studentID, password, name, gender, contactInfo, false, false);
 }
 
 void adminMenu()
@@ -223,7 +222,7 @@ void adminMenu()
     }
 }
 
-void studentMenu(string &stuID)
+void studentMenu(const string &stuID)
 {
     int choice;
     while (true)
@@ -253,7 +252,7 @@ void studentMenu(string &stuID)
                 viewNotifications(); // 查看通知
                 break;
             case 5:
-                userManager->UserPasswordChange(stuID); // 查看通知
+                userManager->UserPasswordChange(stuID);
                 break;
             case 0:
                 cout << "正在退出登录...\n";
@@ -486,7 +485,7 @@ void manageUsers()
                         string contactInfo;
                         cout << "请输入第" << i << "位用户的联系方式：";
                         cin >> contactInfo;
-                        userManager->registerUser(userID, password, name, gender, contactInfo, 0, 0);
+                        userManager->registerUser(userID, password, name, gender, contactInfo, false, false);
                     }
                 }
                 break;
@@ -578,14 +577,13 @@ void handleRepairRequests()
 }
 
 // 学生查看宿舍信息
-void viewDormitoryInfo(string &stuID)
+void viewDormitoryInfo(const string &stuID)
 {
     string sql = "SELECT "
                  "    d.name AS dormitory_name,           -- 宿舍楼名称\n"
                  "    r.roomNumber AS room_number,        -- 房间号\n"
                  "    r.capacity AS room_capacity,       -- 房间容量\n"
                  "    r.occupied AS room_occupied,       -- 已入住人数\n"
-                 "    r.living_status AS room_status,    -- 房间状态\n"
                  "    r.repair_status AS repair_status   -- 维修状态\n"
                  "FROM "
                  "    student_rooms sr\n"
