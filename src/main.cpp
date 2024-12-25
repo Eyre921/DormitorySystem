@@ -217,7 +217,7 @@ void adminMenu()
         cout << "2. 管理用户\n";
         cout << "3. 生成报表\n";
         cout << "4. 处理维修请求\n";
-        cout << "5. 管理宿舍\n";
+        cout << "5. 入住管理\n";
         cout << "0. 退出登录\n";
         cout << "请输入你的选择: ";
         cin >> choice;
@@ -793,19 +793,6 @@ void viewRequests(const string &stuID)
     userManager->Query(sql);
 }
 
-// CREATE TABLE accommodation_requests
-// (
-//     requestID     INTEGER PRIMARY KEY AUTOINCREMENT,                                               -- 申请ID（自增）
-//     studentID     TEXT                                                 NOT NULL,                   -- 学生ID（外键）
-//     dormitoryName TEXT,                                                                            -- 申请宿舍楼名称（用于换宿）
-//     roomNumber    TEXT,                                                                            -- 申请房间号（用于换宿）
-//     requestType   TEXT CHECK (requestType IN ('入住', '换宿', '退宿')) NOT NULL,                   -- 申请类型（入住、换宿、退宿）
-//     requestTime   DATETIME                                              DEFAULT CURRENT_TIMESTAMP, -- 申请时间（默认当前时间）
-//     approveTime   DATETIME                                              DEFAULT NULL,
-//     status        TEXT CHECK (status IN ('待审批', '已审批', '已拒绝')) DEFAULT '待审批',          -- 申请状态（待审批、已审批、已拒绝）
-//     note          TEXT,                                                                            -- 备注（可选，存储任何附加信息）
-//     FOREIGN KEY (studentID) REFERENCES users (userID)                                              -- 外键关联到用户表
-// );
 
 // 学生查看宿舍信息
 void viewDormitoryInfo(const string &stuID)
