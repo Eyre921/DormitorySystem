@@ -43,7 +43,17 @@ public:
 
     void arrangeAccommodation(const string &studentID);
 
+    void QuickArrangeAccommodation(const string &studentID, const string &dormitoryName, const string &roomChoice);
+
+    void SelectValidRoom(const string &studentID, string &dormitoryName, string &roomChoice);
+
     void arrangeCheckOut(const string &studentID);
+
+    void requestRoomChange(const string &studentID);
+
+    void QuickArrangeCheckOut(const string &studentName, const string &studentID, const string &dormitoryName,
+                              const string &roomNumber, const string
+                              &note);
 
     bool IsStudentCheckedIn(const string &studentID);
 
@@ -54,6 +64,8 @@ public:
     void checkUserInfo(const string &userID);
 
     void deleteUser(const string &userID);
+
+    void checkUserInfoALL();
 
     void checkUserInfoByName(const string &userName);
 

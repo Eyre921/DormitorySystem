@@ -12,7 +12,7 @@ Database::Database(const string &dbPath)
         db = nullptr;
     } else
     {
-        cout << "数据库连接成功！" << endl;
+        //cout << "数据库连接成功！" << endl;
     }
 }
 
@@ -198,12 +198,12 @@ bool Database::updateRoomStatus()
     int rc = sqlite3_exec(db, sql, nullptr, nullptr, &errMsg);
     if (rc != SQLITE_OK)
     {
-        std::cerr << "更新房间状态失败: " << errMsg << std::endl;
+        //std::cerr << "更新房间状态失败: " << errMsg << std::endl;
         sqlite3_free(errMsg);
         return false;
     }
 
-    std::cout << "房间占用人数更新成功。" << std::endl;
+    //std::cout << "房间占用人数更新成功。" << std::endl;
     return true;
 }
 

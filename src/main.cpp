@@ -28,6 +28,21 @@ void viewDormitories();
 
 void studentLoginMenu();
 
+// 申请入住
+void applyMoveIn(const string &stuID);
+
+// 申请退宿
+void applyMoveOut(const string &stuID);
+
+// 请求换宿
+void requestRoomChange(const string &stuID);
+
+// 提交维修请求
+void submitRepairRequest(const string &stuID);
+
+// 查看通知
+void viewNotifications(const string &stuID);
+
 void manageUsers();
 
 void checkUserInfo(const string &userID);
@@ -38,13 +53,16 @@ void handleRepairRequests();
 
 void viewDormitoryInfo(const string &stuID);
 
-void requestRoomChange();
 
 void submitRepairRequest();
 
 void adminLogin();
 
+void dormManageMenu();
+
 void studentLogin();
+
+void viewRequests(const string &stuID);
 
 void viewNotifications();
 
@@ -55,13 +73,15 @@ int main()
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
     int choice;
-
+    cout << "数据库成功链接\n数据已更新" << endl;
 
     // userManager->getAllUsers();
     //adminMenu();
     //userManager->arrangeAccommodation();
-    //userManager->arrangeCheckOut();
-
+    //userManager->arrangeCheckOut("2031");
+    //userManager->requestRoomChange("2031");
+    // applyMoveIn("2031");
+    // applyMoveOut("2031");
     while (true)
     {
         cout << "\n---- 主菜单 ----\n";
@@ -80,7 +100,7 @@ int main()
                 adminLogin(); // 管理员登录
                 break;
             case 0:
-                cout << "退出程序...\n";
+                cout << "正在退出程序……\n";
                 return 0;
             default:
                 cout << "无效选择，请重新输入。\n";
@@ -197,7 +217,7 @@ void adminMenu()
         cout << "2. 管理用户\n";
         cout << "3. 生成报表\n";
         cout << "4. 处理维修请求\n";
-        cout << "5. 处理宿舍审批\n";
+        cout << "5. 管理宿舍\n";
         cout << "0. 退出登录\n";
         cout << "请输入你的选择: ";
         cin >> choice;
@@ -217,8 +237,8 @@ void adminMenu()
                 handleRepairRequests(); // 处理维修请求
                 break;
             case 5:
-
-                // TODO
+                dormManageMenu();
+            // TODO
                 break;
             case 0:
                 cout << "正在退出登录...\n";
@@ -229,40 +249,133 @@ void adminMenu()
     }
 }
 
-void studentMenu(const string &stuID)
+// 管理员管理用户
+void manageUsers()
 {
+    string ID;
     int choice;
     while (true)
     {
-        cout << "\n---- 学生菜单 ----\n";
-        cout << "1. 查看宿舍楼和房间信息\n";
-        cout << "2. 请求换房\n";
-        cout << "3. 提交维修请求\n";
-        cout << "4. 查看通知\n";
-        cout << "5. 修改密码\n";
-        cout << "0. 退出登录\n";
+        cout << "\n---- 管理用户 ----\n";
+        cout << "1. 添加用户\n";
+        cout << "2. 删除用户\n";
+        cout << "3. 查看用户信息(通过学号)\n";
+        cout << "4. 查看用户信息(通过姓名)\n";
+        cout << "5. 查看全部用户信息\n";
+        cout << "6. 安排住宿\n";
+        cout << "7. 安排退宿\n";
+        cout << "0. 返回上一级\n";
         cout << "请输入你的选择: ";
         cin >> choice;
 
         switch (choice)
         {
             case 1:
-                viewDormitoryInfo(stuID); // 查看宿舍楼和房间信息
+                int new_num;
+                cout << "请输入需要添加的用户数量（输入0返回上一级）：";
+                cin >> new_num;
+                if (new_num == 0)
+                {
+                    return;
+                } else
+                {
+                    for (int i = 1; i <= new_num; i++)
+                    {
+                        string userID;
+                        cout << "请输入第" << i << "位用户的学号：";
+                        while (true)
+                        {
+                            cin >> userID;
+                            if (userManager->IDExists(userID))
+                            {
+                                cout << "该学号已经被注册！请重新输入学号:" << endl;
+                                continue;
+                            }
+                            break;
+                        }
+
+                        size_t str_len = userID.size();
+                        string password;
+                        if (str_len <= 6)
+                        {
+                            password = userID;
+                        } else
+                        {
+                            //默认密码为学号后6位
+                            password = userID.substr(str_len - 6, 6);
+                        }
+                        string name;
+                        cout << "请输入第" << i << "位用户的姓名：";
+                        cin >> name;
+                        string gender;
+                        while (gender != "男" && gender != "女")
+                        {
+                            cout << "请输入第" << i << "位用户的性别：（男/女）";
+                            cin >> gender;
+                        }
+                        string contactInfo;
+                        cout << "请输入第" << i << "位用户的联系方式：";
+                        cin >> contactInfo;
+                        userManager->registerUser(userID, password, name, gender, contactInfo, false, false);
+                    }
+                }
                 break;
             case 2:
-                requestRoomChange(); // 请求换房
+                cin.ignore();
+                ID = userManager->Get_ID();
+                if (ID == "exit") break;
+                userManager->deleteUser(ID);
                 break;
             case 3:
-                submitRepairRequest(); // 提交维修请求
+                cin.ignore();
+                ID = userManager->Get_ID();
+                if (ID == "exit") break;
+                userManager->checkUserInfo(ID);
                 break;
             case 4:
-                viewNotifications(); // 查看通知
+                cin.ignore();
+                cout << "请输入查询的名字：" << endl;
+                getline(cin, ID);
+                if (ID == "exit") break;
+                userManager->checkUserInfoByName(ID);
                 break;
             case 5:
-                userManager->UserPasswordChange(stuID);
+                userManager->checkUserInfoALL();
                 break;
+            case 6:
+                cin.ignore();
+                while (true)
+                {
+                    ID = userManager->Get_ID();
+                    // 检查是否已经入住
+                    if (userManager->IsStudentCheckedIn(ID))
+                    {
+                        cout << "该学生已入住，请重新选择其他学生。\n";
+                        continue;
+                    }
+                    break;
+                }
+                if (ID == "exit") break;
+                userManager->arrangeAccommodation(ID);
+                break;
+            case 7:
+                cin.ignore();
+                while (true)
+                {
+                    ID = userManager->Get_ID();
+                    // 检查是否已经入住
+                    if (!userManager->IsStudentCheckedIn(ID))
+                    {
+                        cout << "该学生未入住，请重新选择其他学生。\n";
+                        continue;
+                    }
+                    break;
+                }
+                if (ID == "exit") break;
+                userManager->arrangeCheckOut(ID);
+                break;
+
             case 0:
-                cout << "正在退出登录...\n";
                 return;
             default:
                 cout << "无效选择，请重新输入。\n";
@@ -270,7 +383,124 @@ void studentMenu(const string &stuID)
     }
 }
 
-// 管理员管理宿舍楼
+void dormManageMenu()
+{
+    string ID;
+    int choice;
+    while (true)
+    {
+        cout << "\n---- 宿舍管理 ----\n";
+
+        cout << "1. 安排住宿\n";
+        cout << "2. 安排退宿\n";
+        cout << "0. 返回上一级\n";
+        cout << "请输入你的选择: ";
+        cin >> choice;
+        switch (choice)
+        {
+            case 1:
+                cin.ignore();
+                while (true)
+                {
+                    ID = userManager->Get_ID();
+                    // 检查是否已经入住
+                    if (userManager->IsStudentCheckedIn(ID))
+                    {
+                        cout << "该学生已入住，请重新选择其他学生。\n";
+                        continue;
+                    }
+                    break;
+                }
+                if (ID == "exit") break;
+                userManager->arrangeAccommodation(ID);
+                break;
+            case 2:
+                cin.ignore();
+                while (true)
+                {
+                    ID = userManager->Get_ID();
+                    // 检查是否已经入住
+                    if (!userManager->IsStudentCheckedIn(ID))
+                    {
+                        cout << "该学生未入住，请重新选择其他学生。\n";
+                        continue;
+                    }
+                    break;
+                }
+                if (ID == "exit") break;
+                userManager->arrangeCheckOut(ID);
+                break;
+
+            case 0:
+                return;
+            default:
+                cout << "无效选择，请重新输入。\n";
+        }
+    }
+}
+
+// 管理员生成报表
+void generateReports()
+{
+    int choice;
+    while (true)
+    {
+        cout << "\n---- 生成报表 ----\n";
+        cout << "1. 生成宿舍使用情况报表\n";
+        cout << "2. 生成入住率报表\n";
+        cout << "3. 返回上一级\n";
+        cout << "请输入你的选择: ";
+        cin >> choice;
+
+        switch (choice)
+        {
+            case 1:
+                // TODO: 生成宿舍使用情况报表
+                cout << "生成宿舍使用情况报表 - 功能开发中。\n";
+                break;
+            case 2:
+                // TODO: 生成入住率报表
+                cout << "生成入住率报表 - 功能开发中。\n";
+                break;
+            case 3:
+                return;
+            default:
+                cout << "无效选择，请重新输入。\n";
+        }
+    }
+}
+
+// 管理员处理维修请求
+void handleRepairRequests()
+{
+    int choice;
+    while (true)
+    {
+        cout << "\n---- 处理维修请求 ----\n";
+        cout << "1. 查看所有维修请求\n";
+        cout << "2. 更新维修请求状态\n";
+        cout << "3. 返回上一级\n";
+        cout << "请输入你的选择: ";
+        cin >> choice;
+
+        switch (choice)
+        {
+            case 1:
+                // TODO: 查看维修请求
+                cout << "查看维修请求 - 功能开发中。\n";
+                break;
+            case 2:
+                // TODO: 更新维修请求状态
+                cout << "更新维修请求状态 - 功能开发中。\n";
+                break;
+            case 3:
+                return;
+            default:
+                cout << "无效选择，请重新输入。\n";
+        }
+    }
+}
+
 void manageDormitories()
 {
     int choice;
@@ -440,129 +670,61 @@ void viewDormitories()
     userManager->Query(sql);
 }
 
-
-// 管理员管理用户
-void manageUsers()
+void studentMenu(const string &stuID)
 {
-    string ID;
     int choice;
     while (true)
     {
-        cout << "\n---- 管理用户 ----\n";
-        cout << "1. 添加用户\n";
-        cout << "2. 删除用户\n";
-        cout << "3. 查看用户信息(通过学号)\n";
-        cout << "4. 安排住宿\n";
-        cout << "5. 安排退宿\n";
-        cout << "6. 查看用户信息(通过姓名)\n";
-        cout << "0. 返回上一级\n";
+        cout << "\n---- 学生菜单 ----\n";
+        cout << "1. 查看宿舍楼和房间信息\n";
+        cout << "2. 申请入住\n";
+        cout << "3. 申请退宿\n";
+        cout << "4. 请求换宿\n";
+        cout << "5. 提交维修请求\n";
+        cout << "6. 查看通知\n";
+        cout << "7. 查看请求\n";
+        cout << "8. 修改密码\n";
+        cout << "0. 退出登录\n";
         cout << "请输入你的选择: ";
         cin >> choice;
+
+        // 清除输入缓冲区，以防止输入错误导致无限循环
+        if (cin.fail())
+        {
+            cin.clear(); // 清除错误标志
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 忽略错误输入
+            cout << "输入无效，请输入数字。\n";
+            continue;
+        }
 
         switch (choice)
         {
             case 1:
-                int new_num;
-                cout << "请输入需要添加的用户数量（输入0返回上一级）：";
-                cin >> new_num;
-                if (new_num == 0)
-                {
-                    return;
-                } else
-                {
-                    for (int i = 1; i <= new_num; i++)
-                    {
-                        string userID;
-                        cout << "请输入第" << i << "位用户的学号：";
-                        while (true)
-                        {
-                            cin >> userID;
-                            if (userManager->IDExists(userID))
-                            {
-                                cout << "该学号已经被注册！请重新输入学号:" << endl;
-                                continue;
-                            }
-                            break;
-                        }
-
-                        size_t str_len = userID.size();
-                        string password;
-                        if (str_len <= 6)
-                        {
-                            password = userID;
-                        } else
-                        {
-                            //默认密码为学号后6位
-                            password = userID.substr(str_len - 6, 6);
-                        }
-                        string name;
-                        cout << "请输入第" << i << "位用户的姓名：";
-                        cin >> name;
-                        string gender;
-                        while (gender != "男" && gender != "女")
-                        {
-                            cout << "请输入第" << i << "位用户的性别：（男/女）";
-                            cin >> gender;
-                        }
-                        string contactInfo;
-                        cout << "请输入第" << i << "位用户的联系方式：";
-                        cin >> contactInfo;
-                        userManager->registerUser(userID, password, name, gender, contactInfo, false, false);
-                    }
-                }
+                viewDormitoryInfo(stuID); // 查看宿舍楼和房间信息
                 break;
             case 2:
-                cin.ignore();
-                ID = userManager->Get_ID();
-                if (ID == "exit") break;
-                userManager->deleteUser(ID);
+                applyMoveIn(stuID); // 申请入住
                 break;
             case 3:
-                cin.ignore();
-                ID = userManager->Get_ID();
-                if (ID == "exit") break;
-                userManager->checkUserInfo(ID);
+                applyMoveOut(stuID); // 申请退宿
                 break;
             case 4:
-                cin.ignore();
-                while (true)
-                {
-                    ID = userManager->Get_ID();
-                    // 检查是否已经入住
-                    if (userManager->IsStudentCheckedIn(ID))
-                    {
-                        cout << "该学生已入住，请重新选择其他学生。\n";
-                        continue;
-                    }
-                    break;
-                }
-                if (ID == "exit") break;
-                userManager->arrangeAccommodation(ID);
+                requestRoomChange(stuID); // 请求换宿
                 break;
             case 5:
-                cin.ignore();
-                while (true)
-                {
-                    ID = userManager->Get_ID();
-                    // 检查是否已经入住
-                    if (!userManager->IsStudentCheckedIn(ID))
-                    {
-                        cout << "该学生未入住，请重新选择其他学生。\n";
-                        continue;
-                    }
-                    break;
-                }
-                if (ID == "exit") break;
-                userManager->arrangeCheckOut(ID);
+                submitRepairRequest(stuID); // 提交维修请求
                 break;
             case 6:
-                cin.ignore();
-                cout << "请输入查询的名字：" << endl;
-                getline(cin, ID);
-                if (ID == "exit") break;
-                userManager->checkUserInfoByName(ID);
+                viewNotifications(stuID); // 查看通知
+                break;
+            case 7:
+                viewRequests(stuID); // 查看请求
+                break;
+            case 8:
+                userManager->UserPasswordChange(stuID); // 修改密码
                 break;
             case 0:
+                cout << "正在退出登录...\n";
                 return;
             default:
                 cout << "无效选择，请重新输入。\n";
@@ -570,67 +732,60 @@ void manageUsers()
     }
 }
 
-
-// 管理员生成报表
-void generateReports()
+// 申请入住
+void applyMoveIn(const string &stuID)
 {
-    int choice;
-    while (true)
+    if (userManager->IsStudentCheckedIn(stuID))
     {
-        cout << "\n---- 生成报表 ----\n";
-        cout << "1. 生成宿舍使用情况报表\n";
-        cout << "2. 生成入住率报表\n";
-        cout << "3. 返回上一级\n";
-        cout << "请输入你的选择: ";
-        cin >> choice;
-
-        switch (choice)
-        {
-            case 1:
-                // TODO: 生成宿舍使用情况报表
-                cout << "生成宿舍使用情况报表 - 功能开发中。\n";
-                break;
-            case 2:
-                // TODO: 生成入住率报表
-                cout << "生成入住率报表 - 功能开发中。\n";
-                break;
-            case 3:
-                return;
-            default:
-                cout << "无效选择，请重新输入。\n";
-        }
+        cout << "您已经入住！" << endl;
+        return;
     }
+    // 构建 SQL 查询语句，仅插入学生 ID 和申请类型
+    string sql = "INSERT INTO accommodation_requests (studentID, requestType) "
+                 "VALUES ('" + stuID + "', '入住');";
+
+    // 执行 SQL 语句
+    userManager->execute(sql);
+    cout << "申请入住成功" << endl;
 }
 
-// 管理员处理维修请求
-void handleRepairRequests()
+// 申请退宿
+void applyMoveOut(const string &stuID)
 {
-    int choice;
-    while (true)
+    if (!userManager->IsStudentCheckedIn(stuID))
     {
-        cout << "\n---- 处理维修请求 ----\n";
-        cout << "1. 查看所有维修请求\n";
-        cout << "2. 更新维修请求状态\n";
-        cout << "3. 返回上一级\n";
-        cout << "请输入你的选择: ";
-        cin >> choice;
-
-        switch (choice)
-        {
-            case 1:
-                // TODO: 查看维修请求
-                cout << "查看维修请求 - 功能开发中。\n";
-                break;
-            case 2:
-                // TODO: 更新维修请求状态
-                cout << "更新维修请求状态 - 功能开发中。\n";
-                break;
-            case 3:
-                return;
-            default:
-                cout << "无效选择，请重新输入。\n";
-        }
+        cout << "您尚未入住！" << endl;
+        return;
     }
+    // 构建 SQL 查询语句，仅插入学生 ID 和申请类型
+    string sql = "INSERT INTO accommodation_requests (studentID, requestType) "
+                 "VALUES ('" + stuID + "', '退宿');";
+
+    // 执行 SQL 语句
+    userManager->execute(sql);
+    cout << "申请退宿成功" << endl;
+}
+
+// 请求换宿
+void requestRoomChange(const string &stuID)
+{
+    userManager->requestRoomChange(stuID);
+}
+
+// 提交维修请求
+void submitRepairRequest(const string &stuID) {}
+
+// 查看通知
+void viewNotifications(const string &stuID) {}
+// 管理员管理宿舍楼
+
+void viewRequests(const string &stuID)
+{
+    string sql = "SELECT recordID, studentID, roomID, eventTime, recordType, approvalStatus, approvalTime, note "
+                 "FROM check_in_out_records "
+                 "WHERE studentID = '" + stuID + "' "
+                 "ORDER BY eventTime DESC;";
+    userManager->execute(sql);
 }
 
 // 学生查看宿舍信息
@@ -656,19 +811,25 @@ void viewDormitoryInfo(const string &stuID)
                      "    u.userID = '" + stuID + "';"; // 使用学生ID作为参数传递
 
         // 调用Query方法，执行SQL查询
+        string sql2 = "SELECT recordType AS 记录类型, eventTime AS 时间, note AS 备注"
+                      "FROM check_in_out_records "
+                      "WHERE studentID = '" + stuID + "' "
+                      "ORDER BY eventTime DESC LIMIT 1;";
         userManager->Query(sql);
+        userManager->Query(sql2);
     } else
     {
-        cout << "您暂未被安排住宿，是否申请？";
-        // TODO：安排住宿
+        string xuan;
+        cout << "您暂未被安排住宿，是否申请？(请输入yes/no)" << endl;
+        cin.ignore();
+        getline(cin, xuan);
+        if (xuan == "yes")
+        {
+            applyMoveIn(stuID);
+        }
     }
 }
 
-// 学生请求换房
-void requestRoomChange()
-{
-    cout << "请求换房 - 功能开发中。\n";
-}
 
 // 学生提交维修请求
 void submitRepairRequest()

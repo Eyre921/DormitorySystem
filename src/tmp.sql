@@ -1,15 +1,35 @@
-SELECT u.userID                        AS 学号,     -- 学生学号
-       u.name                          AS 姓名,     -- 学生姓名
-       u.gender                        AS 性别,     -- 学生性别
-       COALESCE(u.password, 'NULL')    AS 密码,     -- 学生密码，若为空则显示NULL
-       COALESCE(u.contactInfo, 'NULL') AS 联系方式, -- 学生联系方式，若为空则显示NULL
-       COALESCE(d.name, 'NULL')        AS 宿舍楼,   -- 宿舍楼名称，若为空则显示NULL
-       COALESCE(r.roomNumber, 'NULL')  AS 房间号    -- 房间号，若为空则显示NULL
-FROM users u
-         LEFT JOIN
-     student_rooms sr ON u.userID = sr.studentID -- 连接学生表与学生房间关系表（使用 LEFT JOIN 保证即使学生未入住也能查询到）
-         LEFT JOIN
-     rooms r ON sr.roomID = r.roomID -- 连接房间表
-         LEFT JOIN
-     dormitories d ON r.dormitoryID = d.dormitoryID -- 连接宿舍楼表
-WHERE u.name = '1'; -- 查询指定姓名的学生
+-- 删除原表 check_in_out_records
+DROP TABLE IF EXISTS check_in_out_records;
+
+-- 删除原表 accommodation_requests
+DROP TABLE IF EXISTS accommodation_requests;
+
+
+CREATE TABLE check_in_out_records
+(
+    recordID       INTEGER PRIMARY KEY AUTOINCREMENT,                                                   -- 记录ID（自增）
+    studentID      TEXT                                        NOT NULL,                                -- 学生ID（外键）
+    roomID         INTEGER                                     NOT NULL,                                -- 房间ID（外键）
+    eventTime      DATETIME                                                  DEFAULT CURRENT_TIMESTAMP, -- 事件时间（无论是入住还是退宿）
+    recordType     TEXT CHECK (recordType IN ('入住', '退宿')) NOT NULL,                                -- 记录类型（入住或退宿）
+    approvalStatus TEXT CHECK (approvalStatus IN ('未审批', '通过', '拒绝')) DEFAULT '未审批',          -- 审批状态
+    note           TEXT,                                                                                -- 备注（可选，存储任何附加信息）
+    FOREIGN KEY (studentID) REFERENCES users (userID),                                                  -- 外键关联到用户表
+    FOREIGN KEY (roomID) REFERENCES rooms (roomID)                                                      -- 外键关联到房间表
+);
+
+CREATE TABLE accommodation_requests
+(
+    recordID       INTEGER PRIMARY KEY AUTOINCREMENT,                                                   -- 记录ID（自增）
+    studentID      TEXT                                         NOT NULL,                               -- 学生ID（外键）
+    roomID         INTEGER                                      NOT NULL,                               -- 房间ID（外键）
+    eventTime      DATETIME                                                  DEFAULT CURRENT_TIMESTAMP, -- 事件时间（无论是入住还是退宿）
+    requestType    TEXT CHECK (requestType IN ('入住', '退宿')) NOT NULL,                               -- 记录类型（入住或退宿）
+    approvalStatus TEXT CHECK (approvalStatus IN ('未审批', '通过', '拒绝')) DEFAULT '未审批',          -- 审批状态
+    approvalTime   DATETIME,                                                                            -- 审批时间（默认NULL）
+    note           TEXT,                                                                                -- 备注（可选，存储任何附加信息）
+    FOREIGN KEY (studentID) REFERENCES users (userID),                                                  -- 外键关联到用户表
+    FOREIGN KEY (roomID) REFERENCES rooms (roomID)                                                      -- 外键关联到房间表
+);
+
+
