@@ -33,32 +33,32 @@ CREATE TABLE student_rooms
     FOREIGN KEY (studentID) REFERENCES users (userID),
     FOREIGN KEY (roomID) REFERENCES rooms (roomID)
 );
-DROP TABLE IF EXISTS check_in_out_records;
 CREATE TABLE check_in_out_records
 (
-    recordID       INTEGER PRIMARY KEY AUTOINCREMENT,                                                   -- 记录ID（自增）
-    studentID      TEXT                                        NOT NULL,                                -- 学生ID（外键）
-    roomID         INTEGER                                     NOT NULL,                                -- 房间ID（外键）
-    eventTime      DATETIME                                                  DEFAULT CURRENT_TIMESTAMP, -- 事件时间（无论是入住还是退宿）
-    recordType     TEXT CHECK (recordType IN ('入住', '退宿')) NOT NULL,                                -- 记录类型（入住或退宿）
-    approvalStatus TEXT CHECK (approvalStatus IN ('未审批', '通过', '拒绝')) DEFAULT '未审批',          -- 审批状态
-    note           TEXT,                                                                                -- 备注（可选，存储任何附加信息）
-    FOREIGN KEY (studentID) REFERENCES users (userID),                                                  -- 外键关联到用户表
-    FOREIGN KEY (roomID) REFERENCES rooms (roomID)                                                      -- 外键关联到房间表
+    recordID   INTEGER PRIMARY KEY AUTOINCREMENT,                    -- 记录ID（自增）
+    studentID  TEXT                                        NOT NULL, -- 学生ID（外键）
+    roomID     INTEGER                                     NOT NULL, -- 房间ID（外键）
+    eventTime  DATETIME DEFAULT CURRENT_TIMESTAMP,                   -- 事件时间（无论是入住还是退宿）
+    recordType TEXT CHECK (recordType IN ('入住', '退宿')) NOT NULL, -- 记录类型（入住或退宿）
+    note       TEXT,                                                 -- 备注（可选，存储任何附加信息）
+    FOREIGN KEY (studentID) REFERENCES users (userID),               -- 外键关联到用户表
+    FOREIGN KEY (roomID) REFERENCES rooms (roomID)                   -- 外键关联到房间表
 );
+
+
 
 CREATE TABLE accommodation_requests
 (
-    recordID       INTEGER PRIMARY KEY AUTOINCREMENT,                                                   -- 记录ID（自增）
-    studentID      TEXT                                         NOT NULL,                               -- 学生ID（外键）
-    roomID         INTEGER                                      NOT NULL,                               -- 房间ID（外键）
-    eventTime      DATETIME                                                  DEFAULT CURRENT_TIMESTAMP, -- 事件时间（无论是入住还是退宿）
-    requestType    TEXT CHECK (requestType IN ('入住', '退宿')) NOT NULL,                               -- 记录类型（入住或退宿）
-    approvalStatus TEXT CHECK (approvalStatus IN ('未审批', '通过', '拒绝')) DEFAULT '未审批',          -- 审批状态
-    approvalTime   DATETIME,                                                                            -- 审批时间（默认NULL）
-    note           TEXT,                                                                                -- 备注（可选，存储任何附加信息）
-    FOREIGN KEY (studentID) REFERENCES users (userID),                                                  -- 外键关联到用户表
-    FOREIGN KEY (roomID) REFERENCES rooms (roomID)                                                      -- 外键关联到房间表
+    requestID     INTEGER PRIMARY KEY AUTOINCREMENT,                                               -- 申请ID（自增）
+    studentID     TEXT                                                 NOT NULL,                   -- 学生ID（外键）
+    dormitoryName TEXT,                                                                            -- 申请宿舍楼名称（用于换宿）
+    roomNumber    TEXT,                                                                            -- 申请房间号（用于换宿）
+    requestType   TEXT CHECK (requestType IN ('入住', '换宿', '退宿')) NOT NULL,                   -- 申请类型（入住、换宿、退宿）
+    requestTime   DATETIME                                              DEFAULT CURRENT_TIMESTAMP, -- 申请时间（默认当前时间）
+    approveTime   DATETIME                                              DEFAULT NULL,
+    status        TEXT CHECK (status IN ('待审批', '已审批', '已拒绝')) DEFAULT '待审批',          -- 申请状态（待审批、已审批、已拒绝）
+    note          TEXT,                                                                            -- 备注（可选，存储任何附加信息）
+    FOREIGN KEY (studentID) REFERENCES users (userID)                                              -- 外键关联到用户表
 );
 
 

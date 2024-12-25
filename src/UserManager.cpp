@@ -252,6 +252,7 @@ void UserManager::SelectValidRoom(const string &studentID, string &dormitoryName
 void UserManager::requestRoomChange(const string &studentID)
 {
     string dormitoryName, roomChoice, currentRoom, note;
+    cin.ignore();
     SelectValidRoom(studentID, dormitoryName, roomChoice);
     cout << "请输入换宿备注（可选，按回车跳过）: ";
     getline(cin, note);

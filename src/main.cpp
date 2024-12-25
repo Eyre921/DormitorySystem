@@ -347,6 +347,7 @@ void manageUsers()
                 while (true)
                 {
                     ID = userManager->Get_ID();
+                    if (ID == "exit") break;
                     // 检查是否已经入住
                     if (userManager->IsStudentCheckedIn(ID))
                     {
@@ -364,6 +365,7 @@ void manageUsers()
                 {
                     ID = userManager->Get_ID();
                     // 检查是否已经入住
+                    if (ID == "exit") break;
                     if (!userManager->IsStudentCheckedIn(ID))
                     {
                         cout << "该学生未入住，请重新选择其他学生。\n";
@@ -781,12 +783,29 @@ void viewNotifications(const string &stuID) {}
 
 void viewRequests(const string &stuID)
 {
-    string sql = "SELECT recordID, studentID, roomID, eventTime, recordType, approvalStatus, approvalTime, note "
-                 "FROM check_in_out_records "
-                 "WHERE studentID = '" + stuID + "' "
-                 "ORDER BY eventTime DESC;";
-    userManager->execute(sql);
+    string sql =
+            "SELECT requestID AS \"申请ID\", requestType AS \"申请类型\", status AS \"申请状态\",dormitoryName AS \"宿舍楼名称\", "
+            "roomNumber AS \"房间号\",  requestTime AS \"申请时间\", "
+            "approveTime AS \"审批时间\", note AS \"备注\" "
+            "FROM accommodation_requests "
+            "WHERE studentID = '" + stuID + "' "
+            "ORDER BY requestTime DESC;";
+    userManager->Query(sql);
 }
+
+// CREATE TABLE accommodation_requests
+// (
+//     requestID     INTEGER PRIMARY KEY AUTOINCREMENT,                                               -- 申请ID（自增）
+//     studentID     TEXT                                                 NOT NULL,                   -- 学生ID（外键）
+//     dormitoryName TEXT,                                                                            -- 申请宿舍楼名称（用于换宿）
+//     roomNumber    TEXT,                                                                            -- 申请房间号（用于换宿）
+//     requestType   TEXT CHECK (requestType IN ('入住', '换宿', '退宿')) NOT NULL,                   -- 申请类型（入住、换宿、退宿）
+//     requestTime   DATETIME                                              DEFAULT CURRENT_TIMESTAMP, -- 申请时间（默认当前时间）
+//     approveTime   DATETIME                                              DEFAULT NULL,
+//     status        TEXT CHECK (status IN ('待审批', '已审批', '已拒绝')) DEFAULT '待审批',          -- 申请状态（待审批、已审批、已拒绝）
+//     note          TEXT,                                                                            -- 备注（可选，存储任何附加信息）
+//     FOREIGN KEY (studentID) REFERENCES users (userID)                                              -- 外键关联到用户表
+// );
 
 // 学生查看宿舍信息
 void viewDormitoryInfo(const string &stuID)
@@ -811,10 +830,11 @@ void viewDormitoryInfo(const string &stuID)
                      "    u.userID = '" + stuID + "';"; // 使用学生ID作为参数传递
 
         // 调用Query方法，执行SQL查询
-        string sql2 = "SELECT recordType AS 记录类型, eventTime AS 时间, note AS 备注"
+        string sql2 = "SELECT recordType AS 记录类型, eventTime AS 时间, note AS 备注 "
                       "FROM check_in_out_records "
                       "WHERE studentID = '" + stuID + "' "
                       "ORDER BY eventTime DESC LIMIT 1;";
+
         userManager->Query(sql);
         userManager->Query(sql2);
     } else
