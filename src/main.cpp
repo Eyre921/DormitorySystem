@@ -124,7 +124,7 @@ void studentLogin()
     // 调用 UserManager 中的 loginUser 方法，验证登录
     if (userManager->loginUser(studentID, password, "0"))
     {
-        int str_len = studentID.size();
+        size_t str_len = studentID.size();
         if (str_len < 6)
         {
             if (studentID == password)
@@ -468,7 +468,7 @@ void manageUsers()
                         string userID;
                         cout << "请输入第" << i << "位用户的学号：";
                         cin >> userID;
-                        int str_len = userID.size();
+                        size_t str_len = userID.size();
                         string password;
                         if (str_len <= 6)
                         {
