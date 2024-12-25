@@ -500,7 +500,6 @@ void manageUsers()
                 cin.ignore();
                 getline(cin, ID);
                 checkUserInfo(ID);
-
                 break;
             case 4:
                 cin.ignore();
