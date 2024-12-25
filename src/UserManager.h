@@ -43,8 +43,11 @@ public:
 
     void arrangeAccommodation();
 
-    void arrangeCheckOut();
+    void arrangeCheckOut(const string &studentID);
 
+    bool IsStudentCheckedIn(const string &studentID);
+
+    bool IDExists(const string &studentID);
 
     // 检查用户是否存在
 };

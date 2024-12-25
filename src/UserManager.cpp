@@ -268,43 +268,12 @@ void UserManager::arrangeAccommodation()
 }
 
 
-void UserManager::arrangeCheckOut()
+void UserManager::arrangeCheckOut(const string &studentID)
 {
-    string studentID;
     string studentName; // 获取学生名字
     string dormitoryName; // 获取宿舍楼名称
     string roomNumber; // 获取房间号
 
-    while (true)
-    {
-        // 输入学号
-        cout << "请输入学号(输入exit可返回)：";
-        getline(cin, studentID);
-        if (studentID == "exit")
-        {
-            return;
-        }
-
-        // 检查学号是否存在
-        string checkStudentQuery = "SELECT 1 FROM users WHERE userID = '" + studentID + "' AND isAdmin = 0;";
-        if (!queryExists(checkStudentQuery))
-        {
-            cout << "学号不存在，请重新输入。\n";
-            continue;
-        }
-
-        // 检查是否已入住
-        string checkCheckedInQuery = "SELECT isCheckedIn FROM users WHERE userID = '" + studentID +
-                                     "' AND isCheckedIn = 1;";
-        if (!queryExists(checkCheckedInQuery))
-        {
-            // 学生未入住
-            cout << "该学生尚未入住，无法执行退宿操作。\n";
-            continue;
-        }
-
-        break; // 如果学号存在且已入住，则退出循环，继续后续操作
-    }
 
     // 2. 获取学生的宿舍信息
     string getStudentRoomQuery = "SELECT u.name AS studentName, d.name AS dormitoryName, r.roomNumber "
@@ -400,3 +369,14 @@ void UserManager::arrangeCheckOut()
 }
 
 
+bool UserManager::IsStudentCheckedIn(const string &studentID) {
+    string checkCheckedInQuery = "SELECT isCheckedIn FROM users WHERE userID = '" + studentID +
+                                 "' AND isCheckedIn = 1;";
+
+    return queryExists(checkCheckedInQuery);
+}
+bool UserManager::IDExists(const string &studentID) {
+                    string checkStudentQuery = "SELECT 1 FROM users WHERE userID = '" + studentID +
+                                               "' AND isAdmin = 0;";
+    return queryExists(checkStudentQuery);
+}
