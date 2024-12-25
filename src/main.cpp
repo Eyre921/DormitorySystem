@@ -3,9 +3,10 @@
 #include <UserManager.h>
 #include <limits>
 #include <string>
+#include "globals.h"//全局指针
 using namespace std;
 
-UserManager *userManager = nullptr; // 只声明指针，初始化将在 main 函数中进行
+
 // 函数声明
 void showMainMenu();
 
@@ -54,7 +55,8 @@ int main()
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
     int choice;
-    userManager = new UserManager(); // 自动连接数据库
+
+
     // userManager->getAllUsers();
     //adminMenu();
     //userManager->arrangeAccommodation();

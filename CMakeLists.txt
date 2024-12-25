@@ -23,6 +23,8 @@ set(SOURCE_FILES
         sqlite3/sqlite3.c
         src/Database.cpp
         src/Database.h
+        src/globals.cpp
+        src/globals.h
         # SQLite 源文件
 )
 
