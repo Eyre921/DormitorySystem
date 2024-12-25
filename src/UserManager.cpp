@@ -7,6 +7,7 @@ using namespace std;
 UserManager::UserManager() : db("../data/dormitory.db")
 {
     db.updateRoomStatus();
+
     // 直接在这里指定数据库路径
     // 在这里，可以进行数据库的初始化（例如创建表等操作）
     // if (!db.execute(
@@ -125,22 +126,8 @@ bool UserManager::UserPasswordChange(const string &userID)
     }
 }
 
-void UserManager::arrangeAccommodation()
+void UserManager::arrangeAccommodation(const string &studentID)
 {
-    string studentID = Get_ID();
-    if ("exit" == studentID) return;
-    while (true)
-    {
-        // 检查是否已经入住
-        if (IsStudentCheckedIn(studentID))
-        {
-            // 学生已经入住
-            cout << "该学生已经入住，请重新选择其他学生。\n";
-            studentID = Get_ID();
-            continue;
-        }
-        break; // 如果学号存在且未入住，则退出循环，继续后续操作
-    }
     string free_dorm =
             "SELECT d.name AS dormitoryName, d.sex, d.position, r.roomID, r.roomNumber, r.capacity, r.occupied "
             "FROM dormitories d "
@@ -180,11 +167,12 @@ void UserManager::arrangeAccommodation()
 
     // 查询宿舍楼下所有空房间号（已入住为0）
 
-    string query = "SELECT r.roomNumber, r.capacity, r.occupied "
+    string query = "SELECT r.roomNumber AS 房间号, r.capacity AS 房间容量, r.occupied AS 已入住人数 "
                    "FROM rooms r "
                    "JOIN dormitories d ON r.dormitoryID = d.dormitoryID "
                    "WHERE d.name = '" + dormitoryName + "' "
                    "AND r.occupied < r.capacity;";
+
     // 使用 Query 查询空闲房间
     Query(query);
 
@@ -255,13 +243,14 @@ void UserManager::arrangeCheckOut(const string &studentID)
     string dormitoryName; // 获取宿舍楼名称
     string roomNumber; // 获取房间号
 
-    // 2. 获取学生的宿舍信息
-    string getStudentRoomQuery = "SELECT u.name AS studentName, d.name AS dormitoryName, r.roomNumber "
+    //2. 获取学生的宿舍信息
+    string getStudentRoomQuery = "SELECT u.name AS 姓名, d.name AS 宿舍楼, r.roomNumber AS 房间号 "
                                  "FROM users u "
                                  "JOIN student_rooms sr ON u.userID = sr.studentID "
                                  "JOIN rooms r ON sr.roomID = r.roomID "
                                  "JOIN dormitories d ON r.dormitoryID = d.dormitoryID "
                                  "WHERE u.userID = '" + studentID + "';";
+
 
     // 执行查询
     db.Query(getStudentRoomQuery);
@@ -274,8 +263,8 @@ void UserManager::arrangeCheckOut(const string &studentID)
         roomNumber = db.getQueryResult(2); // 获取房间号
 
         // 输出当前住宿信息
-        cout << "学生 " << studentName << " (" << studentID << ") 当前住宿在 "
-                << dormitoryName << " 宿舍楼的 " << roomNumber << " 房间。\n";
+        // cout << "学生 " << studentName << " (" << studentID << ") 当前住宿在 "
+        //         << dormitoryName << " 宿舍楼的 " << roomNumber << " 房间。\n";
     }
 
     // 3. 询问用户是否确认退宿
@@ -344,7 +333,8 @@ void UserManager::arrangeCheckOut(const string &studentID)
     // 10. 调用 db.updateRoomStatus 来更新房间的状态和占用人数
     db.updateRoomStatus();
 
-    cout << "退宿操作成功，学生 " << studentName << " (" << studentID << ")" << " 已从 " << dormitoryName << " 宿舍楼的 " << roomNumber
+    cout << "退宿操作成功，学生 " << studentName << " (学号：" << studentID << ")" << " 已从 " << dormitoryName << " 宿舍楼的 " <<
+            roomNumber
             << " 房间退宿。\n";
 }
 
@@ -405,7 +395,7 @@ void UserManager::checkUserInfo(const string &userID)
                      "    u.userID = '" + userID + "';"; // 使用学生ID作为参数传递
         // 调用Query方法，执行SQL查询
         Query(sql);
-        cout << "\n该学生暂未入住，建议尽快安排入住\n";
+        cout << "该学生暂未入住。\n";
     } else
     {
         string sql = "SELECT "
@@ -429,4 +419,66 @@ void UserManager::checkUserInfo(const string &userID)
         // 调用Query方法，执行SQL查询
         Query(sql);
     }
+}
+
+void UserManager::checkUserInfoByName(const string &userName)
+{
+    const string sql = "SELECT "
+                       "    u.userID AS 学号,           -- 学生学号\n"
+                       "    u.name AS 姓名,             -- 学生姓名\n"
+                       "    u.gender AS 性别,           -- 学生性别\n"
+                       "    COALESCE(u.password, 'NULL') AS 密码,         -- 学生密码，若为空则显示NULL\n"
+                       "    COALESCE(u.contactInfo, 'NULL') AS 联系方式,  -- 学生联系方式，若为空则显示NULL\n"
+                       "    COALESCE(d.name, 'NULL') AS 宿舍楼,           -- 宿舍楼名称，若为空则显示NULL\n"
+                       "    COALESCE(r.roomNumber, 'NULL') AS 房间号      -- 房间号，若为空则显示NULL\n"
+                       "FROM "
+                       "    users u\n"
+                       "LEFT JOIN "
+                       "    student_rooms sr ON u.userID = sr.studentID  -- 连接学生表与学生房间关系表\n"
+                       "LEFT JOIN "
+                       "    rooms r ON sr.roomID = r.roomID  -- 连接房间表\n"
+                       "LEFT JOIN "
+                       "    dormitories d ON r.dormitoryID = d.dormitoryID  -- 连接宿舍楼表\n"
+                       "WHERE "
+                       "    u.name = '" + userName + "';"; // 使用拼接的方式将userName插入查询条件
+
+    // 调用Query方法，执行SQL查询
+    if (queryExists(sql))
+    {
+        Query(sql);
+        return;
+    }
+
+    cout << "查询 ‘" << userName << "’ 无结果" << endl;
+}
+
+void UserManager::deleteUser(const string &userID)
+{
+    bool flag = IsStudentCheckedIn(userID);
+    if (flag == true)
+    {
+        cout << "当前待删除用户已经入住，请先安排退宿\n";
+        arrangeCheckOut(userID);
+    }
+    string confirmation;
+    while (true)
+    {
+        cout << "请确认是否要删除以下用户？(yes or no)：\n";
+        checkUserInfo(userID);
+        getline(cin, confirmation);
+        if (confirmation == "yes")
+        {
+            break;
+        } else if (confirmation == "no")
+        {
+            cout << "删除操作已取消。\n";
+            return;
+        } else
+        {
+            cout << "无效输入，请输入 'yes' 或 'no'。\n";
+        }
+    }
+    string sql = "DELETE FROM users WHERE userID = '" + userID + "';";
+    execute(sql);
+    cout << "用户删除成功\n";
 }

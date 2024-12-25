@@ -29,7 +29,8 @@ public:
 
     bool hasStudentsInDormitoryRooms(const string &checkRoomsSql);
 
-    void updateRoomStatus();
+
+    bool updateRoomStatus();
 
     string getQueryResult(int columnIndex);
 };

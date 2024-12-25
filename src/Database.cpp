@@ -182,51 +182,35 @@ string Database::getQueryResult(int columnIndex)
     return text ? text : ""; // 如果没有数据则返回空字符串
 }
 
-void Database::updateRoomStatus()
+bool Database::updateRoomStatus()
 {
-    // 1. 统计每个房间的学生数
-    string query = "SELECT r.roomID, COUNT(sr.studentID) AS studentCount "
-            "FROM rooms r "
-            "LEFT JOIN student_rooms sr ON r.roomID = sr.roomID "
-            "GROUP BY r.roomID;";
+    // SQL 语句：更新 rooms 表的 occupied 字段
+    const char *sql = R"(
+            UPDATE rooms
+            SET occupied = (
+                SELECT COUNT(*)
+                FROM student_rooms
+                WHERE student_rooms.roomID = rooms.roomID
+            )
+        )";
 
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, 0) != SQLITE_OK)
+    char *errMsg = nullptr;
+    int rc = sqlite3_exec(db, sql, nullptr, nullptr, &errMsg);
+    if (rc != SQLITE_OK)
     {
-        cerr << "Failed to prepare room status query: " << sqlite3_errmsg(db) << endl;
-        return;
+        std::cerr << "更新房间状态失败: " << errMsg << std::endl;
+        sqlite3_free(errMsg);
+        return false;
     }
 
-    // 2. 逐行处理统计结果，并更新房间的占用人数
-    while (sqlite3_step(stmt) == SQLITE_ROW)
-    {
-        int roomID = sqlite3_column_int(stmt, 0); // 获取 roomID
-        int studentCount = sqlite3_column_int(stmt, 1); // 获取学生数量
-
-        // 3. 更新房间的占用人数
-        string updateQuery = "UPDATE rooms SET occupied = ? WHERE roomID = ?;";
-
-        if (sqlite3_prepare_v2(db, updateQuery.c_str(), -1, &stmt, 0) != SQLITE_OK)
-        {
-            cerr << "Failed to prepare update query: " << sqlite3_errmsg(db) << endl;
-            continue;
-        }
-
-        // 4. 绑定参数：occupied, roomID
-        sqlite3_bind_int(stmt, 1, studentCount); // 绑定学生数量到 occupied 字段
-        sqlite3_bind_int(stmt, 2, roomID); // 绑定 roomID 到 WHERE 条件
-
-        // 执行更新操作
-        if (sqlite3_step(stmt) != SQLITE_DONE)
-        {
-            cerr << "Failed to update room status: " << sqlite3_errmsg(db) << endl;
-        }
-
-        // 5. 重置语句，准备下一次使用
-        sqlite3_reset(stmt);
-    }
-
-    // 6. 释放语句资源
-    sqlite3_finalize(stmt);
+    std::cout << "房间占用人数更新成功。" << std::endl;
+    return true;
 }
+
+
+
+
+
+
 
 

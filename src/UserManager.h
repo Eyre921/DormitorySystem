@@ -41,7 +41,7 @@ public:
 
     bool UserPasswordChange(const string &userID);
 
-    void arrangeAccommodation();
+    void arrangeAccommodation(const string &studentID);
 
     void arrangeCheckOut(const string &studentID);
 
@@ -52,6 +52,10 @@ public:
     string Get_ID();
 
     void checkUserInfo(const string &userID);
+
+    void deleteUser(const string &userID);
+
+    void checkUserInfoByName(const string &userName);
 
     // 检查用户是否存在
 };
