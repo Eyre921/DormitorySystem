@@ -93,6 +93,14 @@ public:
     // 验证待处理的申请ID（是否存在且状态为“待审批”）
     void viewAccommodationRequests(const std::string &requestID = "");
 
+    void deleteDormitory();
+
+    void deleteRoom(int dormitoryID);
+
+    void checkRoomOccupancy(int dormitoryID, const string &roomNumber);
+
+    void viewDormitories();
+
     // 检查用户是否存在
 };
 
