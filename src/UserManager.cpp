@@ -1,5 +1,6 @@
 #include "UserManager.h"
 #include <iostream>
+#include <unordered_set>
 
 using namespace std;
 
@@ -132,11 +133,14 @@ void UserManager::arrangeAccommodation(const string &studentID)
 {
     string dormitoryName, roomChoice;
     SelectValidRoom(studentID, dormitoryName, roomChoice);
-    QuickArrangeAccommodation(studentID, dormitoryName, roomChoice);
+    string note;
+    cout << "请输入入住备注（可选，按回车跳过）: ";
+    getline(cin, note);
+    QuickArrangeAccommodation(studentID, dormitoryName, roomChoice, note);
 }
 
 void UserManager::QuickArrangeAccommodation(const string &studentID, const string &dormitoryName,
-                                            const string &roomChoice)
+                                            const string &roomChoice, const string &note)
 {
     string insert_room = "INSERT INTO student_rooms (studentID, roomID) "
                          "SELECT '" + studentID + "', r.roomID "
@@ -152,9 +156,7 @@ void UserManager::QuickArrangeAccommodation(const string &studentID, const strin
 
     // 插入入住记录
     // 获取备注信息
-    string note;
-    cout << "请输入入住备注（可选，按回车跳过）: ";
-    getline(cin, note);
+
 
     string insert_check_in = "INSERT INTO check_in_out_records (studentID, roomID, eventTime, recordType, note) "
                              "VALUES ('" + studentID + "', (SELECT r.roomID FROM rooms r "
@@ -268,35 +270,6 @@ void UserManager::requestRoomChange(const string &studentID)
 
 void UserManager::arrangeCheckOut(const string &studentID)
 {
-    string studentName; // 获取学生名字
-    string dormitoryName; // 获取宿舍楼名称
-    string roomNumber; // 获取房间号
-
-    //2. 获取学生的宿舍信息
-    string getStudentRoomQuery = "SELECT u.name AS 姓名, d.name AS 宿舍楼, r.roomNumber AS 房间号 "
-                                 "FROM users u "
-                                 "JOIN student_rooms sr ON u.userID = sr.studentID "
-                                 "JOIN rooms r ON sr.roomID = r.roomID "
-                                 "JOIN dormitories d ON r.dormitoryID = d.dormitoryID "
-                                 "WHERE u.userID = '" + studentID + "';";
-
-
-    // 执行查询
-    db.Query(getStudentRoomQuery);
-
-    // 获取查询结果并输出
-    while (sqlite3_step(db.stmt) == SQLITE_ROW)
-    {
-        studentName = db.getQueryResult(0); // 获取学生名字
-        dormitoryName = db.getQueryResult(1); // 获取宿舍楼名称
-        roomNumber = db.getQueryResult(2); // 获取房间号
-
-        // 输出当前住宿信息
-        // cout << "学生 " << studentName << " (" << studentID << ") 当前住宿在 "
-        //         << dormitoryName << " 宿舍楼的 " << roomNumber << " 房间。\n";
-    }
-
-    // 3. 询问用户是否确认退宿
     string confirmation;
     while (true)
     {
@@ -318,12 +291,39 @@ void UserManager::arrangeCheckOut(const string &studentID)
     string note;
     cout << "请输入退宿备注（可选，按回车跳过）: ";
     getline(cin, note);
-    QuickArrangeCheckOut(studentName, studentID, dormitoryName, roomNumber, note);
+    QuickArrangeCheckOut(studentID, note);
 }
 
-void UserManager::QuickArrangeCheckOut(const string &studentName, const string &studentID, const string &dormitoryName,
-                                       const string &roomNumber, const string &note)
+void UserManager::QuickArrangeCheckOut(const string &studentID, const string &note)
 {
+    string studentName; // 获取学生名字
+    string dormitoryName; // 获取宿舍楼名称
+    string roomNumber; // 获取房间号
+    //2. 获取学生的宿舍信息
+    string getStudentRoomQuery = "SELECT u.name AS 姓名, d.name AS 宿舍楼, r.roomNumber AS 房间号 "
+                                 "FROM users u "
+                                 "JOIN student_rooms sr ON u.userID = sr.studentID "
+                                 "JOIN rooms r ON sr.roomID = r.roomID "
+                                 "JOIN dormitories d ON r.dormitoryID = d.dormitoryID "
+                                 "WHERE u.userID = '" + studentID + "';";
+
+
+    // 执行查询
+    db.Query(getStudentRoomQuery);
+
+    // 获取查询结果
+    while (sqlite3_step(db.stmt) == SQLITE_ROW)
+    {
+        studentName = db.getQueryResult(0); // 获取学生名字
+        dormitoryName = db.getQueryResult(1); // 获取宿舍楼名称
+        roomNumber = db.getQueryResult(2); // 获取房间号
+        // 输出当前住宿信息
+        // cout << "学生 " << studentName << " (" << studentID << ") 当前住宿在 "
+        //         << dormitoryName << " 宿舍楼的 " << roomNumber << " 房间。\n";
+    }
+
+    // 4. 获取退宿备注信息
+
     // 获取当前时间作为退宿时间
     string eventTime = "CURRENT_TIMESTAMP"; // 使用数据库的时间
 
@@ -333,7 +333,7 @@ void UserManager::QuickArrangeCheckOut(const string &studentName, const string &
                             "WHERE d.name = '" + dormitoryName + "' AND r.roomNumber = '" + roomNumber +
                             "'  LIMIT 1;";
 
-    db.Query(getRoomIDQuery);
+    db.QueryExists(getRoomIDQuery);
 
     int roomID = 0;
     while (sqlite3_step(db.stmt) == SQLITE_ROW)
@@ -538,3 +538,203 @@ void UserManager::deleteUser(const string &userID)
     execute(sql);
     cout << "用户删除成功\n";
 }
+
+void UserManager::DealAccommodationRequests()
+{
+    // 显示所有待审批的请求
+    string requestID, studentID, studentName, gender, dormitoryName, roomNumber, requestType, requestTime, approveTime,
+            status, note;
+    // 使用 unordered_set 来存储请求ID，避免重复和加速查找
+    unordered_set<string> requestIDs;
+    const string sql = R"(
+SELECT ar.requestID
+FROM accommodation_requests ar
+WHERE ar.status = '待审批'
+ORDER BY ar.requestTime DESC;
+    )";
+
+    db.QueryExists(sql);
+
+    // 遍历查询结果并显示每个申请的信息
+    while (sqlite3_step(db.stmt) == SQLITE_ROW)
+    {
+        // 获取查询结果中的每一列数据
+        requestID = db.getQueryResult(0); // 申请ID
+        // 将请求ID存入 unordered_set
+        requestIDs.insert(requestID);
+    }
+
+    // 如果没有待审批的请求
+    if (requestIDs.empty())
+    {
+        cout << "没有待审批的申请。\n";
+        return;
+    }
+    viewAccommodationRequests();
+
+    string selectedRequestID;
+    // 提示管理员选择处理的请求ID
+    while (true)
+    {
+        cout << "请输入要处理的请求ID（输入 'exit' 退出）：";
+        cin >> selectedRequestID;
+
+        // 如果输入 'exit'，退出
+        if (selectedRequestID == "exit")
+        {
+            cout << "退出成功。\n";
+            return;
+        }
+
+        // 验证请求ID是否有效
+        if (requestIDs.find(selectedRequestID) != requestIDs.end())
+        {
+            viewAccommodationRequests(selectedRequestID);
+            while (sqlite3_step(db.stmt) == SQLITE_ROW)
+            {
+                // 获取查询结果中的每一列数据
+                requestID = db.getQueryResult(0); // 申请ID
+                studentID = db.getQueryResult(1); // 学生学号
+                studentName = db.getQueryResult(2); // 学生姓名
+                gender = db.getQueryResult(3); // 学生性别
+                dormitoryName = db.getQueryResult(4); // 申请宿舍楼名称
+                roomNumber = db.getQueryResult(5); // 申请房间号
+                requestType = db.getQueryResult(6); // 申请类型
+                requestTime = db.getQueryResult(7); // 申请时间
+                approveTime = db.getQueryResult(8); // 审批时间
+                status = db.getQueryResult(9); // 申请状态
+                note = db.getQueryResult(10); // 备注
+            }
+            cout << studentName << " " << studentID << " " << dormitoryName << " " << roomNumber << " " << endl;
+            // 请求ID有效，提示管理员选择审批操作
+            cout << "\n选择审批操作：\n";
+            cout << "1. 通过\n";
+            cout << "2. 不通过\n";
+            cout << "3. 返回\n";
+
+            int choice;
+            cout << "请输入选择（1/2/3）：";
+            cin >> choice;
+            cin.ignore();
+            // 处理选择
+            switch (choice)
+            {
+                case 1: // 通过
+                    cout << "你选择了通过请求ID: " << selectedRequestID << endl;
+
+                    if (requestType == "入住")
+                    {
+                        // 处理入住申请
+                        arrangeAccommodation(studentID);
+                    } else if (requestType == "换宿")
+                    {
+                        QuickArrangeCheckOut(studentID, "申请的换宿");
+                        QuickArrangeAccommodation(studentID, dormitoryName, roomNumber, "申请的换宿");
+                        // 处理换宿申请
+                    } else if (requestType == "退宿")
+                    {
+                        // 处理退宿申请
+                        QuickArrangeCheckOut(studentID, "申请的退宿");
+                    }
+                    updateApprovalStatus(selectedRequestID, "已审批");
+                    requestIDs.erase(selectedRequestID);
+                    break;
+
+                case 2: // 不通过
+                    cout << "你选择了不通过请求ID: " << selectedRequestID << endl;
+                    updateApprovalStatus(selectedRequestID, "已拒绝");
+                    requestIDs.erase(selectedRequestID);
+                    return;
+
+                case 3: // 返回
+                    cout << "返回成功，\n";
+                    break; // 返回上层菜单
+
+                default:
+                    cout << "无效选择，请重新选择。\n";
+                    break;
+            }
+        } else
+        {
+            cout << "无效的请求ID，请重新选择。\n";
+        }
+
+        // 检查是否所有请求都已处理完毕
+        if (requestIDs.empty())
+        {
+            cout << "所有申请已经处理完毕。\n";
+            return;
+        }
+    }
+}
+
+
+void UserManager::updateApprovalStatus(const string &requestID, const string &status)
+{
+    // 更新审批状态的函数，修改申请记录的状态
+    string updateQuery =
+            "UPDATE accommodation_requests SET status = ?, approveTime = CURRENT_TIMESTAMP WHERE requestID = ?";
+    db.executeWithParams(updateQuery, {status, requestID});
+}
+
+
+void UserManager::viewAccommodationRequests(const string &requestID)
+{
+    string sql;
+
+    // 如果传入了请求ID，则查询指定请求
+    if (!requestID.empty())
+    {
+        // 拼接 SQL 查询字符串
+        sql = "SELECT "
+              "ar.requestID AS 申请ID, "
+              "u.userID AS 学生学号, "
+              "u.name AS 姓名, "
+              "u.gender AS 性别, "
+              "ar.dormitoryName AS 申请宿舍楼, "
+              "ar.roomNumber AS 申请房间号, "
+              "ar.requestType AS 申请类型, "
+              "ar.requestTime AS 申请时间, "
+              "ar.approveTime AS 审批时间, "
+              "ar.status AS 申请状态, "
+              "ar.note AS 备注 "
+              "FROM "
+              "accommodation_requests ar "
+              "JOIN "
+              "users u ON ar.studentID = u.userID "
+              "WHERE "
+              "ar.requestID = '" + requestID + "' "
+              "ORDER BY "
+              "ar.requestTime DESC;";
+        db.QueryExists(sql);
+    } else
+    {
+        // 如果没有传入请求ID，则查询所有待审批的申请
+        sql = "SELECT "
+                "ar.requestID AS 申请ID, "
+                "u.userID AS 学生学号, "
+                "u.name AS 姓名, "
+                "u.gender AS 性别, "
+                "ar.dormitoryName AS 申请宿舍楼, "
+                "ar.roomNumber AS 申请房间号, "
+                "ar.requestType AS 申请类型, "
+                "ar.requestTime AS 申请时间, "
+                "ar.approveTime AS 审批时间, "
+                "ar.status AS 申请状态, "
+                "ar.note AS 备注 "
+                "FROM "
+                "accommodation_requests ar "
+                "JOIN "
+                "users u ON ar.studentID = u.userID "
+                "WHERE "
+                "ar.status = '待审批' "
+                "ORDER BY "
+                "ar.requestTime DESC;";
+        db.Query(sql);
+    }
+
+    // 直接调用 db.Query() 执行拼接后的查询
+}
+
+
+

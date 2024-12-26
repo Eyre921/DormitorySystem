@@ -4,6 +4,7 @@
 #include <sqlite3.h>
 #include <string>
 #include <iostream>
+#include <vector>
 using namespace std;
 
 class Database
@@ -31,6 +32,12 @@ public:
 
 
     bool updateRoomStatus();
+
+    bool QueryWithParams(const string &query, const std::vector<std::string> &params);
+
+    void executeWithParams(const std::string &sql, const std::vector<std::string> &params);
+
+    bool QueryWithIntParams(const string &query, const vector<int> &params);
 
     string getQueryResult(int columnIndex);
 };

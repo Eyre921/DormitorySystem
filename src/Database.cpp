@@ -112,6 +112,21 @@ bool Database::QueryExists(const std::string &sql)
     // 处理查询结果
     if (result == SQLITE_ROW)
     {
+        // 获取列数
+        int columnCount = sqlite3_column_count(stmt);
+
+        // 打印查询结果
+
+        while (result == SQLITE_ROW)
+        {
+            for (int i = 0; i < columnCount; ++i)
+            {
+                const char *columnName = sqlite3_column_name(stmt, i); // 获取列名
+                const char *columnValue = reinterpret_cast<const char *>(sqlite3_column_text(stmt, i)); // 获取列值
+            }
+            cout << endl; // 打印一行数据后换行
+            result = sqlite3_step(stmt); // 继续执行下一行
+        }
         return true;
     } else if (result == SQLITE_DONE)
     {
@@ -208,9 +223,99 @@ bool Database::updateRoomStatus()
 }
 
 
+bool Database::QueryWithParams(const string &query, const std::vector<std::string> &params)
+{
+    // 准备查询语句
+    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, 0) != SQLITE_OK)
+    {
+        cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;
+        return false;
+    }
 
+    // 绑定参数
+    for (size_t i = 0; i < params.size(); ++i)
+    {
+        if (sqlite3_bind_text(stmt, i + 1, params[i].c_str(), -1, SQLITE_STATIC) != SQLITE_OK)
+        {
+            cout << "Failed to bind params: " << sqlite3_errmsg(db) << endl;
+            sqlite3_finalize(stmt);
+            return false;
+        }
+    }
 
+    // 执行查询
+    if (sqlite3_step(stmt) != SQLITE_ROW)
+    {
+        cerr << "No rows found" << endl;
+        sqlite3_finalize(stmt);
+        return false;
+    }
 
+    return true;
+}
 
+void Database::executeWithParams(const std::string &sql, const std::vector<std::string> &params)
+{
+    // 准备 SQL 语句
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    {
+        cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;
+        return;
+    }
+
+    // 绑定参数
+    for (size_t i = 0; i < params.size(); ++i)
+    {
+        if (sqlite3_bind_text(stmt, i + 1, params[i].c_str(), -1, SQLITE_STATIC) != SQLITE_OK)
+        {
+            cout << "Failed to bind params: " << sqlite3_errmsg(db) << endl;
+            sqlite3_finalize(stmt);
+            return;
+        }
+    }
+
+    // 执行查询
+    if (sqlite3_step(stmt) != SQLITE_DONE)
+    {
+        cout << "Failed to execute statement: " << sqlite3_errmsg(db) << endl;
+    } else
+    {
+        // cout << "Query executed successfully.\n";
+    }
+
+    // 释放语句资源
+    sqlite3_finalize(stmt);
+}
+
+bool Database::QueryWithIntParams(const string &query, const vector<int> &params)
+{
+    // 准备查询语句
+    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, 0) != SQLITE_OK)
+    {
+        cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;
+        return false;
+    }
+
+    // 绑定参数（这里绑定的是整数类型的参数）
+    for (size_t i = 0; i < params.size(); ++i)
+    {
+        if (sqlite3_bind_int(stmt, i + 1, params[i]) != SQLITE_OK)
+        {
+            cout << "Failed to bind params: " << sqlite3_errmsg(db) << endl;
+            sqlite3_finalize(stmt);
+            return false;
+        }
+    }
+
+    // 执行查询
+    if (sqlite3_step(stmt) != SQLITE_ROW)
+    {
+        cerr << "No rows found" << endl;
+        sqlite3_finalize(stmt);
+        return false;
+    }
+
+    return true;
+}
 
 

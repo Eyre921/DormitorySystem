@@ -74,7 +74,7 @@ int main()
     SetConsoleCP(CP_UTF8);
     int choice;
     cout << "数据库成功链接\n数据已更新" << endl;
-
+    //userManager->DealAccommodationRequests();
     // userManager->getAllUsers();
     //adminMenu();
     //userManager->arrangeAccommodation();
@@ -213,11 +213,11 @@ void adminMenu()
     while (true)
     {
         cout << "\n---- 管理员菜单 ----\n";
-        cout << "1. 管理宿舍楼\n";
-        cout << "2. 管理用户\n";
-        cout << "3. 生成报表\n";
-        cout << "4. 处理维修请求\n";
-        cout << "5. 入住管理\n";
+        cout << "1. 舍楼管理中心\n";
+        cout << "2. 用户管理中心\n";
+        cout << "3. 报表生成模块\n";
+        cout << "4. 维修处理中心\n";
+        cout << "5. 住宿管理中心\n";
         cout << "0. 退出登录\n";
         cout << "请输入你的选择: ";
         cin >> choice;
@@ -262,8 +262,6 @@ void manageUsers()
         cout << "3. 查看用户信息(通过学号)\n";
         cout << "4. 查看用户信息(通过姓名)\n";
         cout << "5. 查看全部用户信息\n";
-        cout << "6. 安排住宿\n";
-        cout << "7. 安排退宿\n";
         cout << "0. 返回上一级\n";
         cout << "请输入你的选择: ";
         cin >> choice;
@@ -342,40 +340,7 @@ void manageUsers()
             case 5:
                 userManager->checkUserInfoALL();
                 break;
-            case 6:
-                cin.ignore();
-                while (true)
-                {
-                    ID = userManager->Get_ID();
-                    if (ID == "exit") break;
-                    // 检查是否已经入住
-                    if (userManager->IsStudentCheckedIn(ID))
-                    {
-                        cout << "该学生已入住，请重新选择其他学生。\n";
-                        continue;
-                    }
-                    break;
-                }
-                if (ID == "exit") break;
-                userManager->arrangeAccommodation(ID);
-                break;
-            case 7:
-                cin.ignore();
-                while (true)
-                {
-                    ID = userManager->Get_ID();
-                    // 检查是否已经入住
-                    if (ID == "exit") break;
-                    if (!userManager->IsStudentCheckedIn(ID))
-                    {
-                        cout << "该学生未入住，请重新选择其他学生。\n";
-                        continue;
-                    }
-                    break;
-                }
-                if (ID == "exit") break;
-                userManager->arrangeCheckOut(ID);
-                break;
+
 
             case 0:
                 return;
@@ -385,6 +350,7 @@ void manageUsers()
     }
 }
 
+// 住宿管理中心
 void dormManageMenu()
 {
     string ID;
@@ -395,6 +361,7 @@ void dormManageMenu()
 
         cout << "1. 安排住宿\n";
         cout << "2. 安排退宿\n";
+        cout << "3. 申请处理\n";
         cout << "0. 返回上一级\n";
         cout << "请输入你的选择: ";
         cin >> choice;
@@ -432,7 +399,9 @@ void dormManageMenu()
                 if (ID == "exit") break;
                 userManager->arrangeCheckOut(ID);
                 break;
-
+            case 3:
+                userManager->DealAccommodationRequests();
+                break;
             case 0:
                 return;
             default:
@@ -779,7 +748,7 @@ void submitRepairRequest(const string &stuID) {}
 
 // 查看通知
 void viewNotifications(const string &stuID) {}
-// 管理员管理宿舍楼
+
 
 void viewRequests(const string &stuID)
 {
@@ -820,7 +789,7 @@ void viewDormitoryInfo(const string &stuID)
         string sql2 = "SELECT recordType AS 记录类型, eventTime AS 时间, note AS 备注 "
                       "FROM check_in_out_records "
                       "WHERE studentID = '" + stuID + "' "
-                      "ORDER BY eventTime DESC LIMIT 1;";
+                      "ORDER BY recordID DESC LIMIT 1;";
 
         userManager->Query(sql);
         userManager->Query(sql2);
