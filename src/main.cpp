@@ -10,44 +10,30 @@ using namespace std;
 // 函数声明
 
 
-void studentRegister();
+void studentLogin();
+
+void studentLoginMenu();
 
 void studentMenu(const string &stuID);
+
+void adminLogin();
 
 void adminMenu();
 
 void manageDormitories();
 
-void addDormitory();
-
-void studentLoginMenu();
-
-
 void manageUsers();
-
 
 void generateReports();
 
 void handleRepairRequests();
 
-
-void adminLogin();
-
 void dormManageMenu();
 
-void studentLogin();
 
-
-//cout << "数据库成功链接\n数据已更新" << endl;
-//userManager->DealAccommodationRequests();
-// userManager->GetAllUsers();
 //adminMenu();
-//userManager->arrangeAccommodation();
-
-//userManager->deleteDormitory();
 //studentMenu("t2");
-//adminMenu();
-//userManager->manageRooms();
+
 // 主程序入口
 int main()
 {
@@ -81,6 +67,7 @@ int main()
     }
 }
 
+// 学生登录菜单
 void studentLoginMenu()
 {
     int choice;
@@ -107,6 +94,7 @@ void studentLoginMenu()
     }
 }
 
+// 学生登录
 void studentLogin()
 {
     string studentID, password;
@@ -144,6 +132,69 @@ void studentLogin()
     }
 }
 
+// 学生菜单
+void studentMenu(const string &stuID)
+{
+    int choice;
+    while (true)
+    {
+        cout << "\n---- 学生菜单 ----\n";
+        cout << "1. 查看宿舍楼和房间信息\n";
+        cout << "2. 申请入住\n";
+        cout << "3. 申请退宿\n";
+        cout << "4. 请求换宿\n";
+        cout << "5. 提交维修请求\n";
+        cout << "6. 查看通知\n";
+        cout << "7. 查看请求\n";
+        cout << "8. 修改密码\n";
+        cout << "0. 退出登录\n";
+        cout << "请输入你的选择: ";
+        cin >> choice;
+
+        // 清除输入缓冲区，以防止输入错误导致无限循环
+        if (cin.fail())
+        {
+            cin.clear(); // 清除错误标志
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 忽略错误输入
+            cout << "输入无效，请输入数字。\n";
+            continue;
+        }
+
+        switch (choice)
+        {
+            case 1:
+                userManager->viewDormitoryInfo(stuID); // 查看宿舍楼和房间信息
+                break;
+            case 2:
+                userManager->applyMoveIn(stuID); // 申请入住
+                break;
+            case 3:
+                userManager->applyMoveOut(stuID); // 申请退宿
+                break;
+            case 4:
+                userManager->requestRoomChange(stuID); // 请求换宿
+                break;
+            case 5:
+                userManager->submitRepairRequest(stuID); // 提交维修请求
+                break;
+            case 6:
+                userManager->viewNotifications(stuID); // 查看通知
+                break;
+            case 7:
+                userManager->viewRequests(stuID); // 查看请求
+                break;
+            case 8:
+                userManager->UserPasswordChange(stuID); // 修改密码
+                break;
+            case 0:
+                cout << "正在退出登录...\n";
+                return;
+            default:
+                cout << "无效选择，请重新输入。\n";
+        }
+    }
+}
+
 // 管理员登录
 void adminLogin()
 {
@@ -163,6 +214,7 @@ void adminLogin()
     }
 }
 
+// 管理员菜单
 void adminMenu()
 {
     int choice;
@@ -204,7 +256,7 @@ void adminMenu()
     }
 }
 
-// 管理员管理用户
+// 管理用户
 void manageUsers()
 {
     string ID;
@@ -322,7 +374,7 @@ void dormManageMenu()
     }
 }
 
-// 管理员生成报表
+// 生成报表
 void generateReports()
 {
     int choice;
@@ -353,7 +405,7 @@ void generateReports()
     }
 }
 
-// 管理员处理维修请求
+// 处理维修请求
 void handleRepairRequests()
 {
     int choice;
@@ -384,6 +436,7 @@ void handleRepairRequests()
     }
 }
 
+// 管理宿舍楼
 void manageDormitories()
 {
     int choice;
@@ -422,67 +475,6 @@ void manageDormitories()
 }
 
 
-void studentMenu(const string &stuID)
-{
-    int choice;
-    while (true)
-    {
-        cout << "\n---- 学生菜单 ----\n";
-        cout << "1. 查看宿舍楼和房间信息\n";
-        cout << "2. 申请入住\n";
-        cout << "3. 申请退宿\n";
-        cout << "4. 请求换宿\n";
-        cout << "5. 提交维修请求\n";
-        cout << "6. 查看通知\n";
-        cout << "7. 查看请求\n";
-        cout << "8. 修改密码\n";
-        cout << "0. 退出登录\n";
-        cout << "请输入你的选择: ";
-        cin >> choice;
-
-        // 清除输入缓冲区，以防止输入错误导致无限循环
-        if (cin.fail())
-        {
-            cin.clear(); // 清除错误标志
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 忽略错误输入
-            cout << "输入无效，请输入数字。\n";
-            continue;
-        }
-
-        switch (choice)
-        {
-            case 1:
-                userManager->viewDormitoryInfo(stuID); // 查看宿舍楼和房间信息
-                break;
-            case 2:
-                userManager->applyMoveIn(stuID); // 申请入住
-                break;
-            case 3:
-                userManager->applyMoveOut(stuID); // 申请退宿
-                break;
-            case 4:
-                userManager->requestRoomChange(stuID); // 请求换宿
-                break;
-            case 5:
-                userManager->submitRepairRequest(stuID); // 提交维修请求
-                break;
-            case 6:
-                userManager->viewNotifications(stuID); // 查看通知
-                break;
-            case 7:
-                userManager->viewRequests(stuID); // 查看请求
-                break;
-            case 8:
-                userManager->UserPasswordChange(stuID); // 修改密码
-                break;
-            case 0:
-                cout << "正在退出登录...\n";
-                return;
-            default:
-                cout << "无效选择，请重新输入。\n";
-        }
-    }
-}
 
 
 
