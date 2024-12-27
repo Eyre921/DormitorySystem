@@ -28,7 +28,7 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 34,
+				"line" : 38,
 				"parent" : 0
 			},
 			{
@@ -57,6 +57,10 @@
 				{
 					"backtrace" : 2,
 					"path" : "D:/Eyre/C++/DormitorySystem/sqlite3"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/Eyre/C++/DormitorySystem/data"
 				}
 			],
 			"language" : "CXX",
@@ -72,8 +76,8 @@
 			[
 				0,
 				1,
-				3,
-				5
+				6,
+				8
 			]
 		},
 		{
@@ -92,12 +96,16 @@
 				{
 					"backtrace" : 2,
 					"path" : "D:/Eyre/C++/DormitorySystem/sqlite3"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/Eyre/C++/DormitorySystem/data"
 				}
 			],
 			"language" : "C",
 			"sourceIndexes" : 
 			[
-				2
+				3
 			]
 		}
 	],
@@ -136,17 +144,27 @@
 			[
 				0,
 				1,
-				2,
 				3,
-				5
+				5,
+				6,
+				8
 			]
 		},
 		{
 			"name" : "Header Files",
 			"sourceIndexes" : 
 			[
+				2,
 				4,
-				6
+				7,
+				9
+			]
+		},
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				10
 			]
 		}
 	],
@@ -166,8 +184,23 @@
 		},
 		{
 			"backtrace" : 1,
+			"path" : "src/UserManager.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
 			"compileGroupIndex" : 1,
 			"path" : "sqlite3/sqlite3.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "sqlite3/sqlite3.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "sqlite3/sqlite3.def",
 			"sourceGroupIndex" : 0
 		},
 		{
@@ -191,6 +224,11 @@
 			"backtrace" : 1,
 			"path" : "src/globals.h",
 			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "data/dormitory.db",
+			"sourceGroupIndex" : 2
 		}
 	],
 	"type" : "EXECUTABLE"

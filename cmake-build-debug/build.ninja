@@ -52,35 +52,35 @@ build cmake_object_order_depends_target_DormitoryManagementSystem: phony || .
 build CMakeFiles/DormitoryManagementSystem.dir/src/main.cpp.obj: CXX_COMPILER__DormitoryManagementSystem_unscanned_Debug D$:/Eyre/C++/DormitorySystem/src/main.cpp || cmake_object_order_depends_target_DormitoryManagementSystem
   DEP_FILE = CMakeFiles\DormitoryManagementSystem.dir\src\main.cpp.obj.d
   FLAGS = -Wall -Wextra -g -std=gnu++1z -fdiagnostics-color=always
-  INCLUDES = -ID:/Eyre/C++/DormitorySystem/src -ID:/Eyre/C++/DormitorySystem/sqlite3
+  INCLUDES = -ID:/Eyre/C++/DormitorySystem/src -ID:/Eyre/C++/DormitorySystem/sqlite3 -ID:/Eyre/C++/DormitorySystem/data
   OBJECT_DIR = CMakeFiles\DormitoryManagementSystem.dir
   OBJECT_FILE_DIR = CMakeFiles\DormitoryManagementSystem.dir\src
 
 build CMakeFiles/DormitoryManagementSystem.dir/src/UserManager.cpp.obj: CXX_COMPILER__DormitoryManagementSystem_unscanned_Debug D$:/Eyre/C++/DormitorySystem/src/UserManager.cpp || cmake_object_order_depends_target_DormitoryManagementSystem
   DEP_FILE = CMakeFiles\DormitoryManagementSystem.dir\src\UserManager.cpp.obj.d
   FLAGS = -Wall -Wextra -g -std=gnu++1z -fdiagnostics-color=always
-  INCLUDES = -ID:/Eyre/C++/DormitorySystem/src -ID:/Eyre/C++/DormitorySystem/sqlite3
+  INCLUDES = -ID:/Eyre/C++/DormitorySystem/src -ID:/Eyre/C++/DormitorySystem/sqlite3 -ID:/Eyre/C++/DormitorySystem/data
   OBJECT_DIR = CMakeFiles\DormitoryManagementSystem.dir
   OBJECT_FILE_DIR = CMakeFiles\DormitoryManagementSystem.dir\src
 
 build CMakeFiles/DormitoryManagementSystem.dir/sqlite3/sqlite3.c.obj: C_COMPILER__DormitoryManagementSystem_unscanned_Debug D$:/Eyre/C++/DormitorySystem/sqlite3/sqlite3.c || cmake_object_order_depends_target_DormitoryManagementSystem
   DEP_FILE = CMakeFiles\DormitoryManagementSystem.dir\sqlite3\sqlite3.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -ID:/Eyre/C++/DormitorySystem/src -ID:/Eyre/C++/DormitorySystem/sqlite3
+  INCLUDES = -ID:/Eyre/C++/DormitorySystem/src -ID:/Eyre/C++/DormitorySystem/sqlite3 -ID:/Eyre/C++/DormitorySystem/data
   OBJECT_DIR = CMakeFiles\DormitoryManagementSystem.dir
   OBJECT_FILE_DIR = CMakeFiles\DormitoryManagementSystem.dir\sqlite3
 
 build CMakeFiles/DormitoryManagementSystem.dir/src/Database.cpp.obj: CXX_COMPILER__DormitoryManagementSystem_unscanned_Debug D$:/Eyre/C++/DormitorySystem/src/Database.cpp || cmake_object_order_depends_target_DormitoryManagementSystem
   DEP_FILE = CMakeFiles\DormitoryManagementSystem.dir\src\Database.cpp.obj.d
   FLAGS = -Wall -Wextra -g -std=gnu++1z -fdiagnostics-color=always
-  INCLUDES = -ID:/Eyre/C++/DormitorySystem/src -ID:/Eyre/C++/DormitorySystem/sqlite3
+  INCLUDES = -ID:/Eyre/C++/DormitorySystem/src -ID:/Eyre/C++/DormitorySystem/sqlite3 -ID:/Eyre/C++/DormitorySystem/data
   OBJECT_DIR = CMakeFiles\DormitoryManagementSystem.dir
   OBJECT_FILE_DIR = CMakeFiles\DormitoryManagementSystem.dir\src
 
 build CMakeFiles/DormitoryManagementSystem.dir/src/globals.cpp.obj: CXX_COMPILER__DormitoryManagementSystem_unscanned_Debug D$:/Eyre/C++/DormitorySystem/src/globals.cpp || cmake_object_order_depends_target_DormitoryManagementSystem
   DEP_FILE = CMakeFiles\DormitoryManagementSystem.dir\src\globals.cpp.obj.d
   FLAGS = -Wall -Wextra -g -std=gnu++1z -fdiagnostics-color=always
-  INCLUDES = -ID:/Eyre/C++/DormitorySystem/src -ID:/Eyre/C++/DormitorySystem/sqlite3
+  INCLUDES = -ID:/Eyre/C++/DormitorySystem/src -ID:/Eyre/C++/DormitorySystem/sqlite3 -ID:/Eyre/C++/DormitorySystem/data
   OBJECT_DIR = CMakeFiles\DormitoryManagementSystem.dir
   OBJECT_FILE_DIR = CMakeFiles\DormitoryManagementSystem.dir\src
 
