@@ -45,6 +45,8 @@ void viewNotifications(const string &stuID);
 
 void manageUsers();
 
+void mamageRooms();
+
 void checkUserInfo(const string &userID);
 
 void generateReports();
@@ -82,7 +84,7 @@ int main()
     // applyMoveIn("2031");
     // applyMoveOut("2031");
     //userManager->deleteDormitory();
-    //studentMenu("t1");
+    //studentMenu("t2");
     adminMenu();
     // while (true)
     // {
@@ -203,7 +205,11 @@ void studentRegister()
     cout << "请输入姓名: ";
     cin >> name;
     cout << "请输入性别: ";
-    cin >> gender;
+    while (gender != "男" && gender != "女")
+    {
+        cout << "请输入性别(男/女): ";
+        cin >> gender;
+    }
     cout << "请输入联系方式: ";
     cin >> contactInfo;
     userManager->registerUser(studentID, password, name, gender, contactInfo, false, false);
@@ -497,7 +503,39 @@ void manageDormitories()
             //deleteDormitory();
                 break;
             case 3:
-                userManager->viewDormitories();
+                userManager->viewAllDormitories();
+                break;
+            case 0:
+                return;
+            default:
+                cout << "无效选择，请重新输入。\n";
+        }
+    }
+}
+
+void mamageRooms()
+{
+    int choice;
+    while (true)
+    {
+        cout << "\n---- 管理房间 ----\n";
+        cout << "1. 查看房间信息\n";
+        cout << "2. 删除房间\n";
+        cout << "3. 修改房间信息\n";
+        cout << "0. 返回上一级\n";
+        cout << "请输入你的选择: ";
+        cin >> choice;
+
+        switch (choice)
+        {
+            case 1:
+
+                break;
+            case 2:
+
+                break;
+            case 3:
+
                 break;
             case 0:
                 return;

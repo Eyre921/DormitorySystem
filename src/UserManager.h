@@ -99,9 +99,11 @@ public:
 
     void checkRoomOccupancy(int dormitoryID, const string &roomNumber);
 
-    void viewDormitories();
+    void viewAllDormitories();
 
     void ViewStudentsInRoom(const string &dormitoryID, const string &roomNumber);
+
+    void manageRooms();
 
     // 检查用户是否存在
 };
