@@ -20,12 +20,12 @@ include_directories(
 
 # 添加源文件
 set(SOURCE_FILES
-        src/main.cpp
-        src/UserManager.cpp
-        src/UserManager.h
         sqlite3/sqlite3.c
         sqlite3/sqlite3.h
         sqlite3/sqlite3.def
+        src/main.cpp
+        src/UserManager.cpp
+        src/UserManager.h
         src/Database.cpp
         src/Database.h
         src/globals.cpp

@@ -1393,6 +1393,89 @@ void UserManager::viewCheckInOutRecords(const string &studentID)
     }
 }
 
+// 处理维修请求
+void UserManager::handleRepairRequests()
+{
+    // 1. 查询所有未处理的维修请求
+    string sql = "SELECT repairID AS '报修ID', studentID AS '学生ID', roomID AS '房间ID', "
+            "repairType AS '种类', description AS '描述', repairTime AS '报修时间' "
+            "FROM repair_requests "
+            "WHERE status = '未处理';";
+
+    // 执行查询
+    db.query(sql);
+
+    // 2. 如果没有未处理的报修请求
+    if (sqlite3_step(db.stmt) != SQLITE_ROW)
+    {
+        cout << "没有待处理的报修请求。\n";
+        return; // 没有待处理的报修请求，直接退出
+    }
+
+    // 4. 获取管理员输入的 repairID
+    string selectedRepairID;
+    cout << "\n请输入要处理的报修ID（输入'exit'退出）：";
+    cin >> selectedRepairID;
+
+    // 输入'退出'，结束函数
+    if (selectedRepairID == "exit")
+    {
+        cout << "已退出处理报修请求。\n";
+        return;
+    }
+
+    // 5. 验证输入的 repairID 是否有效
+    string queryExists = "SELECT 1 FROM repair_requests WHERE repairID = '" + selectedRepairID + "' AND status = '未处理'";
+    if (!db.queryExists(queryExists))
+    {
+        cout << "无效的报修ID，未找到待处理的报修请求。\n";
+        return;
+    }
+
+    // 6. 确认处理报修请求
+    cout << "确认处理报修请求ID: " << selectedRepairID << " 吗？(yes/no): ";
+    string confirm;
+    cin >> confirm;
+
+    if (confirm == "yes")
+    {
+        // 7. 更新报修请求的状态为 '已处理'，并记录处理时间
+        string updateRepairRequestSQL = "UPDATE repair_requests "
+                                        "SET status = '已处理', handleTime = CURRENT_TIMESTAMP "
+                                        "WHERE repairID = '" + selectedRepairID + "';";
+        db.execute(updateRepairRequestSQL);
+
+        // 8. 获取房间ID，更新房间状态
+        string queryRoomID = "SELECT roomID FROM repair_requests WHERE repairID = '" + selectedRepairID + "';";
+        db.queryExists(queryRoomID);
+
+        string roomID;
+        if (sqlite3_step(db.stmt) == SQLITE_ROW)
+        {
+            roomID = db.getQueryResult(0); // 获取房间ID
+        }
+
+        string checkPendingRepairsSQL = "SELECT 1 FROM repair_requests "
+                                        "WHERE roomID = '" + roomID + "' AND status = '未处理' LIMIT 1;";
+        if (db.queryExists(checkPendingRepairsSQL))
+        {
+            // 如果该房间还有未处理的报修请求，不能将房间状态更新为 '正常'
+            cout << "房间仍有待处理的报修请求，房间状态保持为 '维修中'。\n";
+        } else
+        {
+            // 否则，更新房间状态为 '正常'
+            string updateRoomSQL = "UPDATE rooms "
+                                   "SET repair_status = '正常' "
+                                   "WHERE roomID = '" + roomID + "';";
+            db.execute(updateRoomSQL);
+            cout << "该房间所有报修请求已处理，状态已更新为 '正常'。\n";
+        }
+    } else
+    {
+        cout << "取消处理该报修请求。\n";
+    }
+}
+
 
 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 //
 
@@ -1556,7 +1639,7 @@ void UserManager::createRepairRequest(const string &studentID)
                        "JOIN student_rooms sr ON r.roomID = sr.roomID "
                        "WHERE sr.studentID = '" + studentID + "';";
 
-    db.query(queryRoom);
+    db.queryExists(queryRoom);
 
     // 获取房间号
     string roomNumber;
@@ -1595,7 +1678,12 @@ void UserManager::createRepairRequest(const string &studentID)
 
     // 执行SQL语句
     db.execute(sql);
+    // 更新房间的维修状态为“维修中”
+    string updateRepairStatus = "UPDATE rooms SET repair_status = '维修中' "
+                                "WHERE roomNumber = '" + roomNumber + "';";
 
+    // 执行更新房间状态的SQL语句
+    db.execute(updateRepairStatus);
     cout << "报修记录已成功提交。\n";
 }
 
@@ -1618,7 +1706,7 @@ void UserManager::viewRequests(const string &stuID)
     db.query(sql);
 }
 
-// 查看未审批的请求
+// 学生查看未审批的请求
 void UserManager::viewApprovingRequests(const string &stuID)
 {
     // 构造SQL查询语句，查询待审批的申请

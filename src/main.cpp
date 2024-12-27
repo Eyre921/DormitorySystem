@@ -291,7 +291,7 @@ void adminMenu()
                 generateReports(); // 生成报表
                 break;
             case 4:
-                handleRepairRequests(); // 处理维修请求
+                userManager->handleRepairRequests(); // 处理维修请求
                 break;
             case 5:
                 dormManageMenu();
@@ -461,36 +461,6 @@ void generateReports()
     }
 }
 
-// 处理维修请求
-void handleRepairRequests()
-{
-    int choice;
-    while (true)
-    {
-        cout << "\n---- 处理维修请求 ----\n";
-        cout << "1. 查看所有维修请求\n";
-        cout << "2. 更新维修请求状态\n";
-        cout << "3. 返回上一级\n";
-        cout << "请输入你的选择: ";
-        cin >> choice;
-
-        switch (choice)
-        {
-            case 1:
-                // TODO: 查看维修请求
-                cout << "查看维修请求 - 功能开发中。\n";
-                break;
-            case 2:
-                // TODO: 更新维修请求状态
-                cout << "更新维修请求状态 - 功能开发中。\n";
-                break;
-            case 3:
-                return;
-            default:
-                cout << "无效选择，请重新输入。\n";
-        }
-    }
-}
 
 // 管理宿舍楼
 void manageDormitories()
@@ -529,6 +499,8 @@ void manageDormitories()
         }
     }
 }
+
+
 
 
 

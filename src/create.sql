@@ -17,12 +17,12 @@ CREATE TABLE dormitories
 );
 CREATE TABLE rooms
 (
-    roomID        INTEGER PRIMARY KEY AUTOINCREMENT, -- 房间ID（自增）
-    dormitoryID   INTEGER           NOT NULL,        -- 所属宿舍楼ID（外键）
-    roomNumber    TEXT              NOT NULL,        -- 房间号
-    capacity      INTEGER           NOT NULL,        -- 房间容量
-    occupied      INTEGER DEFAULT 0 NOT NULL,        -- 已入住人数
-    repair_status TEXT    DEFAULT '正常',            -- 房间状态（正常、维修中）
+    roomID        INTEGER PRIMARY KEY AUTOINCREMENT,                                   -- 房间ID（自增）
+    dormitoryID   INTEGER                                                    NOT NULL, -- 所属宿舍楼ID（外键）
+    roomNumber    TEXT                                                       NOT NULL, -- 房间号
+    capacity      INTEGER                                                    NOT NULL, -- 房间容量
+    occupied      INTEGER                                          DEFAULT 0 NOT NULL, -- 已入住人数
+    repair_status TEXT CHECK (repair_status IN ('维修中', '正常')) DEFAULT '正常',     -- 房间状态（正常、维修中）
     FOREIGN KEY (dormitoryID) REFERENCES dormitories (dormitoryID)
 );
 CREATE TABLE student_rooms

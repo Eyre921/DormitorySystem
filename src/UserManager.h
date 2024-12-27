@@ -133,6 +133,7 @@ public:
     // 查看住宿记录
     void viewCheckInOutRecords(const string &studentID = "");
 
+    void handleRepairRequests();
 
     // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 //
 
