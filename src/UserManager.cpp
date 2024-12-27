@@ -26,7 +26,7 @@ UserManager::UserManager() : db("dormitory.db")
 // 查询并打印
 void UserManager::query(const string &SQL)
 {
-    db.Query(SQL);
+    db.query(SQL);
 }
 
 // 执行
@@ -38,7 +38,7 @@ void UserManager::execute(const string &SQL)
 // 查询但不打印
 bool UserManager::queryExists(const string &SQL)
 {
-    return db.QueryExists(SQL);
+    return db.queryExists(SQL);
 }
 
 
@@ -47,7 +47,7 @@ bool UserManager::queryExists(const string &SQL)
 // 一键获取所有用户信息
 void UserManager::getAllUsers()
 {
-    db.Query("SELECT * FROM users;");
+    db.query("SELECT * FROM users;");
 }
 
 // 获取并返回ID
@@ -91,7 +91,7 @@ bool UserManager::dormitoryExistsByName(const string &dormitoryName)
     string sql = "SELECT * FROM dormitories WHERE name = '" + dormitoryName + "';";
 
     // 调用查询函数来检查数据库中是否已有该宿舍楼名称
-    if (db.QueryExists(sql))
+    if (db.queryExists(sql))
     {
         return true; // 如果返回 true，表示该宿舍楼名称已存在
     } else
@@ -105,14 +105,14 @@ bool UserManager::studentExistsByID(const string &ID)
 {
     // 模拟查询语句
     string sql = "SELECT * FROM users WHERE userID = '" + ID + "';";
-    return db.QueryExists(sql);
+    return db.queryExists(sql);
 }
 
 int UserManager::getDormitoryIDByName(const string &dormitoryName)
 {
     string queryDormitory = "SELECT dormitoryID FROM dormitories WHERE name = '" + dormitoryName + "'";
     // 执行查询
-    db.QueryExists(queryDormitory);
+    db.queryExists(queryDormitory);
     // 检查查询结果
     if (sqlite3_step(db.stmt) != SQLITE_ROW)
     {
@@ -130,7 +130,7 @@ bool UserManager::loginUser(const string &userID, const string &password, const 
     string sql = "SELECT * FROM users WHERE userID = '" + userID + "' AND password = '" + password + "' AND isAdmin = '"
                  + isAdmin + "';";
 
-    if (db.QueryExists(sql))
+    if (db.queryExists(sql))
     {
         cout << "登录成功！";
         return true; // 登录成功
@@ -361,7 +361,7 @@ void UserManager::deleteDormitory()
     string queryDormitory = "SELECT dormitoryID FROM dormitories WHERE name = '" + dormitoryName + "'";
 
     // 执行查询
-    db.QueryExists(queryDormitory);
+    db.queryExists(queryDormitory);
 
     // 检查查询结果
     if (sqlite3_step(db.stmt) != SQLITE_ROW)
@@ -379,7 +379,7 @@ void UserManager::deleteDormitory()
                         "FROM rooms r "
                         "WHERE r.dormitoryID = '" + dormitoryID + "'"; // 拼接 dormitoryID
 
-    db.QueryExists(queryRooms); // 执行查询房间ID
+    db.queryExists(queryRooms); // 执行查询房间ID
 
     // 遍历查询结果，将房间ID存入集合
     while (sqlite3_step(db.stmt) == SQLITE_ROW)
@@ -402,7 +402,7 @@ void UserManager::deleteDormitory()
                                       "FROM rooms r "
                                       "WHERE r.roomID = '" + roomID + "'";
 
-            db.QueryExists(queryRoomDetails);
+            db.queryExists(queryRoomDetails);
 
             string roomNumber;
             int capacity = 0;
@@ -527,7 +527,7 @@ void UserManager::viewAllDormitories()
         )";
 
     // 执行SQL语句
-    db.Query(sql);
+    db.query(sql);
 }
 
 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 //
@@ -537,7 +537,7 @@ void UserManager::viewAllRooms(const string &dormitoryName)
 {
     string queryDormitory = "SELECT dormitoryID FROM dormitories WHERE name = '" + dormitoryName + "'";
     // 执行查询
-    db.QueryExists(queryDormitory);
+    db.queryExists(queryDormitory);
     if (sqlite3_step(db.stmt) != SQLITE_ROW)
     {
         cout << "未找到该宿舍楼。\n";
@@ -551,7 +551,7 @@ void UserManager::viewAllRooms(const string &dormitoryName)
                         "FROM rooms r "
                         "WHERE r.dormitoryID = '" + dormitoryID + "'"; // 拼接 dormitoryID
 
-    db.QueryExists(queryRooms); // 执行查询房间ID
+    db.queryExists(queryRooms); // 执行查询房间ID
 
     // 遍历查询结果，将房间ID存入集合
     while (sqlite3_step(db.stmt) == SQLITE_ROW)
@@ -575,7 +575,7 @@ void UserManager::viewAllRooms(const string &dormitoryName)
                                       "FROM rooms r "
                                       "WHERE r.roomID = '" + roomID + "'";
 
-            db.QueryExists(queryRoomDetails);
+            db.queryExists(queryRoomDetails);
 
             string roomNumber;
             int capacity = 0;
@@ -608,7 +608,7 @@ void UserManager::manageRooms()
     string queryDormitory = "SELECT dormitoryID FROM dormitories WHERE name = '" + dormitoryName + "'";
 
     // 执行查询
-    db.QueryExists(queryDormitory);
+    db.queryExists(queryDormitory);
 
     // 检查查询结果
     if (sqlite3_step(db.stmt) != SQLITE_ROW)
@@ -626,7 +626,7 @@ void UserManager::manageRooms()
                         "FROM rooms r "
                         "WHERE r.dormitoryID = '" + dormitoryID + "'"; // 拼接 dormitoryID
 
-    db.QueryExists(queryRooms); // 执行查询房间ID
+    db.queryExists(queryRooms); // 执行查询房间ID
 
     // 遍历查询结果，将房间ID存入集合
     while (sqlite3_step(db.stmt) == SQLITE_ROW)
@@ -662,7 +662,7 @@ void UserManager::manageRooms()
                                   "FROM rooms r "
                                   "WHERE r.roomID = '" + selectedRoomID + "'";
 
-        db.QueryExists(queryRoomDetails);
+        db.queryExists(queryRoomDetails);
 
         int capacity = 0;
         int occupied = 0;
@@ -727,7 +727,7 @@ void UserManager::viewStudentsInRoom(const string &dormitoryName, const string &
     vector<pair<string, string> > students; // 每个元素是学生姓名和ID的组合
 
     // 执行查询
-    db.QueryExists(sql);
+    db.queryExists(sql);
 
     // 遍历查询结果并将学生姓名和ID存储到数组中
     while (sqlite3_step(db.stmt) == SQLITE_ROW)
@@ -1099,7 +1099,7 @@ void UserManager::quickArrangeCheckOut(const string &studentID, const string &no
 
 
     // 执行查询
-    db.Query(getStudentRoomQuery);
+    db.query(getStudentRoomQuery);
 
     // 获取查询结果
     while (sqlite3_step(db.stmt) == SQLITE_ROW)
@@ -1123,7 +1123,7 @@ void UserManager::quickArrangeCheckOut(const string &studentID, const string &no
                             "WHERE d.name = '" + dormitoryName + "' AND r.roomNumber = '" + roomNumber +
                             "'  LIMIT 1;";
 
-    db.QueryExists(getRoomIDQuery);
+    db.queryExists(getRoomIDQuery);
 
     int roomID = 0;
     while (sqlite3_step(db.stmt) == SQLITE_ROW)
@@ -1176,7 +1176,7 @@ WHERE ar.status = '待审批'
 ORDER BY ar.requestTime DESC;
     )";
 
-    db.QueryExists(sql);
+    db.queryExists(sql);
 
     // 遍历查询结果并显示每个申请的信息
     while (sqlite3_step(db.stmt) == SQLITE_ROW)
@@ -1329,7 +1329,7 @@ void UserManager::viewAccommodationRequests(const string &requestID)
               "ar.requestID = '" + requestID + "' "
               "ORDER BY "
               "ar.requestTime DESC;";
-        db.QueryExists(sql);
+        db.queryExists(sql);
     } else
     {
         // 如果没有传入请求ID，则查询所有待审批的申请
@@ -1353,7 +1353,7 @@ void UserManager::viewAccommodationRequests(const string &requestID)
                 "ar.status = '待审批' "
                 "ORDER BY "
                 "ar.requestTime DESC;";
-        db.Query(sql);
+        db.query(sql);
     }
 
     // 直接调用 db.Query() 执行拼接后的查询
@@ -1412,8 +1412,8 @@ void UserManager::viewDormitoryInfo(const string &stuID)
                       "WHERE studentID = '" + stuID + "' "
                       "ORDER BY recordID DESC LIMIT 1;";
 
-        db.Query(sql);
-        db.Query(sql2);
+        db.query(sql);
+        db.query(sql2);
     } else
     {
         string xuan;
@@ -1501,7 +1501,7 @@ void UserManager::viewRequests(const string &stuID)
             "FROM accommodation_requests "
             "WHERE studentID = '" + stuID + "' "
             "ORDER BY requestTime DESC;";
-    db.Query(sql);
+    db.query(sql);
 }
 
 

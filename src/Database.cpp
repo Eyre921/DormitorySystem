@@ -23,7 +23,7 @@ bool Database::execute(const string &sql) const
 }
 
 // 查询并打印
-bool Database::Query(const std::string &sql)
+bool Database::query(const std::string &sql)
 {
     //sqlite3_stmt *stmt;
 
@@ -72,7 +72,7 @@ bool Database::Query(const std::string &sql)
 }
 
 // 查询存在性
-bool Database::QueryExists(const std::string &sql)
+bool Database::queryExists(const std::string &sql)
 {
     // sqlite3_stmt *stmt;
 
@@ -118,7 +118,7 @@ bool Database::QueryExists(const std::string &sql)
 }
 
 // 带参查询
-bool Database::QueryWithParams(const string &query, const std::vector<std::string> &params)
+bool Database::queryWithParams(const string &query, const std::vector<std::string> &params)
 {
     // 准备查询语句
     if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, 0) != SQLITE_OK)
