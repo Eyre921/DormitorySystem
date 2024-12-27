@@ -1,16 +1,16 @@
 # ninja log v6
-171	2243	7562134031902019	CMakeFiles/DormitoryManagementSystem.dir/src/DormitoryManager.cpp.obj	cb53afec2cc7b36f
-178	2239	7562134031972017	CMakeFiles/DormitoryManagementSystem.dir/src/QueryManager.cpp.obj	63597de32a126ff0
 183	2242	7562134032022013	CMakeFiles/DormitoryManagementSystem.dir/src/ReportManager.cpp.obj	59a36a39ef397a14
+178	2239	7562134031972017	CMakeFiles/DormitoryManagementSystem.dir/src/QueryManager.cpp.obj	63597de32a126ff0
+171	2243	7562134031902019	CMakeFiles/DormitoryManagementSystem.dir/src/DormitoryManager.cpp.obj	cb53afec2cc7b36f
 187	2243	7562134032062017	CMakeFiles/DormitoryManagementSystem.dir/src/RoomManager.cpp.obj	cb2ffd1020839a4a
 174	2240	7562134031932021	CMakeFiles/DormitoryManagementSystem.dir/src/NotificationManager.cpp.obj	8cc6dd79c19caf5f
 180	2240	7562134032002014	CMakeFiles/DormitoryManagementSystem.dir/src/RepairManager.cpp.obj	74ae3ee84d9e02b5
-2	890	7570094070698748	CMakeFiles/DormitoryManagementSystem.dir/src/UserManager.cpp.obj	5313b44b3ad30a7e
-2	521	7570087996457928	CMakeFiles/DormitoryManagementSystem.dir/src/main.cpp.obj	7d2b07b3266689e1
-6	4960	7570087996506270	CMakeFiles/DormitoryManagementSystem.dir/sqlite3/sqlite3.c.obj	f043c798b111ff
-1	213	7570094645544484	build.ninja	87311108787cef01
-891	1251	7570094079587215	DormitoryManagementSystem_d.exe	420d576d782a83ac
+2	975	7570097223755877	CMakeFiles/DormitoryManagementSystem.dir/src/UserManager.cpp.obj	13995db40f92811e
+1	588	7570097044276215	CMakeFiles/DormitoryManagementSystem.dir/src/main.cpp.obj	b40a676cf3ef131f
+5	5140	7570097044306217	CMakeFiles/DormitoryManagementSystem.dir/sqlite3/sqlite3.c.obj	ec382966919b9435
+1	219	7570097714931844	build.ninja	87311108787cef01
+976	1357	7570097233489721	DormitoryManagementSystem_d.exe	420d576d782a83ac
 221	1858	7563243624190500	CMakeFiles/DormitoryManagementSystem.dir/src/Person.cpp.obj	3c36cbdf83744a06
 11	345	7563247090893154	CMakeFiles/DormitoryManagementSystem.dir/src/User.cpp.obj	5340d27d6cec4174
-8	392	7570087996526321	CMakeFiles/DormitoryManagementSystem.dir/src/Database.cpp.obj	60064a600cca4d54
-10	439	7570087996546337	CMakeFiles/DormitoryManagementSystem.dir/src/globals.cpp.obj	80d93a1e580644f1
+7	372	7570097044335006	CMakeFiles/DormitoryManagementSystem.dir/src/Database.cpp.obj	fe406a309efdb1b8
+9	496	7570097044355071	CMakeFiles/DormitoryManagementSystem.dir/src/globals.cpp.obj	e7c4d2a9b6325f2e

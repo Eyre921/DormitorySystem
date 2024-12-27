@@ -233,14 +233,14 @@ void UserManager::selectValidRoom(const string &studentID, string &dormitoryName
 
     // 查询宿舍楼下所有空房间号（已入住为0）
 
-    string query = "SELECT r.roomNumber AS 房间号, r.capacity AS 房间容量, r.occupied AS 已入住人数 "
-                   "FROM rooms r "
-                   "JOIN dormitories d ON r.dormitoryID = d.dormitoryID "
-                   "WHERE d.name = '" + dormitoryName + "' "
-                   "AND r.occupied < r.capacity;";
+    string sql = "SELECT r.roomNumber AS 房间号, r.capacity AS 房间容量, r.occupied AS 已入住人数 "
+                 "FROM rooms r "
+                 "JOIN dormitories d ON r.dormitoryID = d.dormitoryID "
+                 "WHERE d.name = '" + dormitoryName + "' "
+                 "AND r.occupied < r.capacity;";
 
     // 使用 Query 查询空闲房间
-    query(query);
+    query(sql);
 
 
     while (true)
@@ -716,18 +716,18 @@ void UserManager::manageRooms()
 void UserManager::viewStudentsInRoom(const string &dormitoryName, const string &roomNumber)
 {
     // 拼接查询语句，获取该房间中的所有学生姓名和ID
-    string query = "SELECT u.name, u.userID "
-                   "FROM users u "
-                   "JOIN student_rooms sr ON u.userID = sr.studentID "
-                   "JOIN rooms r ON sr.roomID = r.roomID "
-                   "JOIN dormitories d ON r.dormitoryID = d.dormitoryID "
-                   "WHERE d.name = '" + dormitoryName + "' AND r.roomNumber = '" + roomNumber + "';";
+    string sql = "SELECT u.name, u.userID "
+                 "FROM users u "
+                 "JOIN student_rooms sr ON u.userID = sr.studentID "
+                 "JOIN rooms r ON sr.roomID = r.roomID "
+                 "JOIN dormitories d ON r.dormitoryID = d.dormitoryID "
+                 "WHERE d.name = '" + dormitoryName + "' AND r.roomNumber = '" + roomNumber + "';";
 
     // 存储学生的姓名和ID
     vector<pair<string, string> > students; // 每个元素是学生姓名和ID的组合
 
     // 执行查询
-    db.QueryExists(query);
+    db.QueryExists(sql);
 
     // 遍历查询结果并将学生姓名和ID存储到数组中
     while (sqlite3_step(db.stmt) == SQLITE_ROW)

@@ -28,7 +28,7 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 38,
+				"line" : 37,
 				"parent" : 0
 			},
 			{
@@ -57,10 +57,6 @@
 				{
 					"backtrace" : 2,
 					"path" : "D:/Eyre/C++/DormitorySystem/sqlite3"
-				},
-				{
-					"backtrace" : 2,
-					"path" : "D:/Eyre/C++/DormitorySystem/data"
 				}
 			],
 			"language" : "CXX",
@@ -96,10 +92,6 @@
 				{
 					"backtrace" : 2,
 					"path" : "D:/Eyre/C++/DormitorySystem/sqlite3"
-				},
-				{
-					"backtrace" : 2,
-					"path" : "D:/Eyre/C++/DormitorySystem/data"
 				}
 			],
 			"language" : "C",
