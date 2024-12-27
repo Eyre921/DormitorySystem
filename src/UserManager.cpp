@@ -607,7 +607,7 @@ ORDER BY ar.requestTime DESC;
                 status = db.getQueryResult(9); // 申请状态
                 note = db.getQueryResult(10); // 备注
             }
-            cout << studentName << " " << studentID << " " << dormitoryName << " " << roomNumber << " " << endl;
+            //cout << studentName << " " << studentID << " " << dormitoryName << " " << roomNumber << " " << endl;
             // 请求ID有效，提示管理员选择审批操作
             cout << "\n选择审批操作：\n";
             cout << "1. 通过\n";
@@ -1016,3 +1016,4 @@ void UserManager::ViewStudentsInRoom(const string &dormitoryName, const string &
         cout << endl;
     }
 }
+

@@ -82,7 +82,7 @@ int main()
     // applyMoveIn("2031");
     // applyMoveOut("2031");
     //userManager->deleteDormitory();
-    //studentMenu("1001");
+    //studentMenu("t1");
     adminMenu();
     // while (true)
     // {
