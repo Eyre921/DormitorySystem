@@ -28,17 +28,6 @@ void viewDormitories();
 
 void studentLoginMenu();
 
-// 申请入住
-void applyMoveIn(const string &stuID);
-
-// 申请退宿
-void applyMoveOut(const string &stuID);
-
-// 请求换宿
-void requestRoomChange(const string &stuID);
-
-// 提交维修请求
-void submitRepairRequest(const string &stuID);
 
 // 查看通知
 void viewNotifications(const string &stuID);
@@ -53,9 +42,6 @@ void generateReports();
 
 void handleRepairRequests();
 
-void viewDormitoryInfo(const string &stuID);
-
-void submitRepairRequest();
 
 void adminLogin();
 
@@ -63,54 +49,48 @@ void dormManageMenu();
 
 void studentLogin();
 
-void viewRequests(const string &stuID);
 
-void viewNotifications();
+//cout << "数据库成功链接\n数据已更新" << endl;
+//userManager->DealAccommodationRequests();
+// userManager->getAllUsers();
+//adminMenu();
+//userManager->arrangeAccommodation();
 
-
+//userManager->deleteDormitory();
+//studentMenu("t2");
+//adminMenu();
+//userManager->manageRooms();
 // 主程序入口
 int main()
 {
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
     int choice;
-    cout << "数据库成功链接\n数据已更新" << endl;
-    //userManager->DealAccommodationRequests();
-    // userManager->getAllUsers();
-    //adminMenu();
-    //userManager->arrangeAccommodation();
-    //userManager->arrangeCheckOut("2031");
-    //userManager->requestRoomChange("2031");
-    // applyMoveIn("2031");
-    // applyMoveOut("2031");
-    //userManager->deleteDormitory();
-    //studentMenu("t2");
-    adminMenu();
-    //userManager->manageRooms();
-    // while (true)
-    // {
-    //     cout << "\n---- 主菜单 ----\n";
-    //     cout << "1. 学生菜单\n";
-    //     cout << "2. 管理员菜单\n";
-    //     cout << "0. 退出\n";
-    //     cout << "请输入你的选择: ";
-    //     cin >> choice;
-    //
-    //     switch (choice)
-    //     {
-    //         case 1:
-    //             studentLoginMenu(); // 学生登录
-    //             break;
-    //         case 2:
-    //             adminLogin(); // 管理员登录
-    //             break;
-    //         case 0:
-    //             cout << "正在退出程序……\n";
-    //             return 0;
-    //         default:
-    //             cout << "无效选择，请重新输入。\n";
-    //     }
-    // }
+
+    while (true)
+    {
+        cout << "\n---- 主菜单 ----\n";
+        cout << "1. 学生菜单\n";
+        cout << "2. 管理员菜单\n";
+        cout << "0. 退出\n";
+        cout << "请输入你的选择: ";
+        cin >> choice;
+
+        switch (choice)
+        {
+            case 1:
+                studentLoginMenu(); // 学生登录
+                break;
+            case 2:
+                adminLogin(); // 管理员登录
+                break;
+            case 0:
+                cout << "正在退出程序……\n";
+                return 0;
+            default:
+                cout << "无效选择，请重新输入。\n";
+        }
+    }
 }
 
 void studentLoginMenu()
@@ -672,25 +652,25 @@ void studentMenu(const string &stuID)
         switch (choice)
         {
             case 1:
-                viewDormitoryInfo(stuID); // 查看宿舍楼和房间信息
+                userManager->viewDormitoryInfo(stuID); // 查看宿舍楼和房间信息
                 break;
             case 2:
-                applyMoveIn(stuID); // 申请入住
+                userManager->applyMoveIn(stuID); // 申请入住
                 break;
             case 3:
-                applyMoveOut(stuID); // 申请退宿
+                userManager->applyMoveOut(stuID); // 申请退宿
                 break;
             case 4:
-                requestRoomChange(stuID); // 请求换宿
+                userManager->requestRoomChange(stuID); // 请求换宿
                 break;
             case 5:
-                submitRepairRequest(stuID); // 提交维修请求
+                userManager->submitRepairRequest(stuID); // 提交维修请求
                 break;
             case 6:
-                viewNotifications(stuID); // 查看通知
+                userManager->viewNotifications(stuID); // 查看通知
                 break;
             case 7:
-                viewRequests(stuID); // 查看请求
+                userManager->viewRequests(stuID); // 查看请求
                 break;
             case 8:
                 userManager->UserPasswordChange(stuID); // 修改密码
@@ -704,117 +684,16 @@ void studentMenu(const string &stuID)
     }
 }
 
-// 申请入住
-void applyMoveIn(const string &stuID)
-{
-    if (userManager->IsStudentCheckedIn(stuID))
-    {
-        cout << "您已经入住！" << endl;
-        return;
-    }
-    // 构建 SQL 查询语句，仅插入学生 ID 和申请类型
-    string sql = "INSERT INTO accommodation_requests (studentID, requestType) "
-                 "VALUES ('" + stuID + "', '入住');";
-
-    // 执行 SQL 语句
-    userManager->execute(sql);
-    cout << "申请入住成功" << endl;
-}
-
-// 申请退宿
-void applyMoveOut(const string &stuID)
-{
-    if (!userManager->IsStudentCheckedIn(stuID))
-    {
-        cout << "您尚未入住！" << endl;
-        return;
-    }
-    // 构建 SQL 查询语句，仅插入学生 ID 和申请类型
-    string sql = "INSERT INTO accommodation_requests (studentID, requestType) "
-                 "VALUES ('" + stuID + "', '退宿');";
-
-    // 执行 SQL 语句
-    userManager->execute(sql);
-    cout << "申请退宿成功" << endl;
-}
-
-// 请求换宿
-void requestRoomChange(const string &stuID)
-{
-    userManager->requestRoomChange(stuID);
-}
 
 // 提交维修请求
-void submitRepairRequest(const string &stuID) {}
+
 
 // 查看通知
-void viewNotifications(const string &stuID) {}
 
 
-void viewRequests(const string &stuID)
-{
-    string sql =
-            "SELECT requestID AS \"申请ID\", requestType AS \"申请类型\", status AS \"申请状态\",dormitoryName AS \"宿舍楼名称\", "
-            "roomNumber AS \"房间号\",  requestTime AS \"申请时间\", "
-            "approveTime AS \"审批时间\", note AS \"备注\" "
-            "FROM accommodation_requests "
-            "WHERE studentID = '" + stuID + "' "
-            "ORDER BY requestTime DESC;";
-    userManager->Query(sql);
-}
 
 
-// 学生查看宿舍信息
-void viewDormitoryInfo(const string &stuID)
-{
-    if (userManager->IsStudentCheckedIn(stuID))
-    {
-        string sql = "SELECT "
-                     "    d.name AS 宿舍楼,           -- 宿舍楼名称\n"
-                     "    r.roomNumber AS 房间号,        -- 房间号\n"
-                     "    r.capacity AS 房间容量,       -- 房间容量\n"
-                     "    r.occupied AS 已入住人数,       -- 已入住人数\n"
-                     "    r.repair_status AS 维修状态   -- 维修状态\n"
-                     "FROM "
-                     "    student_rooms sr\n"
-                     "JOIN "
-                     "    rooms r ON sr.roomID = r.roomID   -- 连接房间表\n"
-                     "JOIN "
-                     "    dormitories d ON r.dormitoryID = d.dormitoryID -- 连接宿舍楼表\n"
-                     "JOIN "
-                     "    users u ON sr.studentID = u.userID -- 连接学生表\n"
-                     "WHERE "
-                     "    u.userID = '" + stuID + "';"; // 使用学生ID作为参数传递
 
-        // 调用Query方法，执行SQL查询
-        string sql2 = "SELECT recordType AS 记录类型, eventTime AS 时间, note AS 备注 "
-                      "FROM check_in_out_records "
-                      "WHERE studentID = '" + stuID + "' "
-                      "ORDER BY recordID DESC LIMIT 1;";
 
-        userManager->Query(sql);
-        userManager->Query(sql2);
-    } else
-    {
-        string xuan;
-        cout << "您暂未被安排住宿，是否申请？(请输入yes/no)" << endl;
-        cin.ignore();
-        getline(cin, xuan);
-        if (xuan == "yes")
-        {
-            applyMoveIn(stuID);
-        }
-    }
-}
 
-// 学生提交维修请求
-void submitRepairRequest()
-{
-    cout << "提交维修请求 - 功能开发中。\n";
-}
 
-// 学生查看通知
-void viewNotifications()
-{
-    cout << "查看通知 - 功能开发中。\n";
-}

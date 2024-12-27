@@ -94,6 +94,7 @@ build CMakeFiles/DormitoryManagementSystem.dir/src/globals.cpp.obj: CXX_COMPILER
 
 build DormitoryManagementSystem_d.exe: CXX_EXECUTABLE_LINKER__DormitoryManagementSystem_Debug CMakeFiles/DormitoryManagementSystem.dir/src/main.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/UserManager.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/sqlite3/sqlite3.c.obj CMakeFiles/DormitoryManagementSystem.dir/src/Database.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/globals.cpp.obj
   FLAGS = -Wall -Wextra -g
+  LINK_FLAGS = -static-libgcc -static-libstdc++
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\DormitoryManagementSystem.dir
   POST_BUILD = cd .

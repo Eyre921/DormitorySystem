@@ -9,6 +9,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 # 设置 C++ 编译器标志（如果需要的话）
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 
 # 添加包含目录
 include_directories(

@@ -111,24 +111,6 @@ bool UserManager::hasStudentsInDormitoryRooms(const string &checkRoomsSql)
     return db.hasStudentsInDormitoryRooms(checkRoomsSql);
 }
 
-bool UserManager::UserPasswordChange(const string &userID)
-{
-    string newPassword;
-    cout << "请输入新密码:";
-    cin >> newPassword;
-    // 构造插入语句
-    string sql = "UPDATE users SET password = '" + newPassword + "' WHERE userID = " + userID + ";";
-    // 尝试执行插入操作
-    if (db.execute(sql))
-    {
-        cout << "密码修改成功！\n";
-        return true;
-    } else
-    {
-        cout << "密码修改失败……\n";
-        return false; // 插入失败
-    }
-}
 
 void UserManager::arrangeAccommodation(const string &studentID)
 {
@@ -254,22 +236,6 @@ void UserManager::SelectValidRoom(const string &studentID, string &dormitoryName
     }
 }
 
-void UserManager::requestRoomChange(const string &studentID)
-{
-    string dormitoryName, roomChoice, currentRoom, note;
-    cin.ignore();
-    SelectValidRoom(studentID, dormitoryName, roomChoice);
-    cout << "请输入换宿备注（可选，按回车跳过）: ";
-    getline(cin, note);
-    string sql = "INSERT INTO accommodation_requests (studentID, dormitoryName, roomNumber, requestType, note) "
-                 "SELECT '" + studentID + "', '" + dormitoryName + "', r2.roomNumber, '换宿', '' "
-                 "FROM rooms r2 "
-                 "WHERE r2.roomNumber = '" + roomChoice + "' " // 目标房间号
-                 "AND r2.dormitoryID = (SELECT dormitoryID FROM dormitories WHERE name = '" + dormitoryName + "');";
-    // 执行 SQL 语句
-    db.execute(sql);
-    cout << "换宿申请已提交，等待宿管处理。\n";
-}
 
 void UserManager::arrangeCheckOut(const string &studentID)
 {
@@ -545,8 +511,8 @@ void UserManager::deleteUser(const string &userID)
 void UserManager::DealAccommodationRequests()
 {
     // 显示所有待审批的请求
-    string requestID, studentID, studentName, gender, dormitoryName, roomNumber, requestType, requestTime, approveTime,
-            status, note;
+    string studentID, dormitoryName, roomNumber, requestType;
+    //string studentName, gender, requestTime, approveTime,status, note;
     // 使用 unordered_set 来存储请求ID，避免重复和加速查找
     unordered_set<string> requestIDs;
     const string sql = R"(
@@ -562,7 +528,7 @@ ORDER BY ar.requestTime DESC;
     while (sqlite3_step(db.stmt) == SQLITE_ROW)
     {
         // 获取查询结果中的每一列数据
-        requestID = db.getQueryResult(0); // 申请ID
+        string requestID = db.getQueryResult(0); // 申请ID
         // 将请求ID存入 unordered_set
         requestIDs.insert(requestID);
     }
@@ -596,17 +562,17 @@ ORDER BY ar.requestTime DESC;
             while (sqlite3_step(db.stmt) == SQLITE_ROW)
             {
                 // 获取查询结果中的每一列数据
-                requestID = db.getQueryResult(0); // 申请ID
+                // requestID = db.getQueryResult(0); // 申请ID
                 studentID = db.getQueryResult(1); // 学生学号
-                studentName = db.getQueryResult(2); // 学生姓名
-                gender = db.getQueryResult(3); // 学生性别
+                // studentName = db.getQueryResult(2); // 学生姓名
+                // gender = db.getQueryResult(3); // 学生性别
                 dormitoryName = db.getQueryResult(4); // 申请宿舍楼名称
                 roomNumber = db.getQueryResult(5); // 申请房间号
                 requestType = db.getQueryResult(6); // 申请类型
-                requestTime = db.getQueryResult(7); // 申请时间
-                approveTime = db.getQueryResult(8); // 审批时间
-                status = db.getQueryResult(9); // 申请状态
-                note = db.getQueryResult(10); // 备注
+                // requestTime = db.getQueryResult(7); // 申请时间
+                // approveTime = db.getQueryResult(8); // 审批时间
+                // status = db.getQueryResult(9); // 申请状态
+                // note = db.getQueryResult(10); // 备注
             }
             //cout << studentName << " " << studentID << " " << dormitoryName << " " << roomNumber << " " << endl;
             // 请求ID有效，提示管理员选择审批操作
@@ -903,8 +869,8 @@ void UserManager::manageRooms()
     }
 
     string selectedRoomNumber;
-    string selectedRoomID;
-    int choice;
+
+
     cout << "请输入选择的房间号" << endl;
     getline(cin, selectedRoomNumber);
     auto it = rooms.find(selectedRoomNumber);
@@ -914,7 +880,7 @@ void UserManager::manageRooms()
         return;
     } else
     {
-        selectedRoomID = it->second;
+        string selectedRoomID = it->second;
         string queryRoomDetails = "SELECT r.capacity, r.occupied "
                                   "FROM rooms r "
                                   "WHERE r.roomID = '" + selectedRoomID + "'";
@@ -929,7 +895,7 @@ void UserManager::manageRooms()
             capacity = stoi(db.getQueryResult(0)); // 获取房间容量
             occupied = stoi(db.getQueryResult(1)); // 获取已入住人数
         }
-
+        int choice;
         while (true)
         {
             cout << "\n---- 管理房间 ----\n";
@@ -1015,7 +981,7 @@ void UserManager::viewAllRooms(const string &dormitoryName)
         string roomID = db.getQueryResult(0); // 获取房间ID
         roomIDs.insert(roomID); // 将房间ID插入到集合中
     }
-    bool hasStudentLiveIn = false;
+
     // 如果没有房间，返回
     if (roomIDs.empty())
     {
@@ -1070,7 +1036,7 @@ void UserManager::ViewStudentsInRoom(const string &dormitoryName, const string &
     {
         string studentName = db.getQueryResult(0); // 获取学生姓名
         string studentID = db.getQueryResult(1); // 获取学生ID
-        students.push_back({studentName, studentID}); // 存储学生姓名和ID
+        students.emplace_back(studentName, studentID); // 存储学生姓名和ID
     }
 
     // 如果没有找到任何学生，输出提示信息
@@ -1147,4 +1113,140 @@ void UserManager::modifyRoomInfo(const string &selectedRoomID, const int capacit
     sql += "WHERE roomID = '" + selectedRoomID + "';";
 
     db.execute(sql);
+}
+
+
+// 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单
+// cout << "1. 查看宿舍楼和房间信息\n";
+void UserManager::viewDormitoryInfo(const string &stuID)
+{
+    if (IsStudentCheckedIn(stuID))
+    {
+        string sql = "SELECT "
+                     "    d.name AS 宿舍楼,           -- 宿舍楼名称\n"
+                     "    r.roomNumber AS 房间号,        -- 房间号\n"
+                     "    r.capacity AS 房间容量,       -- 房间容量\n"
+                     "    r.occupied AS 已入住人数,       -- 已入住人数\n"
+                     "    r.repair_status AS 维修状态   -- 维修状态\n"
+                     "FROM "
+                     "    student_rooms sr\n"
+                     "JOIN "
+                     "    rooms r ON sr.roomID = r.roomID   -- 连接房间表\n"
+                     "JOIN "
+                     "    dormitories d ON r.dormitoryID = d.dormitoryID -- 连接宿舍楼表\n"
+                     "JOIN "
+                     "    users u ON sr.studentID = u.userID -- 连接学生表\n"
+                     "WHERE "
+                     "    u.userID = '" + stuID + "';"; // 使用学生ID作为参数传递
+
+        // 调用Query方法，执行SQL查询
+        string sql2 = "SELECT recordType AS 记录类型, eventTime AS 时间, note AS 备注 "
+                      "FROM check_in_out_records "
+                      "WHERE studentID = '" + stuID + "' "
+                      "ORDER BY recordID DESC LIMIT 1;";
+
+        db.Query(sql);
+        db.Query(sql2);
+    } else
+    {
+        string xuan;
+        cout << "您暂未被安排住宿，是否申请？(请输入yes/no)" << endl;
+        cin.ignore();
+        getline(cin, xuan);
+        if (xuan == "yes")
+        {
+            applyMoveIn(stuID);
+        }
+    }
+}
+
+// cout << "2. 申请入住\n";
+void UserManager::applyMoveIn(const string &stuID)
+{
+    if (IsStudentCheckedIn(stuID))
+    {
+        cout << "您已经入住！" << endl;
+        return;
+    }
+    // 构建 SQL 查询语句，仅插入学生 ID 和申请类型
+    string sql = "INSERT INTO accommodation_requests (studentID, requestType) "
+                 "VALUES ('" + stuID + "', '入住');";
+
+    // 执行 SQL 语句
+    db.execute(sql);
+    cout << "申请入住成功" << endl;
+}
+
+// cout << "3. 申请退宿\n";
+void UserManager::applyMoveOut(const string &stuID)
+{
+    if (IsStudentCheckedIn(stuID))
+    {
+        cout << "您尚未入住！" << endl;
+        return;
+    }
+    // 构建 SQL 查询语句，仅插入学生 ID 和申请类型
+    string sql = "INSERT INTO accommodation_requests (studentID, requestType) "
+                 "VALUES ('" + stuID + "', '退宿');";
+
+    // 执行 SQL 语句
+    execute(sql);
+    cout << "申请退宿成功" << endl;
+}
+
+
+// cout << "4. 请求换宿\n";
+void UserManager::requestRoomChange(const string &studentID)
+{
+    string dormitoryName, roomChoice, currentRoom, note;
+    cin.ignore();
+    SelectValidRoom(studentID, dormitoryName, roomChoice);
+    cout << "请输入换宿备注（可选，按回车跳过）: ";
+    getline(cin, note);
+    string sql = "INSERT INTO accommodation_requests (studentID, dormitoryName, roomNumber, requestType, note) "
+                 "SELECT '" + studentID + "', '" + dormitoryName + "', r2.roomNumber, '换宿', '' "
+                 "FROM rooms r2 "
+                 "WHERE r2.roomNumber = '" + roomChoice + "' " // 目标房间号
+                 "AND r2.dormitoryID = (SELECT dormitoryID FROM dormitories WHERE name = '" + dormitoryName + "');";
+    // 执行 SQL 语句
+    db.execute(sql);
+    cout << "换宿申请已提交，等待宿管处理。\n";
+}
+
+// cout << "5. 提交维修请求\n";
+void UserManager::submitRepairRequest(const string &stuID) {}
+
+// cout << "6. 查看通知\n";
+void UserManager::viewNotifications(const string &stuID) {}
+
+// cout << "7. 查看请求\n";
+void UserManager::viewRequests(const string &stuID)
+{
+    string sql =
+            "SELECT requestID AS \"申请ID\", requestType AS \"申请类型\", status AS \"申请状态\",dormitoryName AS \"宿舍楼名称\", "
+            "roomNumber AS \"房间号\",  requestTime AS \"申请时间\", "
+            "approveTime AS \"审批时间\", note AS \"备注\" "
+            "FROM accommodation_requests "
+            "WHERE studentID = '" + stuID + "' "
+            "ORDER BY requestTime DESC;";
+    db.Query(sql);
+}
+
+bool UserManager::UserPasswordChange(const string &userID)
+{
+    string newPassword;
+    cout << "请输入新密码:";
+    cin >> newPassword;
+    // 构造插入语句
+    string sql = "UPDATE users SET password = '" + newPassword + "' WHERE userID = " + userID + ";";
+    // 尝试执行插入操作
+    if (db.execute(sql))
+    {
+        cout << "密码修改成功！\n";
+        return true;
+    } else
+    {
+        cout << "密码修改失败……\n";
+        return false; // 插入失败
+    }
 }

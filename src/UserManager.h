@@ -53,6 +53,12 @@ public:
 
     void requestRoomChange(const string &studentID);
 
+    void submitRepairRequest(const string &stuID);
+
+    void viewNotifications(const string &stuID);
+
+    void viewRequests(const string &stuID);
+
     void QuickArrangeCheckOut(const string &studentID, const string &note);
 
     bool IsStudentCheckedIn(const string &studentID);
@@ -106,6 +112,12 @@ public:
     void ViewStudentsInRoom(const string &dormitoryID, const string &roomNumber);
 
     void modifyRoomInfo(const string &selectedRoomID, int capacity);
+
+    void viewDormitoryInfo(const string &stuID);
+
+    void applyMoveIn(const string &stuID);
+
+    void applyMoveOut(const string &stuID);
 
     void manageRooms();
 
