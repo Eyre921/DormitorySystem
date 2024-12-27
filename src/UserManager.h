@@ -2,7 +2,6 @@
 #define USERMANAGER_H
 
 #include "Database.h"
-#include <set>
 using namespace std;
 
 class UserManager
@@ -44,6 +43,8 @@ public:
     bool studentExistsByID(const string &ID);
 
     int getDormitoryIDByName(const string &dormitoryName);
+
+    int getChoice();
 
     // 用户登录
     bool loginUser(const string &userID, const string &password, const string &isAdmin);
@@ -89,7 +90,7 @@ public:
     void deleteRoom(const string &selectedRoomID);
 
     // 3. 修改房间信息
-    void modifyRoomInfo(const string &selectedRoomID, const int capacity);
+    void modifyRoomInfo(const string &selectedRoomID, int capacity);
 
     // 管理用户 // 管理用户 // 管理用户 // 管理用户 // 管理用户 // 管理用户 // 管理用户 // 管理用户 // 管理用户 // 管理用户 // 管理用户 //
     // 添加用户

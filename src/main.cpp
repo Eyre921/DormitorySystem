@@ -28,10 +28,32 @@ void manageUsers();
 
 void generateReports();
 
-void handleRepairRequests();
-
 void dormManageMenu();
 
+int getChoice()
+{
+    int choice;
+
+    while (true)
+    {
+        cin >> choice;
+        if (choice > 11)
+        {
+            cout << "输入无效，请输入有效数字：";
+            continue;
+        }
+        if (cin.fail()) // 清除输入缓冲区，以防止输入错误导致无限循环
+        {
+            cin.clear(); // 清除错误标志
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 忽略错误输入
+            cout << "输入无效，请输入有效数字：";
+            continue;
+        }
+        break;
+    }
+
+    return choice;
+}
 
 //adminMenu();
 //studentMenu("t2");
@@ -41,7 +63,6 @@ int main()
 {
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
-    int choice;
 
     while (true)
     {
@@ -50,7 +71,7 @@ int main()
         cout << "2. 管理员菜单\n";
         cout << "0. 退出\n";
         cout << "请输入你的选择: ";
-        cin >> choice;
+        int choice = getChoice();
 
         switch (choice)
         {
@@ -72,13 +93,12 @@ int main()
 // 学生登录菜单
 void studentLoginMenu()
 {
-    int choice;
     cout << "\n---- 学生菜单 ----\n";
     cout << "1. 学生登录\n";
     cout << "2. 学生注册\n";
     cout << "0. 退出\n";
     cout << "请输入你的选择: ";
-    cin >> choice;
+    int choice = getChoice();
 
     switch (choice)
     {
@@ -137,7 +157,6 @@ void studentLogin()
 // 学生菜单
 void studentMenu(const string &stuID)
 {
-    int choice;
     while (true)
     {
         cout << "\n---- 学生菜单 ----\n";
@@ -149,16 +168,10 @@ void studentMenu(const string &stuID)
         cout << "6. 修改密码\n";
         cout << "0. 退出登录\n";
         cout << "请输入你的选择: ";
-        cin >> choice;
 
+        int choice = getChoice();
         // 清除输入缓冲区，以防止输入错误导致无限循环
-        if (cin.fail())
-        {
-            cin.clear(); // 清除错误标志
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 忽略错误输入
-            cout << "输入无效，请输入数字。\n";
-            continue;
-        }
+
 
         switch (choice)
         {
@@ -202,7 +215,7 @@ void applyAccommodationChange(const string &stuID)
         userManager->viewApprovingRequests(stuID);
         return;
     }
-    int choice;
+
     while (true)
     {
         cout << "\n---- 申请宿舍调整 ----\n";
@@ -213,7 +226,7 @@ void applyAccommodationChange(const string &stuID)
 
         cout << "0. 退出\n";
         cout << "请输入你的选择: ";
-        cin >> choice;
+        int choice = getChoice();
 
         // 清除输入缓冲区，以防止输入错误导致无限循环
         if (cin.fail())
@@ -266,7 +279,6 @@ void adminLogin()
 // 管理员菜单
 void adminMenu()
 {
-    int choice;
     while (true)
     {
         cout << "\n---- 管理员菜单 ----\n";
@@ -277,7 +289,7 @@ void adminMenu()
         cout << "5. 住宿管理中心\n";
         cout << "0. 退出登录\n";
         cout << "请输入你的选择: ";
-        cin >> choice;
+        int choice = getChoice();
 
         switch (choice)
         {
@@ -309,7 +321,7 @@ void adminMenu()
 void manageUsers()
 {
     string ID;
-    int choice;
+
     while (true)
     {
         cout << "\n---- 管理用户 ----\n";
@@ -321,7 +333,7 @@ void manageUsers()
         cout << "6. 修改用户密码\n";
         cout << "0. 返回上一级\n";
         cout << "请输入你的选择: ";
-        cin >> choice;
+        int choice = getChoice();
 
         switch (choice)
         {
@@ -368,7 +380,6 @@ void manageUsers()
 void dormManageMenu()
 {
     string ID;
-    int choice;
     while (true)
     {
         cout << "\n---- 住宿管理 ----\n";
@@ -378,7 +389,7 @@ void dormManageMenu()
         cout << "4. 查看住宿记录\n";
         cout << "0. 返回上一级\n";
         cout << "请输入你的选择: ";
-        cin >> choice;
+        int choice = getChoice();
         switch (choice)
         {
             case 1:
@@ -433,7 +444,6 @@ void dormManageMenu()
 // 生成报表
 void generateReports()
 {
-    int choice;
     while (true)
     {
         cout << "\n---- 生成报表 ----\n";
@@ -441,7 +451,7 @@ void generateReports()
         cout << "2. 生成入住率报表\n";
         cout << "3. 返回上一级\n";
         cout << "请输入你的选择: ";
-        cin >> choice;
+        int choice = getChoice();
 
         switch (choice)
         {
@@ -465,7 +475,6 @@ void generateReports()
 // 管理宿舍楼
 void manageDormitories()
 {
-    int choice;
     while (true)
     {
         cout << "\n---- 管理宿舍楼 ----\n";
@@ -475,7 +484,7 @@ void manageDormitories()
         cout << "4. 房间管理\n";
         cout << "0. 返回上一级\n";
         cout << "请输入你的选择: ";
-        cin >> choice;
+        int choice = getChoice();
 
         switch (choice)
         {

@@ -1,5 +1,6 @@
 #include "UserManager.h"
 #include <iostream>
+#include <limits>
 #include <unordered_map>
 #include <unordered_set>
 using namespace std;
@@ -121,6 +122,32 @@ int UserManager::getDormitoryIDByName(const string &dormitoryName)
     // 获取楼栋的ID
     string dormitoryID = db.getQueryResult(0);
     return stoi(dormitoryID);
+}
+
+// 选择保护函数
+int UserManager::getChoice()
+{
+    int choice;
+
+    while (true)
+    {
+        cin >> choice;
+        if (choice > 11)
+        {
+            cout << "输入无效，请输入有效数字：";
+            continue;
+        }
+        if (cin.fail()) // 清除输入缓冲区，以防止输入错误导致无限循环
+        {
+            cin.clear(); // 清除错误标志
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 忽略错误输入
+            cout << "输入无效，请输入有效数字：";
+            continue;
+        }
+        break;
+    }
+
+    return choice;
 }
 
 // 用户登录
@@ -671,7 +698,7 @@ void UserManager::manageRooms()
             capacity = stoi(db.getQueryResult(0)); // 获取房间容量
             occupied = stoi(db.getQueryResult(1)); // 获取已入住人数
         }
-        int choice;
+
         while (true)
         {
             cout << "\n---- 管理房间 ----\n";
@@ -680,7 +707,7 @@ void UserManager::manageRooms()
             cout << "3. 修改房间信息\n";
             cout << "0. 返回上一级\n";
             cout << "请输入你的选择: ";
-            cin >> choice;
+            int choice = getChoice();
 
             switch (choice)
             {
@@ -768,17 +795,17 @@ void UserManager::deleteRoom(const string &selectedRoomID)
 void UserManager::modifyRoomInfo(const string &selectedRoomID, const int capacity)
 {
     // 提供用户选择
-    int choice;
+
     string newRoomNumber;
     int newCapacity;
     string newRepairStatus;
 
     cout << "请选择要修改的内容:" << endl;
-    cout << "1. 修改房间号 (roomNumber)" << endl;
-    cout << "2. 修改房间容量 (capacity)" << endl;
-    cout << "3. 修改房间状态 (repair_status)" << endl;
+    cout << "1. 修改房间号 " << endl;
+    cout << "2. 修改房间容量 " << endl;
+    cout << "3. 修改房间状态 " << endl;
     cout << "请输入选项 (1-3): ";
-    cin >> choice;
+    int choice = getChoice();
 
     string sql = "UPDATE rooms SET ";
 
@@ -1234,9 +1261,9 @@ ORDER BY ar.requestTime DESC;
             cout << "2. 不通过\n";
             cout << "3. 返回\n";
 
-            int choice;
-            cout << "请输入选择（1/2/3）：";
-            cin >> choice;
+
+            cout << "请输入选择：";
+            int choice = getChoice();
             cin.ignore();
             // 处理选择
             switch (choice)
