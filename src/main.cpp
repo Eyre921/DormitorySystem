@@ -483,6 +483,7 @@ void manageDormitories()
         cout << "1. 添加宿舍楼\n";
         cout << "2. 删除宿舍楼\n";
         cout << "3. 查看宿舍楼信息\n";
+        cout << "4. 房间管理\n";
         cout << "0. 返回上一级\n";
         cout << "请输入你的选择: ";
         cin >> choice;

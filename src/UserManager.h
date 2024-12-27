@@ -101,6 +101,8 @@ public:
 
     void viewDormitories();
 
+    void ViewStudentsInRoom(const string &dormitoryID, const string &roomNumber);
+
     // 检查用户是否存在
 };
 

@@ -124,7 +124,7 @@ bool Database::QueryExists(const std::string &sql)
                 const char *columnName = sqlite3_column_name(stmt, i); // 获取列名
                 const char *columnValue = reinterpret_cast<const char *>(sqlite3_column_text(stmt, i)); // 获取列值
             }
-            cout << endl; // 打印一行数据后换行
+            //cout << endl; // 打印一行数据后换行
             result = sqlite3_step(stmt); // 继续执行下一行
         }
         return true;
@@ -246,7 +246,7 @@ bool Database::QueryWithParams(const string &query, const std::vector<std::strin
     // 执行查询
     if (sqlite3_step(stmt) != SQLITE_ROW)
     {
-        cerr << "No rows found" << endl;
+        //cerr << "No rows found" << endl;
         sqlite3_finalize(stmt);
         return false;
     }
