@@ -70,3 +70,9 @@
 3	509	7570085077366641	CMakeFiles/DormitoryManagementSystem.dir/src/main.cpp.obj	b40a676cf3ef131f
 6	829	7570085077396700	CMakeFiles/DormitoryManagementSystem.dir/src/UserManager.cpp.obj	13995db40f92811e
 829	1123	7570085085630443	DormitoryManagementSystem_d.exe	420d576d782a83ac
+7	383	7570086555453797	CMakeFiles/DormitoryManagementSystem.dir/src/globals.cpp.obj	e7c4d2a9b6325f2e
+2	454	7570086555393822	CMakeFiles/DormitoryManagementSystem.dir/src/main.cpp.obj	b40a676cf3ef131f
+5	789	7570086555423808	CMakeFiles/DormitoryManagementSystem.dir/src/UserManager.cpp.obj	13995db40f92811e
+789	1092	7570086563273224	DormitoryManagementSystem_d.exe	420d576d782a83ac
+2	963	7570086910599429	CMakeFiles/DormitoryManagementSystem.dir/src/UserManager.cpp.obj	13995db40f92811e
+963	1409	7570086920212395	DormitoryManagementSystem_d.exe	420d576d782a83ac

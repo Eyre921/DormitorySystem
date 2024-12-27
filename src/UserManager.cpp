@@ -117,7 +117,7 @@ int UserManager::getDormitoryIDByName(const string &dormitoryName)
     if (sqlite3_step(db.stmt) != SQLITE_ROW)
     {
         cout << "宿舍楼id获取失败。\n";
-        return NULL; // 终止函数，避免继续执行
+        return 0; // 终止函数，避免继续执行
     }
     // 获取楼栋的ID
     string dormitoryID = db.getQueryResult(0);
