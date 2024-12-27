@@ -1393,7 +1393,7 @@ void UserManager::viewCheckInOutRecords(const string &studentID)
     }
 }
 
-// 处理维修请求
+// 处理维修请求 // 处理维修请求 // 处理维修请求 // 处理维修请求 // 处理维修请求 // 处理维修请求 // 处理维修请求 // 处理维修请求 //
 void UserManager::handleRepairRequests()
 {
     // 1. 查询所有未处理的维修请求
