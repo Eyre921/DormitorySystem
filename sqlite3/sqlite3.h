@@ -634,7 +634,7 @@ SQLITE_API int sqlite3_exec(
 ** mean that writes of blocks that are nnn bytes in size and
 ** are aligned to an address which is an integer multiple of
 ** nnn are atomic.  The SQLITE_IOCAP_SAFE_APPEND value means
-** that when data is appended to a file, the data is appended
+** that when dataBackup is appended to a file, the dataBackup is appended
 ** first then the size of the file is extended, never the other
 ** way around.  The SQLITE_IOCAP_SEQUENTIAL property means that
 ** information is written to disk in the same order as calls
@@ -702,7 +702,7 @@ SQLITE_API int sqlite3_exec(
 ** these integer values as the second argument.
 **
 ** When the SQLITE_SYNC_DATAONLY flag is used, it means that the
-** sync operation only needs to flush data to mass storage.  Inode
+** sync operation only needs to flush dataBackup to mass storage.  Inode
 ** information need not be flushed. If the lower four bits of the flag
 ** equal SQLITE_SYNC_NORMAL, that means to use normal fsync() semantics.
 ** If the lower four bits equal SQLITE_SYNC_FULL, that means
@@ -759,7 +759,7 @@ struct sqlite3_file {
 ** The flags argument to xSync may be one of [SQLITE_SYNC_NORMAL] or
 ** [SQLITE_SYNC_FULL].  The first choice is the normal fsync().
 ** The second choice is a Mac OS X style fullsync.  The [SQLITE_SYNC_DATAONLY]
-** flag may be ORed in to indicate that only the data of the file
+** flag may be ORed in to indicate that only the dataBackup of the file
 ** and not its inode needs to be synced.
 **
 ** The integer values to xLock() and xUnlock() are one of
@@ -830,7 +830,7 @@ struct sqlite3_file {
 ** mean that writes of blocks that are nnn bytes in size and
 ** are aligned to an address which is an integer multiple of
 ** nnn are atomic.  The SQLITE_IOCAP_SAFE_APPEND value means
-** that when data is appended to a file, the data is appended
+** that when dataBackup is appended to a file, the dataBackup is appended
 ** first then the size of the file is extended, never the other
 ** way around.  The SQLITE_IOCAP_SEQUENTIAL property means that
 ** information is written to disk in the same order as calls
@@ -1161,8 +1161,8 @@ struct sqlite3_io_methods {
 ** <li>[[SQLITE_FCNTL_DATA_VERSION]]
 ** The [SQLITE_FCNTL_DATA_VERSION] opcode is used to detect changes to
 ** a database file.  The argument is a pointer to a 32-bit unsigned integer.
-** The "data version" for the pager is written into the pointer.  The
-** "data version" changes whenever any change occurs to the corresponding
+** The "dataBackup version" for the pager is written into the pointer.  The
+** "dataBackup version" changes whenever any change occurs to the corresponding
 ** database file, either through SQL statements on the same database
 ** connection or through transactions committed by separate database
 ** connections possibly in other processes. The [sqlite3_total_changes()]
@@ -1479,7 +1479,7 @@ struct sqlite3_vfs {
   int mxPathname;          /* Maximum file pathname length */
   sqlite3_vfs *pNext;      /* Next registered VFS */
   const char *zName;       /* Name of this virtual file system */
-  void *pAppData;          /* Pointer to application-specific data */
+  void *pAppData;          /* Pointer to application-specific dataBackup */
   int (*xOpen)(sqlite3_vfs*, sqlite3_filename zName, sqlite3_file*,
                int flags, int *pOutFlags);
   int (*xDelete)(sqlite3_vfs*, const char *zName, int syncDir);
@@ -1752,7 +1752,7 @@ SQLITE_API int sqlite3_db_config(sqlite3*, int op, ...);
 ** that causes the corresponding memory allocation to fail.
 **
 ** The xInit method initializes the memory allocator.  For example,
-** it might allocate any required mutexes or initialize internal data
+** it might allocate any required mutexes or initialize internal dataBackup
 ** structures.  The xShutdown method is invoked (indirectly) by
 ** [sqlite3_shutdown()] and should deallocate any resources acquired
 ** by xInit.  The pAppData pointer is used as the only parameter to
@@ -2575,7 +2575,7 @@ SQLITE_API int sqlite3_extended_result_codes(sqlite3*, int onoff);
 ** [sqlite3_set_last_insert_rowid()]
 **
 ** Some virtual table implementations may INSERT rows into rowid tables as
-** part of committing a transaction (e.g. to flush data accumulated in memory
+** part of committing a transaction (e.g. to flush dataBackup accumulated in memory
 ** to disk). In this case subsequent calls to this function return the rowid
 ** associated with these internal INSERT operations, which leads to
 ** unintuitive results. Virtual table implementations that do write to rowid
@@ -2896,7 +2896,7 @@ SQLITE_API int sqlite3_busy_timeout(sqlite3*, int ms);
 ** This is a legacy interface that is preserved for backwards compatibility.
 ** Use of this interface is not recommended.
 **
-** Definition: A <b>result table</b> is memory data structure created by the
+** Definition: A <b>result table</b> is memory dataBackup structure created by the
 ** [sqlite3_get_table()] interface.  A result table records the
 ** complete query results from one or more queries.
 **
@@ -2956,7 +2956,7 @@ SQLITE_API int sqlite3_busy_timeout(sqlite3*, int ms);
 **
 ** The sqlite3_get_table() interface is implemented as a wrapper around
 ** [sqlite3_exec()].  The sqlite3_get_table() routine does not have access
-** to any internal data structures of SQLite.  It uses only the public
+** to any internal dataBackup structures of SQLite.  It uses only the public
 ** interface defined here.  As a consequence, errors that occur in the
 ** wrapper layer outside of the internal [sqlite3_exec()] call are not
 ** reflected in subsequent calls to [sqlite3_errcode()] or
@@ -3202,7 +3202,7 @@ SQLITE_API void sqlite3_randomness(int N, void *P);
 **
 ** An authorizer is used when [sqlite3_prepare | preparing]
 ** SQL statements from an untrusted source, to ensure that the SQL statements
-** do not try to access data they are not allowed to see, or that they do not
+** do not try to access dataBackup they are not allowed to see, or that they do not
 ** try to execute malicious statements that damage the database.  For
 ** example, an application may allow a user to enter arbitrary
 ** SQL queries for evaluation by a database.  But the application does
@@ -3717,30 +3717,30 @@ SQLITE_API void sqlite3_progress_handler(sqlite3*, int, int(*)(void*), void*);
 **
 ** <table border="1" align=center cellpadding=5>
 ** <tr><th> URI filenames <th> Results
-** <tr><td> file:data.db <td>
-**          Open the file "data.db" in the current directory.
-** <tr><td> file:/home/fred/data.db<br>
-**          file:///home/fred/data.db <br>
-**          file://localhost/home/fred/data.db <br> <td>
-**          Open the database file "/home/fred/data.db".
-** <tr><td> file://darkstar/home/fred/data.db <td>
+** <tr><td> file:dataBackup.db <td>
+**          Open the file "dataBackup.db" in the current directory.
+** <tr><td> file:/home/fred/dataBackup.db<br>
+**          file:///home/fred/dataBackup.db <br>
+**          file://localhost/home/fred/dataBackup.db <br> <td>
+**          Open the database file "/home/fred/dataBackup.db".
+** <tr><td> file://darkstar/home/fred/dataBackup.db <td>
 **          An error. "darkstar" is not a recognized authority.
 ** <tr><td style="white-space:nowrap">
-**          file:///C:/Documents%20and%20Settings/fred/Desktop/data.db
-**     <td> Windows only: Open the file "data.db" on fred's desktop on drive
+**          file:///C:/Documents%20and%20Settings/fred/Desktop/dataBackup.db
+**     <td> Windows only: Open the file "dataBackup.db" on fred's desktop on drive
 **          C:. Note that the %20 escaping in this example is not strictly
 **          necessary - space characters can be used literally
 **          in URI filenames.
-** <tr><td> file:data.db?mode=ro&cache=private <td>
-**          Open file "data.db" in the current directory for read-only access.
+** <tr><td> file:dataBackup.db?mode=ro&cache=private <td>
+**          Open file "dataBackup.db" in the current directory for read-only access.
 **          Regardless of whether or not shared-cache mode is enabled by
 **          default, use a private cache.
-** <tr><td> file:/home/fred/data.db?vfs=unix-dotfile <td>
-**          Open file "/home/fred/data.db". Use the special VFS "unix-dotfile"
+** <tr><td> file:/home/fred/dataBackup.db?vfs=unix-dotfile <td>
+**          Open file "/home/fred/dataBackup.db". Use the special VFS "unix-dotfile"
 **          that uses dot-files in place of posix advisory locking.
-** <tr><td> file:data.db?mode=readonly <td>
+** <tr><td> file:dataBackup.db?mode=readonly <td>
 **          An error. "readonly" is not a valid option for the "mode" parameter.
-**          Use "ro" instead:  "file:data.db?mode=ro".
+**          Use "ro" instead:  "file:dataBackup.db?mode=ro".
 ** </table>
 **
 ** ^URI hexadecimal escape sequences (%HH) are supported within the path and
@@ -4810,9 +4810,9 @@ SQLITE_API int sqlite3_clear_bindings(sqlite3_stmt*);
 **
 ** ^Return the number of columns in the result set returned by the
 ** [prepared statement]. ^If this routine returns 0, that means the
-** [prepared statement] returns no data (for example an [UPDATE]).
+** [prepared statement] returns no dataBackup (for example an [UPDATE]).
 ** ^However, just because this routine returns a positive number does not
-** mean that one or more rows of data will be returned.  ^A SELECT statement
+** mean that one or more rows of dataBackup will be returned.  ^A SELECT statement
 ** will always have a positive sqlite3_column_count() but depending on the
 ** WHERE clause constraints and the table content, it might return no rows.
 **
@@ -4924,7 +4924,7 @@ SQLITE_API const void *sqlite3_column_origin_name16(sqlite3_stmt*,int);
 **
 ** ^SQLite uses dynamic run-time typing.  ^So just because a column
 ** is declared to contain a particular type does not mean that the
-** data stored in that column is of the declared type.  SQLite is
+** dataBackup stored in that column is of the declared type.  SQLite is
 ** strongly typed, but the typing is dynamic not static.  ^Type
 ** is associated with individual values, not with the containers
 ** used to hold those values.
@@ -4967,10 +4967,10 @@ SQLITE_API const void *sqlite3_column_decltype16(sqlite3_stmt*,int);
 ** machine without first calling [sqlite3_reset()] to reset the virtual
 ** machine back to its initial state.
 **
-** ^If the SQL statement being executed returns any data, then [SQLITE_ROW]
-** is returned each time a new row of data is ready for processing by the
+** ^If the SQL statement being executed returns any dataBackup, then [SQLITE_ROW]
+** is returned each time a new row of dataBackup is ready for processing by the
 ** caller. The values may be accessed using the [column access functions].
-** sqlite3_step() is called again to retrieve the next row of data.
+** sqlite3_step() is called again to retrieve the next row of dataBackup.
 **
 ** ^[SQLITE_ERROR] means that a run-time error (such as a constraint
 ** violation) has occurred.  sqlite3_step() should not be called again on
@@ -5031,7 +5031,7 @@ SQLITE_API int sqlite3_step(sqlite3_stmt*);
 ** will return non-zero if previous call to [sqlite3_step](P) returned
 ** [SQLITE_ROW], except in the case of the [PRAGMA incremental_vacuum]
 ** where it always returns zero since each step of that multi-step
-** pragma returns 0 columns of data.
+** pragma returns 0 columns of dataBackup.
 **
 ** See also: [sqlite3_column_count()]
 */
@@ -5118,13 +5118,13 @@ SQLITE_API int sqlite3_data_count(sqlite3_stmt *pStmt);
 ** are pending, then the results are undefined.
 **
 ** The first six interfaces (_blob, _double, _int, _int64, _text, and _text16)
-** each return the value of a result column in a specific data format.  If
+** each return the value of a result column in a specific dataBackup format.  If
 ** the result column is not initially in the requested format (for example,
 ** if the query returns an integer but the sqlite3_column_text() interface
 ** is used to extract the value) then an automatic type conversion is performed.
 **
 ** ^The sqlite3_column_type() routine returns the
-** [SQLITE_INTEGER | datatype code] for the initial data type
+** [SQLITE_INTEGER | datatype code] for the initial dataBackup type
 ** of the result column.  ^The returned value is one of [SQLITE_INTEGER],
 ** [SQLITE_FLOAT], [SQLITE_TEXT], [SQLITE_BLOB], or [SQLITE_NULL].
 ** The return value of sqlite3_column_type() can be used to decide which
@@ -5372,7 +5372,7 @@ SQLITE_API int sqlite3_reset(sqlite3_stmt *pStmt);
 ** the three "sqlite3_create_function*" routines are the text encoding
 ** expected for the second parameter (the name of the function being
 ** created) and the presence or absence of a destructor callback for
-** the application data pointer. Function sqlite3_create_window_function()
+** the application dataBackup pointer. Function sqlite3_create_window_function()
 ** is similar, but allows the user to supply the extra callback functions
 ** needed by [aggregate window functions].
 **
@@ -5407,7 +5407,7 @@ SQLITE_API int sqlite3_reset(sqlite3_stmt *pStmt);
 ** different preferred text encodings, with different implementations for
 ** each encoding.
 ** ^When multiple implementations of the same function are available, SQLite
-** will pick the one that involves the least amount of data conversion.
+** will pick the one that involves the least amount of dataBackup conversion.
 **
 ** ^The fourth parameter may optionally be ORed with [SQLITE_DETERMINISTIC]
 ** to signal that the function will always return the same result given
@@ -5457,12 +5457,12 @@ SQLITE_API int sqlite3_reset(sqlite3_stmt *pStmt);
 **
 ** ^(If the final parameter to sqlite3_create_function_v2() or
 ** sqlite3_create_window_function() is not NULL, then it is destructor for
-** the application data pointer. The destructor is invoked when the function
+** the application dataBackup pointer. The destructor is invoked when the function
 ** is deleted, either by being overloaded or when the database connection
 ** closes.)^ ^The destructor is also invoked if the call to
 ** sqlite3_create_function_v2() fails.  ^When the destructor callback is
 ** invoked, it is passed a single argument which is a copy of the application
-** data pointer which was the fifth parameter to sqlite3_create_function_v2().
+** dataBackup pointer which was the fifth parameter to sqlite3_create_function_v2().
 **
 ** ^It is permitted to register multiple implementations of the same
 ** functions with the same name but with either differing numbers of
@@ -5946,32 +5946,32 @@ SQLITE_API sqlite3 *sqlite3_context_db_handle(sqlite3_context*);
 ** METHOD: sqlite3_context
 **
 ** These functions may be used by (non-aggregate) SQL functions to
-** associate auxiliary data with argument values. If the same argument
+** associate auxiliary dataBackup with argument values. If the same argument
 ** value is passed to multiple invocations of the same SQL function during
-** query execution, under some circumstances the associated auxiliary data
+** query execution, under some circumstances the associated auxiliary dataBackup
 ** might be preserved.  An example of where this might be useful is in a
 ** regular-expression matching function. The compiled version of the regular
-** expression can be stored as auxiliary data associated with the pattern string.
+** expression can be stored as auxiliary dataBackup associated with the pattern string.
 ** Then as long as the pattern string remains the same,
 ** the compiled regular expression can be reused on multiple
 ** invocations of the same function.
 **
-** ^The sqlite3_get_auxdata(C,N) interface returns a pointer to the auxiliary data
+** ^The sqlite3_get_auxdata(C,N) interface returns a pointer to the auxiliary dataBackup
 ** associated by the sqlite3_set_auxdata(C,N,P,X) function with the Nth argument
 ** value to the application-defined function.  ^N is zero for the left-most
-** function argument.  ^If there is no auxiliary data
+** function argument.  ^If there is no auxiliary dataBackup
 ** associated with the function argument, the sqlite3_get_auxdata(C,N) interface
 ** returns a NULL pointer.
 **
-** ^The sqlite3_set_auxdata(C,N,P,X) interface saves P as auxiliary data for the
+** ^The sqlite3_set_auxdata(C,N,P,X) interface saves P as auxiliary dataBackup for the
 ** N-th argument of the application-defined function.  ^Subsequent
 ** calls to sqlite3_get_auxdata(C,N) return P from the most recent
-** sqlite3_set_auxdata(C,N,P,X) call if the auxiliary data is still valid or
-** NULL if the auxiliary data has been discarded.
+** sqlite3_set_auxdata(C,N,P,X) call if the auxiliary dataBackup is still valid or
+** NULL if the auxiliary dataBackup has been discarded.
 ** ^After each call to sqlite3_set_auxdata(C,N,P,X) where X is not NULL,
 ** SQLite will invoke the destructor function X with parameter P exactly
-** once, when the auxiliary data is discarded.
-** SQLite is free to discard the auxiliary data at any time, including: <ul>
+** once, when the auxiliary dataBackup is discarded.
+** SQLite is free to discard the auxiliary dataBackup at any time, including: <ul>
 ** <li> ^(when the corresponding function parameter changes)^, or
 ** <li> ^(when [sqlite3_reset()] or [sqlite3_finalize()] is called for the
 **      SQL statement)^, or
@@ -5995,7 +5995,7 @@ SQLITE_API sqlite3 *sqlite3_context_db_handle(sqlite3_context*);
 ** function is being evaluated during query planning rather than during
 ** query execution.
 **
-** ^(In practice, auxiliary data is preserved between function calls for
+** ^(In practice, auxiliary dataBackup is preserved between function calls for
 ** function parameters that are compile-time constants, including literal
 ** values and [parameters] and expressions composed from the same.)^
 **
@@ -6037,29 +6037,29 @@ SQLITE_API void sqlite3_set_auxdata(sqlite3_context*, int N, void*, void (*)(voi
 **      database connection closing process.
 ** </ul>
 **
-** SQLite does not do anything with client data other than invoke
-** destructors on the client data at the appropriate time.  The intended
-** use for client data is to provide a mechanism for wrapper libraries
+** SQLite does not do anything with client dataBackup other than invoke
+** destructors on the client dataBackup at the appropriate time.  The intended
+** use for client dataBackup is to provide a mechanism for wrapper libraries
 ** to store additional information about an SQLite database connection.
 **
 ** There is no limit (other than available memory) on the number of different
-** client data pointers (with different names) that can be attached to a
+** client dataBackup pointers (with different names) that can be attached to a
 ** single database connection.  However, the implementation is optimized
-** for the case of having only one or two different client data names.
+** for the case of having only one or two different client dataBackup names.
 ** Applications and wrapper libraries are discouraged from using more than
-** one client data name each.
+** one client dataBackup name each.
 **
-** There is no way to enumerate the client data pointers
+** There is no way to enumerate the client dataBackup pointers
 ** associated with a database connection.  The N parameter can be thought
 ** of as a secret key such that only code that knows the secret key is able
-** to access the associated data.
+** to access the associated dataBackup.
 **
 ** Security Warning:  These interfaces should not be exposed in scripting
 ** languages or in other circumstances where it might be possible for an
 ** an attacker to invoke them.  Any agent that can invoke these interfaces
 ** can probably also take control of the process.
 **
-** Database connection client data is only available for SQLite
+** Database connection client dataBackup is only available for SQLite
 ** version 3.44.0 ([dateof:3.44.0]) and later.
 **
 ** See also: [sqlite3_set_auxdata()] and [sqlite3_get_auxdata()].
@@ -6312,19 +6312,19 @@ SQLITE_API void sqlite3_result_subtype(sqlite3_context*,unsigned int);
 ** ^The [SQLITE_UTF16_ALIGNED] value for eTextRep forces strings to begin
 ** on an even byte address.
 **
-** ^The fourth argument, pArg, is an application data pointer that is passed
+** ^The fourth argument, pArg, is an application dataBackup pointer that is passed
 ** through as the first argument to the collating function callback.
 **
 ** ^The fifth argument, xCompare, is a pointer to the collating function.
 ** ^Multiple collating functions can be registered using the same name but
 ** with different eTextRep parameters and SQLite will use whichever
-** function requires the least amount of data transformation.
+** function requires the least amount of dataBackup transformation.
 ** ^If the xCompare argument is NULL then the collating function is
 ** deleted.  ^When all collating functions having the same name are deleted,
 ** that collation is no longer usable.
 **
 ** ^The collating function callback is invoked with a copy of the pArg
-** application data pointer and with two strings in the encoding specified
+** application dataBackup pointer and with two strings in the encoding specified
 ** by the eTextRep argument.  The two integer parameters to the collating
 ** function callback are the length of the two strings, in bytes. The collating
 ** function must return an integer that is negative, zero, or positive
@@ -6357,7 +6357,7 @@ SQLITE_API void sqlite3_result_subtype(sqlite3_context*,unsigned int);
 ** ^The xDestroy callback is <u>not</u> called if the
 ** sqlite3_create_collation_v2() function fails.  Applications that invoke
 ** sqlite3_create_collation_v2() with a non-NULL xDestroy argument should
-** check the return code and dispose of the application data pointer
+** check the return code and dispose of the application dataBackup pointer
 ** themselves rather than expecting SQLite to deal with it for them.
 ** This is different from every other SQLite interface.  The inconsistency
 ** is unfortunate but cannot be changed without breaking backwards
@@ -6816,7 +6816,7 @@ SQLITE_API void *sqlite3_rollback_hook(sqlite3*, void(*)(void *), void*);
 **
 ** ^The sqlite3_autovacuum_pages(D,C,P,X) interface registers a callback
 ** function C that is invoked prior to each autovacuum of the database
-** file.  ^The callback is passed a copy of the generic data pointer (P),
+** file.  ^The callback is passed a copy of the generic dataBackup pointer (P),
 ** the schema-name of the attached database that is being autovacuumed,
 ** the size of the database file in pages, the number of free pages,
 ** and the number of bytes per page, respectively.  The callback should
@@ -6941,7 +6941,7 @@ SQLITE_API void *sqlite3_update_hook(
 ** CAPI3REF: Enable Or Disable Shared Pager Cache
 **
 ** ^(This routine enables or disables the sharing of the database cache
-** and schema data structures between [database connection | connections]
+** and schema dataBackup structures between [database connection | connections]
 ** to the same database. Sharing is enabled if the argument is true
 ** and disabled if the argument is false.)^
 **
@@ -7150,7 +7150,7 @@ SQLITE_API SQLITE_DEPRECATED void sqlite3_soft_heap_limit(int N);
 ** for the [rowid] are set as follows:
 **
 ** <pre>
-**     data type: "INTEGER"
+**     dataBackup type: "INTEGER"
 **     collation sequence: "BINARY"
 **     not null: 0
 **     primary key: 1
@@ -7166,7 +7166,7 @@ SQLITE_API int sqlite3_table_column_metadata(
   const char *zDbName,        /* Database name or NULL */
   const char *zTableName,     /* Table name */
   const char *zColumnName,    /* Column name */
-  char const **pzDataType,    /* OUTPUT: Declared data type */
+  char const **pzDataType,    /* OUTPUT: Declared dataBackup type */
   char const **pzCollSeq,     /* OUTPUT: Collation sequence name */
   int *pNotNull,              /* OUTPUT: True if NOT NULL constraint exists */
   int *pPrimaryKey,           /* OUTPUT: True if column part of PK */
@@ -7591,7 +7591,7 @@ struct sqlite3_index_info {
 ** by the first parameter.  ^The name of the module is given by the
 ** second parameter.  ^The third parameter is a pointer to
 ** the implementation of the [virtual table module].   ^The fourth
-** parameter is an arbitrary client data pointer that is passed through
+** parameter is an arbitrary client dataBackup pointer that is passed through
 ** into the [xCreate] and [xConnect] methods of the virtual table module
 ** when a new virtual table is be being created or reinitialized.
 **
@@ -7614,13 +7614,13 @@ SQLITE_API int sqlite3_create_module(
   sqlite3 *db,               /* SQLite connection to register module with */
   const char *zName,         /* Name of the module */
   const sqlite3_module *p,   /* Methods for the module */
-  void *pClientData          /* Client data for xCreate/xConnect */
+  void *pClientData          /* Client dataBackup for xCreate/xConnect */
 );
 SQLITE_API int sqlite3_create_module_v2(
   sqlite3 *db,               /* SQLite connection to register module with */
   const char *zName,         /* Name of the module */
   const sqlite3_module *p,   /* Methods for the module */
-  void *pClientData,         /* Client data for xCreate/xConnect */
+  void *pClientData,         /* Client dataBackup for xCreate/xConnect */
   void(*xDestroy)(void*)     /* Module destructor function */
 );
 
@@ -7892,13 +7892,13 @@ SQLITE_API int sqlite3_blob_bytes(sqlite3_blob *);
 ** CAPI3REF: Read Data From A BLOB Incrementally
 ** METHOD: sqlite3_blob
 **
-** ^(This function is used to read data from an open [BLOB handle] into a
-** caller-supplied buffer. N bytes of data are copied into buffer Z
+** ^(This function is used to read dataBackup from an open [BLOB handle] into a
+** caller-supplied buffer. N bytes of dataBackup are copied into buffer Z
 ** from the open BLOB, starting at offset iOffset.)^
 **
 ** ^If offset iOffset is less than N bytes from the end of the BLOB,
-** [SQLITE_ERROR] is returned and no data is read.  ^If N or iOffset is
-** less than zero, [SQLITE_ERROR] is returned and no data is read.
+** [SQLITE_ERROR] is returned and no dataBackup is read.  ^If N or iOffset is
+** less than zero, [SQLITE_ERROR] is returned and no dataBackup is read.
 ** ^The size of the blob (and hence the maximum value of N+iOffset)
 ** can be determined using the [sqlite3_blob_bytes()] interface.
 **
@@ -7921,8 +7921,8 @@ SQLITE_API int sqlite3_blob_read(sqlite3_blob *, void *Z, int N, int iOffset);
 ** CAPI3REF: Write Data Into A BLOB Incrementally
 ** METHOD: sqlite3_blob
 **
-** ^(This function is used to write data into an open [BLOB handle] from a
-** caller-supplied buffer. N bytes of data are copied from the buffer Z
+** ^(This function is used to write dataBackup into an open [BLOB handle] from a
+** caller-supplied buffer. N bytes of dataBackup are copied from the buffer Z
 ** into the open BLOB, starting at offset iOffset.)^
 **
 ** ^(On success, sqlite3_blob_write() returns SQLITE_OK.
@@ -7938,10 +7938,10 @@ SQLITE_API int sqlite3_blob_read(sqlite3_blob *, void *Z, int N, int iOffset);
 ** This function may only modify the contents of the BLOB; it is
 ** not possible to increase the size of a BLOB using this API.
 ** ^If offset iOffset is less than N bytes from the end of the BLOB,
-** [SQLITE_ERROR] is returned and no data is written. The size of the
+** [SQLITE_ERROR] is returned and no dataBackup is written. The size of the
 ** BLOB (and hence the maximum value of N+iOffset) can be determined
 ** using the [sqlite3_blob_bytes()] interface. ^If N or iOffset are less
-** than zero [SQLITE_ERROR] is returned and no data is written.
+** than zero [SQLITE_ERROR] is returned and no dataBackup is written.
 **
 ** ^An attempt to write to an expired [BLOB handle] fails with an
 ** error code of [SQLITE_ABORT].  ^Writes to the BLOB that occurred
@@ -8297,7 +8297,7 @@ SQLITE_API sqlite3_mutex *sqlite3_db_mutex(sqlite3*);
 ** the [sqlite3_file] object associated with the journal file instead of
 ** the main database.  The [SQLITE_FCNTL_VFS_POINTER] opcode returns
 ** a pointer to the underlying [sqlite3_vfs] object for the file.
-** The [SQLITE_FCNTL_DATA_VERSION] returns the data version counter
+** The [SQLITE_FCNTL_DATA_VERSION] returns the dataBackup version counter
 ** from the pager.
 **
 ** ^If the second parameter (zDbName) does not match the name of any
@@ -8988,7 +8988,7 @@ struct sqlite3_pcache_page {
 ** call to [sqlite3_initialize()])^
 ** (usually only once during the lifetime of the process). ^(The xInit()
 ** method is passed a copy of the sqlite3_pcache_methods2.pArg value.)^
-** The intent of the xInit() method is to set up global data structures
+** The intent of the xInit() method is to set up global dataBackup structures
 ** required by the custom page cache implementation.
 ** ^(If the xInit() method is NULL, then the
 ** built-in default page cache is used instead of the application defined
@@ -9190,7 +9190,7 @@ typedef struct sqlite3_backup sqlite3_backup;
 **     <li><b>sqlite3_backup_init()</b> is called once to initialize the
 **         backup,
 **     <li><b>sqlite3_backup_step()</b> is called one or more times to transfer
-**         the data between the two databases, and finally
+**         the dataBackup between the two databases, and finally
 **     <li><b>sqlite3_backup_finish()</b> is called to release all resources
 **         associated with the backup operation.
 **   </ol>)^
@@ -9576,7 +9576,7 @@ SQLITE_API void sqlite3_log(int iErrCode, const char *zFormat, ...);
 ** METHOD: sqlite3
 **
 ** ^The [sqlite3_wal_hook()] function is used to register a callback that
-** is invoked each time data is committed to a database in wal mode.
+** is invoked each time dataBackup is committed to a database in wal mode.
 **
 ** ^(The callback is invoked by SQLite after the commit has taken place and
 ** the associated write-lock on the database released)^, so the implementation
@@ -9823,7 +9823,7 @@ SQLITE_API int sqlite3_vtab_config(sqlite3*, int op, ...);
 **
 ** If X is non-zero, then the virtual table implementation guarantees
 ** that if [xUpdate] returns [SQLITE_CONSTRAINT], it will do so before
-** any modifications to internal or persistent data structures have been made.
+** any modifications to internal or persistent dataBackup structures have been made.
 ** If the [ON CONFLICT] mode is ABORT, FAIL, IGNORE or ROLLBACK, SQLite
 ** is able to roll back a statement or database transaction, and abandon
 ** or continue processing the current SQL statement as appropriate.
@@ -10947,7 +10947,7 @@ struct sqlite3_rtree_geometry {
   void *pContext;                 /* Copy of pContext passed to s_r_g_c() */
   int nParam;                     /* Size of array aParam[] */
   sqlite3_rtree_dbl *aParam;      /* Parameters passed to SQL geom function */
-  void *pUser;                    /* Callback implementation user data */
+  void *pUser;                    /* Callback implementation user dataBackup */
   void (*xDelUser)(void *);       /* Called by SQLite to clean up pUser */
 };
 
@@ -11124,7 +11124,7 @@ SQLITE_API int sqlite3session_object_config(sqlite3_session*, int op, void *pArg
 **
 ** <dt>SQLITE_SESSION_OBJCONFIG_ROWID <dd>
 **   This option is used to set, clear or query the flag that enables
-**   collection of data for tables with no explicit PRIMARY KEY.
+**   collection of dataBackup for tables with no explicit PRIMARY KEY.
 **
 **   Normally, tables with no explicit PRIMARY KEY are simply ignored
 **   by the sessions module. However, if this flag is set, it behaves
@@ -11322,7 +11322,7 @@ SQLITE_API void sqlite3session_table_filter(
 ** Once a table has been attached to a session object, the session object
 ** records the primary key values of all new rows inserted into the table.
 ** It also records the original primary key and other column values of any
-** deleted or updated rows. For each unique primary key value, data is only
+** deleted or updated rows. For each unique primary key value, dataBackup is only
 ** recorded once - the first time a row with said primary key is inserted,
 ** updated or deleted in the lifetime of the session.
 **
@@ -12317,7 +12317,7 @@ SQLITE_API int sqlite3changeset_apply_v2(
     sqlite3_changeset_iter *p     /* Handle describing change and conflict */
   ),
   void *pCtx,                     /* First argument passed to xConflict */
-  void **ppRebase, int *pnRebase, /* OUT: Rebase data */
+  void **ppRebase, int *pnRebase, /* OUT: Rebase dataBackup */
   int flags                       /* SESSION_CHANGESETAPPLY_* flags */
 );
 
@@ -12644,7 +12644,7 @@ SQLITE_API void sqlite3rebaser_delete(sqlite3_rebaser *p);
 **
 ** In order to avoid this problem, instead of a single large buffer, input
 ** is passed to a streaming API functions by way of a callback function that
-** the sessions module invokes to incrementally request input data as it is
+** the sessions module invokes to incrementally request input dataBackup as it is
 ** required. In all cases, a pair of API function parameters such as
 **
 **  <pre>
@@ -12662,7 +12662,7 @@ SQLITE_API void sqlite3rebaser_delete(sqlite3_rebaser *p);
 ** Each time the xInput callback is invoked by the sessions module, the first
 ** argument passed is a copy of the supplied pIn context pointer. The second
 ** argument, pData, points to a buffer (*pnData) bytes in size. Assuming no
-** error occurs the xInput method should copy up to (*pnData) bytes of data
+** error occurs the xInput method should copy up to (*pnData) bytes of dataBackup
 ** into the buffer and set (*pnData) to the actual number of bytes copied
 ** before returning SQLITE_OK. If the input is completely exhausted, (*pnData)
 ** should be set to zero to indicate this. Or, if an error occurs, an SQLite
@@ -12693,19 +12693,19 @@ SQLITE_API void sqlite3rebaser_delete(sqlite3_rebaser *p);
 **  &nbsp;     void *pOut
 **  </pre>
 **
-** The xOutput callback is invoked zero or more times to return data to
+** The xOutput callback is invoked zero or more times to return dataBackup to
 ** the application. The first parameter passed to each call is a copy of the
 ** pOut pointer supplied by the application. The second parameter, pData,
 ** points to a buffer nData bytes in size containing the chunk of output
-** data being returned. If the xOutput callback successfully processes the
-** supplied data, it should return SQLITE_OK to indicate success. Otherwise,
+** dataBackup being returned. If the xOutput callback successfully processes the
+** supplied dataBackup, it should return SQLITE_OK to indicate success. Otherwise,
 ** it should return some other SQLite error code. In this case processing
 ** is immediately abandoned and the streaming API function returns a copy
 ** of the xOutput error code to the application.
 **
 ** The sessions module never invokes an xOutput callback with the third
 ** parameter set to a value less than or equal to zero. Other than this,
-** no guarantees are made as to the size of the chunks of data returned.
+** no guarantees are made as to the size of the chunks of dataBackup returned.
 */
 SQLITE_API int sqlite3changeset_apply_strm(
   sqlite3 *db,                    /* Apply change to "main" db of this handle */
@@ -12811,10 +12811,10 @@ SQLITE_API int sqlite3rebaser_rebase_strm(
 ** <dl>
 ** <dt>SQLITE_SESSION_CONFIG_STRMSIZE<dd>
 **    By default, the sessions module streaming interfaces attempt to input
-**    and output data in approximately 1 KiB chunks. This operand may be used
+**    and output dataBackup in approximately 1 KiB chunks. This operand may be used
 **    to set and query the value of this configuration setting. The pointer
 **    passed as the second argument must point to a value of type (int).
-**    If this value is greater than 0, it is used as the new streaming data
+**    If this value is greater than 0, it is used as the new streaming dataBackup
 **    chunk size for both input and output. Before returning, the (int) value
 **    pointed to by pArg is set to the final value of the streaming interface
 **    chunk size.
@@ -13012,35 +13012,35 @@ struct Fts5PhraseIter {
 ** xSetAuxdata(pFts5, pAux, xDelete)
 **
 **   Save the pointer passed as the second argument as the extension function's
-**   "auxiliary data". The pointer may then be retrieved by the current or any
+**   "auxiliary dataBackup". The pointer may then be retrieved by the current or any
 **   future invocation of the same fts5 extension function made as part of
 **   the same MATCH query using the xGetAuxdata() API.
 **
-**   Each extension function is allocated a single auxiliary data slot for
+**   Each extension function is allocated a single auxiliary dataBackup slot for
 **   each FTS query (MATCH expression). If the extension function is invoked
 **   more than once for a single FTS query, then all invocations share a
-**   single auxiliary data context.
+**   single auxiliary dataBackup context.
 **
-**   If there is already an auxiliary data pointer when this function is
+**   If there is already an auxiliary dataBackup pointer when this function is
 **   invoked, then it is replaced by the new pointer. If an xDelete callback
 **   was specified along with the original pointer, it is invoked at this
 **   point.
 **
 **   The xDelete callback, if one is specified, is also invoked on the
-**   auxiliary data pointer after the FTS5 query has finished.
+**   auxiliary dataBackup pointer after the FTS5 query has finished.
 **
 **   If an error (e.g. an OOM condition) occurs within this function,
-**   the auxiliary data is set to NULL and an error code returned. If the
-**   xDelete parameter was not NULL, it is invoked on the auxiliary data
+**   the auxiliary dataBackup is set to NULL and an error code returned. If the
+**   xDelete parameter was not NULL, it is invoked on the auxiliary dataBackup
 **   pointer before returning.
 **
 **
 ** xGetAuxdata(pFts5, bClear)
 **
-**   Returns the current auxiliary data pointer for the fts5 extension
+**   Returns the current auxiliary dataBackup pointer for the fts5 extension
 **   function. See the xSetAuxdata() method for details.
 **
-**   If the bClear argument is non-zero, then the auxiliary data is cleared
+**   If the bClear argument is non-zero, then the auxiliary dataBackup is cleared
 **   (set to NULL) before this function returns. In this case the xDelete,
 **   if any, is not invoked.
 **
@@ -13132,7 +13132,7 @@ struct Fts5PhraseIter {
 **
 **   The output text is not a copy of the query text that specified the
 **   token. It is the output of the tokenizer module. For tokendata=1
-**   tables, this includes any embedded 0x00 and trailing data.
+**   tables, this includes any embedded 0x00 and trailing dataBackup.
 **
 ** xInstToken(pFts5, iIdx, iToken, ppToken, pnToken)
 **   This is used to access token iToken of phrase hit iIdx within the
@@ -13146,7 +13146,7 @@ struct Fts5PhraseIter {
 **
 **   The output text is not a copy of the document text that was tokenized.
 **   It is the output of the tokenizer module. For tokendata=1 tables, this
-**   includes any embedded 0x00 and trailing data.
+**   includes any embedded 0x00 and trailing dataBackup.
 **
 **   This API can be quite slow if used with an FTS5 table created with the
 **   "detail=none" or "detail=column" option.
@@ -13424,7 +13424,7 @@ struct Fts5ExtensionApi {
 **   single token.
 **
 **   In many cases, method (1) above is the best approach. It does not add
-**   extra data to the FTS index or require FTS5 to query for multiple terms,
+**   extra dataBackup to the FTS index or require FTS5 to query for multiple terms,
 **   so it is efficient in terms of disk space and query speed. However, it
 **   does not support prefix queries very well. If, as suggested above, the
 **   token "first" is substituted for "1st" by the tokenizer, then the query:

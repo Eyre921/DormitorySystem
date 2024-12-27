@@ -1703,7 +1703,7 @@ static void shellAddSchemaName(
 #define SQLITE_WINDIRENT_H
 
 /*
-** We need several data types from the Windows SDK header.
+** We need several dataBackup types from the Windows SDK header.
 */
 
 #ifndef WIN32_LEAN_AND_MEAN
@@ -2357,7 +2357,7 @@ int sqlite3PcacheTraceDeactivate(void){
 **
 ** The sha3(X) function computes the SHA3 hash of the input X, or NULL if
 ** X is NULL.  If inputs X is text, the UTF-8 rendering of that text is
-** used to compute the hash.  If X is a BLOB, then the binary data of the
+** used to compute the hash.  If X is a BLOB, then the binary dataBackup of the
 ** blob is used to compute the hash.  If X is an integer or real number,
 ** then that number if converted into UTF-8 text and the hash is computed
 ** over the text.
@@ -2382,7 +2382,7 @@ int sqlite3PcacheTraceDeactivate(void){
 **
 **    typeof(Y)='null'         A single "N" is hashed.  (One byte)
 **
-**    typeof(Y)='integer'      The data hash is the character "I" followed
+**    typeof(Y)='integer'      The dataBackup hash is the character "I" followed
 **                             by an 8-byte big-endian binary of the
 **                             64-bit signed integer.  (Nine bytes total.)
 **
@@ -3346,7 +3346,7 @@ static void hash_init(SHA1Context *p){
 static void hash_step(
   SHA1Context *p,                 /* Add content to this context */
   const unsigned char *data,      /* Data to be added */
-  unsigned int len                /* Number of bytes in data */
+  unsigned int len                /* Number of bytes in dataBackup */
 ){
   unsigned int i, j;
 
@@ -4694,7 +4694,7 @@ int sqlite3_decimal_init(
 **     the array is kept in sorted order using an insert-sort.  This
 **     results in O(N*K) performance where K is the size of the window.
 **     One can imagine alternative implementations that give O(N*logN*logK)
-**     performance, but they require more complex logic and data structures.
+**     performance, but they require more complex logic and dataBackup structures.
 **     The developers have elected to keep the asymptotically slower
 **     algorithm for now, for simplicity, under the theory that window
 **     functions are seldom used and when they are, the window size K is
@@ -5118,7 +5118,7 @@ int sqlite3_percentile_init(
 **
 ** The conversions meet RFC 4648 requirements, provided that this
 ** C source specifies that line-feeds are included in the encoded
-** data to limit visible line lengths to 72 characters and to
+** dataBackup to limit visible line lengths to 72 characters and to
 ** terminate any encoded blob having non-zero length.
 **
 ** Length limitations are not imposed except that the runtime
@@ -6423,7 +6423,7 @@ static int progressSequence( SequenceSpec *pss ){
 typedef struct series_cursor series_cursor;
 struct series_cursor {
   sqlite3_vtab_cursor base;  /* Base class - must be first */
-  SequenceSpec ss;           /* (this) Derived class data */
+  SequenceSpec ss;           /* (this) Derived class dataBackup */
 };
 
 /*
@@ -6975,8 +6975,8 @@ static sqlite3_module seriesModule = {
   seriesFilter,              /* xFilter - configure scan constraints */
   seriesNext,                /* xNext - advance a cursor */
   seriesEof,                 /* xEof - check for end of scan */
-  seriesColumn,              /* xColumn - read data */
-  seriesRowid,               /* xRowid - read data */
+  seriesColumn,              /* xColumn - read dataBackup */
+  seriesRowid,               /* xRowid - read dataBackup */
   0,                         /* xUpdate */
   0,                         /* xBegin */
   0,                         /* xSync */
@@ -7967,7 +7967,7 @@ int sqlite3_regexp_init(
 **     name:  Path to file or directory (text value).
 **     mode:  Value of stat.st_mode for directory entry (an integer).
 **     mtime: Value of stat.st_mtime for directory entry (an integer).
-**     data:  For a regular file, a blob containing the file data. For a
+**     dataBackup:  For a regular file, a blob containing the file dataBackup. For a
 **            symlink, a text value containing the text of the link. For a
 **            directory, NULL.
 **
@@ -8025,7 +8025,7 @@ SQLITE_EXTENSION_INIT1
 ** Structure of the fsdir() table-valued function
 */
                  /*    0    1    2     3    4           5             */
-#define FSDIR_SCHEMA "(name,mode,mtime,data,path HIDDEN,dir HIDDEN)"
+#define FSDIR_SCHEMA "(name,mode,mtime,dataBackup,path HIDDEN,dir HIDDEN)"
 #define FSDIR_COLUMN_NAME     0     /* Name of the file */
 #define FSDIR_COLUMN_MODE     1     /* Access mode */
 #define FSDIR_COLUMN_MTIME    2     /* Last modification time */
@@ -8888,8 +8888,8 @@ static int fsdirRegister(sqlite3 *db){
     fsdirFilter,               /* xFilter - configure scan constraints */
     fsdirNext,                 /* xNext - advance a cursor */
     fsdirEof,                  /* xEof - check for end of scan */
-    fsdirColumn,               /* xColumn - read data */
-    fsdirRowid,                /* xRowid - read data */
+    fsdirColumn,               /* xColumn - read dataBackup */
+    fsdirRowid,                /* xRowid - read dataBackup */
     0,                         /* xUpdate */
     0,                         /* xBegin */
     0,                         /* xSync */
@@ -9410,8 +9410,8 @@ static sqlite3_module completionModule = {
   completionFilter,          /* xFilter - configure scan constraints */
   completionNext,            /* xNext - advance a cursor */
   completionEof,             /* xEof - check for end of scan */
-  completionColumn,          /* xColumn - read data */
-  completionRowid,           /* xRowid - read data */
+  completionColumn,          /* xColumn - read dataBackup */
+  completionRowid,           /* xRowid - read dataBackup */
   0,                         /* xUpdate */
   0,                         /* xBegin */
   0,                         /* xSync */
@@ -9687,7 +9687,7 @@ static int apndClose(sqlite3_file *pFile){
 }
 
 /*
-** Read data from an apnd-file.
+** Read dataBackup from an apnd-file.
 */
 static int apndRead(
   sqlite3_file *pFile, 
@@ -9729,7 +9729,7 @@ static int apndWriteMark(
 }
 
 /*
-** Write data to an apnd-file.
+** Write dataBackup to an apnd-file.
 */
 static int apndWrite(
   sqlite3_file *pFile,
@@ -10242,8 +10242,8 @@ static const char ZIPFILE_SCHEMA[] =
     "mode,"              /* 1: POSIX mode for file */
     "mtime,"             /* 2: Last modification time (secs since 1970)*/
     "sz,"                /* 3: Size of object */
-    "rawdata,"           /* 4: Raw data */
-    "data,"              /* 5: Uncompressed data */
+    "rawdata,"           /* 4: Raw dataBackup */
+    "dataBackup,"              /* 5: Uncompressed dataBackup */
     "method,"            /* 6: Compression method (integer) */
     "z HIDDEN"           /* 7: Name of zip file */
   ") WITHOUT ROWID;";
@@ -10287,7 +10287,7 @@ static const char ZIPFILE_SCHEMA[] =
 #define ZIPFILE_SIGNATURE_EOCD    0x06054b50
 
 /*
-** The sizes of the fixed-size part of each of the three main data 
+** The sizes of the fixed-size part of each of the three main dataBackup
 ** structures in a zip archive.
 */
 #define ZIPFILE_LFH_FIXED_SZ      30
@@ -10400,9 +10400,9 @@ typedef struct ZipfileEntry ZipfileEntry;
 struct ZipfileEntry {
   ZipfileCDS cds;            /* Parsed CDS record */
   u32 mUnixTime;             /* Modification time, in UNIX format */
-  u8 *aExtra;                /* cds.nExtra+cds.nComment bytes of extra data */
-  i64 iDataOff;              /* Offset to data in file (if aData==0) */
-  u8 *aData;                 /* cds.szCompressed bytes of compressed data */
+  u8 *aExtra;                /* cds.nExtra+cds.nComment bytes of extra dataBackup */
+  i64 iDataOff;              /* Offset to dataBackup in file (if aData==0) */
+  u8 *aData;                 /* cds.szCompressed bytes of compressed dataBackup */
   ZipfileEntry *pNext;       /* Next element in in-memory CDS */
 };
 
@@ -10655,7 +10655,7 @@ static void zipfileCursorErr(ZipfileCsr *pCsr, const char *zFmt, ...){
 }
 
 /*
-** Read nRead bytes of data from offset iOff of file pFile into buffer
+** Read nRead bytes of dataBackup from offset iOff of file pFile into buffer
 ** aRead[]. Return SQLITE_OK if successful, or an SQLite error code
 ** otherwise. 
 **
@@ -11080,15 +11080,15 @@ static void zipfileFree(void *p) {
 }
 
 /*
-** Buffer aIn (size nIn bytes) contains compressed data. Uncompressed, the
-** size is nOut bytes. This function uncompresses the data and sets the
+** Buffer aIn (size nIn bytes) contains compressed dataBackup. Uncompressed, the
+** size is nOut bytes. This function uncompresses the dataBackup and sets the
 ** return value in context pCtx to the result (a blob).
 **
 ** If an error occurs, an error code is left in pCtx instead.
 */
 static void zipfileInflate(
   sqlite3_context *pCtx,          /* Store result here */
-  const u8 *aIn,                  /* Compressed data */
+  const u8 *aIn,                  /* Compressed dataBackup */
   int nIn,                        /* Size of buffer aIn[] in bytes */
   int nOut                        /* Expected output size */
 ){
@@ -11123,9 +11123,9 @@ static void zipfileInflate(
 }
 
 /*
-** Buffer aIn (size nIn bytes) contains uncompressed data. This function
+** Buffer aIn (size nIn bytes) contains uncompressed dataBackup. This function
 ** compresses it and sets (*ppOut) to point to a buffer containing the
-** compressed data. The caller is responsible for eventually calling
+** compressed dataBackup. The caller is responsible for eventually calling
 ** sqlite3_free() to release buffer (*ppOut). Before returning, (*pnOut) 
 ** is set to the size of buffer (*ppOut) in bytes.
 **
@@ -11206,7 +11206,7 @@ static int zipfileColumn(
     }
     case 4:   /* rawdata */
       if( sqlite3_vtab_nochange(ctx) ) break;
-    case 5: { /* data */
+    case 5: { /* dataBackup */
       if( i==4 || pCDS->iCompression==0 || pCDS->iCompression==8 ){
         int sz = pCDS->szCompressed;
         int szFinal = pCDS->szUncompressed;
@@ -11527,7 +11527,7 @@ static int zipfileSerializeLFH(ZipfileEntry *pEntry, u8 *aBuf){
   memcpy(a, pCds->zFile, (int)pCds->nFile);
   a += (int)pCds->nFile;
 
-  /* The "extra" data */
+  /* The "extra" dataBackup */
   zipfileWrite16(a, ZIPFILE_EXTRA_TIMESTAMP);
   zipfileWrite16(a, 5);
   *a++ = 0x01;
@@ -11584,9 +11584,9 @@ static int zipfileGetMode(
     }
   }
   if( ((mode & S_IFDIR)==0)==bIsDir ){
-    /* The "mode" attribute is a directory, but data has been specified.
-    ** Or vice-versa - no data but "mode" is a file or symlink.  */
-    *pzErr = sqlite3_mprintf("zipfile: mode does not match data");
+    /* The "mode" attribute is a directory, but dataBackup has been specified.
+    ** Or vice-versa - no dataBackup but "mode" is a file or symlink.  */
+    *pzErr = sqlite3_mprintf("zipfile: mode does not match dataBackup");
     return SQLITE_CONSTRAINT;
   }
   *pMode = mode;
@@ -11620,7 +11620,7 @@ static int zipfileBegin(sqlite3_vtab *pVtab){
   }
 
   /* Open a write fd on the file. Also load the entire central directory
-  ** structure into memory. During the transaction any new file data is 
+  ** structure into memory. During the transaction any new file dataBackup is
   ** appended to the archive file, but the central directory is accumulated
   ** in main-memory until the transaction is committed.  */
   pTab->pWriteFd = sqlite3_fopen(pTab->zFile, "ab+");
@@ -11766,10 +11766,10 @@ static int zipfileUpdate(
 
     if( rc==SQLITE_OK ){
       if( sqlite3_value_type(apVal[7])==SQLITE_NULL ){
-        /* data=NULL. A directory */
+        /* dataBackup=NULL. A directory */
         bIsDir = 1;
       }else{
-        /* Value specified for "data", and possibly "method". This must be
+        /* Value specified for "dataBackup", and possibly "method". This must be
         ** a regular file or a symlink. */
         const u8 *aIn = sqlite3_value_blob(apVal[7]);
         int nIn = sqlite3_value_bytes(apVal[7]);
@@ -12062,7 +12062,7 @@ static int zipfileFindFunction(
   int nArg,                       /* Number of SQL function arguments */
   const char *zName,              /* Name of SQL function */
   void (**pxFunc)(sqlite3_context*,int,sqlite3_value**), /* OUT: Result */
-  void **ppArg                    /* OUT: User data for *pxFunc */
+  void **ppArg                    /* OUT: User dataBackup for *pxFunc */
 ){
   (void)nArg;
   if( sqlite3_stricmp("zipfile_cds", zName)==0 ){
@@ -12106,9 +12106,9 @@ static int zipfileBufferGrow(ZipfileBuffer *pBuf, int nByte){
 ** xStep() callback for the zipfile() aggregate. This can be called in
 ** any of the following ways:
 **
-**   SELECT zipfile(name,data) ...
-**   SELECT zipfile(name,mode,mtime,data) ...
-**   SELECT zipfile(name,mode,mtime,data,method) ...
+**   SELECT zipfile(name,dataBackup) ...
+**   SELECT zipfile(name,mode,mtime,dataBackup) ...
+**   SELECT zipfile(name,mode,mtime,dataBackup,method) ...
 */
 static void zipfileStep(sqlite3_context *pCtx, int nVal, sqlite3_value **apVal){
   ZipfileCtx *p;                  /* Aggregate function context */
@@ -12127,11 +12127,11 @@ static void zipfileStep(sqlite3_context *pCtx, int nVal, sqlite3_value **apVal){
 
   int iMethod = -1;               /* Compression method to use (0 or 8) */
 
-  const u8 *aData = 0;            /* Possibly compressed data for new entry */
+  const u8 *aData = 0;            /* Possibly compressed dataBackup for new entry */
   int nData = 0;                  /* Size of aData[] in bytes */
-  int szUncompressed = 0;         /* Size of data before compression */
+  int szUncompressed = 0;         /* Size of dataBackup before compression */
   u8 *aFree = 0;                  /* Free this before returning */
-  u32 iCrc32 = 0;                 /* crc32 of uncompressed data */
+  u32 iCrc32 = 0;                 /* crc32 of uncompressed dataBackup */
 
   char *zName = 0;                /* Path (name) of new entry */
   int nName = 0;                  /* Size of zName in bytes */
@@ -12180,8 +12180,8 @@ static void zipfileStep(sqlite3_context *pCtx, int nVal, sqlite3_value **apVal){
     }
   }
 
-  /* Now inspect the data. If this is NULL, then the new entry must be a
-  ** directory.  Otherwise, figure out whether or not the data should
+  /* Now inspect the dataBackup. If this is NULL, then the new entry must be a
+  ** directory.  Otherwise, figure out whether or not the dataBackup should
   ** be deflated or simply stored in the zip archive. */
   if( sqlite3_value_type(pData)==SQLITE_NULL ){
     bIsDir = 1;
@@ -12254,7 +12254,7 @@ static void zipfileStep(sqlite3_context *pCtx, int nVal, sqlite3_value **apVal){
   if( (rc = zipfileBufferGrow(&p->body, nByte)) ) goto zipfile_step_out;
   p->body.n += zipfileSerializeLFH(&e, &p->body.a[p->body.n]);
 
-  /* Append the data to the body of the new archive */
+  /* Append the dataBackup to the body of the new archive */
   if( nData>0 ){
     if( (rc = zipfileBufferGrow(&p->body, nData)) ) goto zipfile_step_out;
     memcpy(&p->body.a[p->body.n], aData, nData);
@@ -12333,8 +12333,8 @@ static int zipfileRegister(sqlite3 *db){
     zipfileFilter,             /* xFilter - configure scan constraints */
     zipfileNext,               /* xNext - advance a cursor */
     zipfileEof,                /* xEof - check for end of scan */
-    zipfileColumn,             /* xColumn - read data */
-    0,                         /* xRowid - read data */
+    zipfileColumn,             /* xColumn - read dataBackup */
+    0,                         /* xRowid - read dataBackup */
     zipfileUpdate,             /* xUpdate */
     zipfileBegin,              /* xBegin */
     0,                         /* xSync */
@@ -12415,7 +12415,7 @@ SQLITE_EXTENSION_INIT1
 **
 ** Future enhancements to SQLar might add support for new compression formats.
 ** If so, those new formats will be identified by alternative headers in the
-** compressed data.
+** compressed dataBackup.
 */
 static void sqlarCompressFunc(
   sqlite3_context *context,
@@ -12544,28 +12544,28 @@ sqlite3expert *sqlite3_expert_new(sqlite3 *db, char **pzErr);
 ** Configure an sqlite3expert object.
 **
 ** EXPERT_CONFIG_SAMPLE:
-**   By default, sqlite3_expert_analyze() generates sqlite_stat1 data for
+**   By default, sqlite3_expert_analyze() generates sqlite_stat1 dataBackup for
 **   each candidate index. This involves scanning and sorting the entire
 **   contents of each user database table once for each candidate index
 **   associated with the table. For large databases, this can be 
 **   prohibitively slow. This option allows the sqlite3expert object to
-**   be configured so that sqlite_stat1 data is instead generated based on a
-**   subset of each table, or so that no sqlite_stat1 data is used at all.
+**   be configured so that sqlite_stat1 dataBackup is instead generated based on a
+**   subset of each table, or so that no sqlite_stat1 dataBackup is used at all.
 **
 **   A single integer argument is passed to this option. If the value is less
-**   than or equal to zero, then no sqlite_stat1 data is generated or used by
+**   than or equal to zero, then no sqlite_stat1 dataBackup is generated or used by
 **   the analysis - indexes are recommended based on the database schema only.
-**   Or, if the value is 100 or greater, complete sqlite_stat1 data is
+**   Or, if the value is 100 or greater, complete sqlite_stat1 dataBackup is
 **   generated for each candidate index (this is the default). Finally, if the
 **   value falls between 0 and 100, then it represents the percentage of user
-**   table rows that should be considered when generating sqlite_stat1 data.
+**   table rows that should be considered when generating sqlite_stat1 dataBackup.
 **
 **   Examples:
 **
-**     // Do not generate any sqlite_stat1 data
+**     // Do not generate any sqlite_stat1 dataBackup
 **     sqlite3_expert_config(pExpert, EXPERT_CONFIG_SAMPLE, 0);
 **
-**     // Generate sqlite_stat1 data based on 10% of the rows in each table.
+**     // Generate sqlite_stat1 dataBackup based on 10% of the rows in each table.
 **     sqlite3_expert_config(pExpert, EXPERT_CONFIG_SAMPLE, 10);
 */
 int sqlite3_expert_config(sqlite3expert *p, int op, ...);
@@ -13333,9 +13333,9 @@ static int idxRegisterVtab(sqlite3expert *p){
     expertFilter,                 /* xFilter - configure scan constraints */
     expertNext,                   /* xNext - advance a cursor */
     expertEof,                    /* xEof */
-    expertColumn,                 /* xColumn - read data */
-    expertRowid,                  /* xRowid - read data */
-    expertUpdate,                 /* xUpdate - write data */
+    expertColumn,                 /* xColumn - read dataBackup */
+    expertRowid,                  /* xRowid - read dataBackup */
+    expertUpdate,                 /* xUpdate - write dataBackup */
     0,                            /* xBegin - begin transaction */
     0,                            /* xSync - sync transaction */
     0,                            /* xCommit - commit transaction */
@@ -13776,7 +13776,7 @@ static int idxCreateFromWhere(
 }
 
 /*
-** Create candidate indexes in database [dbm] based on the data in 
+** Create candidate indexes in database [dbm] based on the dataBackup in
 ** linked-list pScan.
 */
 static int idxCreateCandidates(sqlite3expert *p){
@@ -14480,7 +14480,7 @@ static int idxBuildSampleTable(sqlite3expert *p, const char *zTab){
 ** indexes have already been created in database sqlite3expert.dbm, this
 ** function populates sqlite_stat1 table in the same database.
 **
-** The stat1 data is generated by querying the 
+** The stat1 dataBackup is generated by querying the
 */
 static int idxPopulateStat1(sqlite3expert *p, char **pzErr){
   int rc = SQLITE_OK;
@@ -14502,7 +14502,7 @@ static int idxPopulateStat1(sqlite3expert *p, char **pzErr){
     "SELECT name, coll FROM pragma_index_xinfo(?) WHERE key";
   const char *zWrite = "INSERT INTO sqlite_stat1 VALUES(?, ?, ?)";
 
-  /* If iSample==0, no sqlite_stat1 data is required. */
+  /* If iSample==0, no sqlite_stat1 dataBackup is required. */
   if( p->iSample==0 ) return SQLITE_OK;
 
   rc = idxLargestIndex(p->dbm, &nMax, pzErr);
@@ -14837,7 +14837,7 @@ int sqlite3_expert_analyze(sqlite3expert *p, char **pzErr){
     return rc;
   }
 
-  /* Generate the stat1 data */
+  /* Generate the stat1 dataBackup */
   if( rc==SQLITE_OK ){
     rc = idxPopulateStat1(p, pzErr);
   }
@@ -16458,7 +16458,7 @@ static int vfstraceClose(sqlite3_file *pFile){
 }
 
 /*
-** Read data from an vfstrace-file.
+** Read dataBackup from an vfstrace-file.
 */
 static int vfstraceRead(
   sqlite3_file *pFile, 
@@ -16477,7 +16477,7 @@ static int vfstraceRead(
 }
 
 /*
-** Write data to an vfstrace-file.
+** Write dataBackup to an vfstrace-file.
 */
 static int vfstraceWrite(
   sqlite3_file *pFile, 
@@ -16974,7 +16974,7 @@ static void vfstraceDlClose(sqlite3_vfs *pVfs, void *pHandle){
 
 /*
 ** Populate the buffer pointed to by zBufOut with nByte bytes of 
-** random data.
+** random dataBackup.
 */
 static int vfstraceRandomness(sqlite3_vfs *pVfs, int nByte, char *zBufOut){
   vfstrace_info *pInfo = (vfstrace_info*)pVfs->pAppData;
@@ -17146,14 +17146,14 @@ void vfstrace_unregister(const char *zTraceName){
 *************************************************************************
 **
 ** This file contains the public interface to the "recover" extension -
-** an SQLite extension designed to recover data from corrupted database
+** an SQLite extension designed to recover dataBackup from corrupted database
 ** files.
 */
 
 /*
 ** OVERVIEW:
 **
-** To use the API to recover data from a corrupted database, an
+** To use the API to recover dataBackup from a corrupted database, an
 ** application:
 **
 **   1) Creates an sqlite3_recover handle by calling either
@@ -17217,17 +17217,17 @@ typedef struct sqlite3_recover sqlite3_recover;
 /* 
 ** These two APIs attempt to create and return a new sqlite3_recover object.
 ** In both cases the first two arguments identify the (possibly
-** corrupt) database to recover data from. The first argument is an open
+** corrupt) database to recover dataBackup from. The first argument is an open
 ** database handle and the second the name of a database attached to that
 ** handle (i.e. "main", "temp" or the name of an attached database).
 **
 ** If sqlite3_recover_init() is used to create the new sqlite3_recover
-** handle, then data is recovered into a new database, identified by
+** handle, then dataBackup is recovered into a new database, identified by
 ** string parameter zUri. zUri may be an absolute or relative file path,
 ** or may be an SQLite URI. If the identified database file already exists,
 ** it is overwritten.
 **
-** If sqlite3_recover_init_sql() is invoked, then any recovered data will
+** If sqlite3_recover_init_sql() is invoked, then any recovered dataBackup will
 ** be returned to the user as a series of SQL statements. Executing these
 ** SQL statements results in the same database as would have been created
 ** had sqlite3_recover_init() been used. For each SQL statement in the
@@ -17277,7 +17277,7 @@ int sqlite3_recover_config(sqlite3_recover*, int op, void *pArg);
 **   of a "lost-and-found" table in the output database, or NULL. If
 **   the argument is non-NULL and the database contains seemingly
 **   valid pages that cannot be associated with any table in the
-**   recovered part of the schema, data is extracted from these
+**   recovered part of the schema, dataBackup is extracted from these
 **   pages to add to the lost-and-found table.
 **
 ** SQLITE_RECOVER_FREELIST_CORRUPT:
@@ -17287,7 +17287,7 @@ int sqlite3_recover_config(sqlite3_recover*, int op, void *pArg);
 **   SQLITE_RECOVER_LOST_AND_FOUND, then is assumed that the freelist is 
 **   corrupt and an attempt is made to recover records from pages that
 **   appear to be linked into the freelist. Otherwise, pages on the freelist
-**   are ignored. Setting this option can recover more data from the
+**   are ignored. Setting this option can recover more dataBackup from the
 **   database, but often ends up "recovering" deleted records. The default 
 **   value is 0 (clear).
 **
@@ -17304,14 +17304,14 @@ int sqlite3_recover_config(sqlite3_recover*, int op, void *pArg);
 **   int containing value 0 or 1 cast as a (void*). If this option is clear
 **   (argument is 0), then when creating an output database, the recover 
 **   module creates and populates non-UNIQUE indexes right at the end of the
-**   recovery operation - after all recoverable data has been inserted
+**   recovery operation - after all recoverable dataBackup has been inserted
 **   into the new database. This is faster overall, but means that the
 **   final call to sqlite3_recover_step() for a recovery operation may
 **   be need to create a large number of indexes, which may be very slow.
 **
 **   Or, if this option is set (argument is 1), then non-UNIQUE indexes
 **   are created in the output database before it is populated with 
-**   recovered data. This is slower overall, but avoids the slow call
+**   recovered dataBackup. This is slower overall, but avoids the slow call
 **   to sqlite3_recover_step() at the end of the recovery operation.
 **
 **   The default option value is 0.
@@ -17329,7 +17329,7 @@ int sqlite3_recover_config(sqlite3_recover*, int op, void *pArg);
 ** function returns SQLITE_OK. If recovery has been completed successfully
 ** then SQLITE_DONE is returned. If an error has occurred, then an SQLite
 ** error code (e.g. SQLITE_IOERR or SQLITE_NOMEM) is returned. It is not
-** considered an error if some or all of the data cannot be recovered
+** considered an error if some or all of the dataBackup cannot be recovered
 ** due to database corruption.
 **
 ** Once sqlite3_recover_step() has returned a value other than SQLITE_OK,
@@ -17403,7 +17403,7 @@ int sqlite3_recover_finish(sqlite3_recover*);
 ** "sqlite_dbpage" eponymous virtual table be available.
 **
 ** SQLITE_DBDATA:
-**   sqlite_dbdata is used to extract data directly from a database b-tree
+**   sqlite_dbdata is used to extract dataBackup directly from a database b-tree
 **   page and its associated overflow pages, bypassing the b-tree layer.
 **   The table schema is equivalent to:
 **
@@ -17444,7 +17444,7 @@ int sqlite3_recover_finish(sqlite3_recover*);
 **         (2, 1,  1, 'ten' );
 **
 **   If database corruption is encountered, this module does not report an
-**   error. Instead, it attempts to extract as much data as possible and
+**   error. Instead, it attempts to extract as much dataBackup as possible and
 **   ignores the corruption.
 **
 ** SQLITE_DBPTR:
@@ -17742,7 +17742,7 @@ static u32 get_uint32(unsigned char *a){
 /*
 ** Load page pgno from the database via the sqlite_dbpage virtual table.
 ** If successful, set (*ppPage) to point to a buffer containing the page
-** data, (*pnPage) to the size of that buffer in bytes and return
+** dataBackup, (*pnPage) to the size of that buffer in bytes and return
 ** SQLITE_OK. In this case it is the responsibility of the caller to
 ** eventually free the buffer using sqlite3_free().
 **
@@ -18038,7 +18038,7 @@ static int dbdataNext(sqlite3_vtab_cursor *pCursor){
             iOff += dbdataGetVarint(&pCsr->aPage[iOff], &pCsr->iIntkey);
           }
     
-          /* Figure out how much data to read from the local page */
+          /* Figure out how much dataBackup to read from the local page */
           U = pCsr->nPage;
           if( bHasRowid ){
             X = U-35;
@@ -18263,7 +18263,7 @@ static int dbdataFilter(
       }
     }else{
       rc = sqlite3_prepare_v2(pTab->db, 
-          "SELECT data FROM sqlite_dbpage(?) WHERE pgno=?", -1,
+          "SELECT dataBackup FROM sqlite_dbpage(?) WHERE pgno=?", -1,
           &pCsr->pStmt, 0
       );
     }
@@ -18373,8 +18373,8 @@ static int sqlite3DbdataRegister(sqlite3 *db){
     dbdataFilter,                 /* xFilter - configure scan constraints */
     dbdataNext,                   /* xNext - advance a cursor */
     dbdataEof,                    /* xEof - check for end of scan */
-    dbdataColumn,                 /* xColumn - read data */
-    dbdataRowid,                  /* xRowid - read data */
+    dbdataColumn,                 /* xColumn - read dataBackup */
+    dbdataRowid,                  /* xRowid - read dataBackup */
     0,                            /* xUpdate */
     0,                            /* xBegin */
     0,                            /* xSync */
@@ -18448,7 +18448,7 @@ typedef struct RecoverTable RecoverTable;
 typedef struct RecoverColumn RecoverColumn;
 
 /*
-** When recovering rows of data that can be associated with table
+** When recovering rows of dataBackup that can be associated with table
 ** definitions recovered from the sqlite_schema table, each table is
 ** represented by an instance of the following object.
 **
@@ -18479,7 +18479,7 @@ typedef struct RecoverColumn RecoverColumn;
 ** pNext:
 **   All RecoverTable objects used by the recovery operation are allocated
 **   and populated as part of creating the recovered database schema in
-**   the output database, before any non-schema data are recovered. They
+**   the output database, before any non-schema dataBackup are recovered. They
 **   are then stored in a singly-linked list linked by this variable beginning
 **   at sqlite3_recover.pTblList.
 */
@@ -18556,7 +18556,7 @@ struct RecoverBitmap {
 
 /*
 ** State variables (part of the sqlite3_recover structure) used while
-** recovering data for tables identified in the recovered schema (state
+** recovering dataBackup for tables identified in the recovered schema (state
 ** RECOVER_STATE_WRITING).
 */
 typedef struct RecoverStateW1 RecoverStateW1;
@@ -18578,7 +18578,7 @@ struct RecoverStateW1 {
 
 /*
 ** State variables (part of the sqlite3_recover structure) used while
-** recovering data destined for the lost and found table (states
+** recovering dataBackup destined for the lost and found table (states
 ** RECOVER_STATE_LOSTANDFOUND[123]).
 */
 typedef struct RecoverStateLAF RecoverStateLAF;
@@ -19057,7 +19057,7 @@ static void recoverReadI32(
 ** the sqlite3_recover.laf.pUsed variable.
 **
 ** The only argument to this function is a page-number. It returns true 
-** if the page has already been used somehow during data recovery, or false
+** if the page has already been used somehow during dataBackup recovery, or false
 ** otherwise.
 **
 **     SELECT page_is_used(<pgno>);
@@ -19081,11 +19081,11 @@ static void recoverPageIsUsed(
 ** This function always takes a single integer argument. If the argument
 ** is zero, then the value returned is the number of pages in the db being
 ** recovered. If the argument is greater than zero, it is a page number. 
-** The value returned in this case is an SQL blob containing the data for 
+** The value returned in this case is an SQL blob containing the dataBackup for
 ** the identified page of the db being recovered. e.g.
 **
 **     SELECT getpage(0);       -- return number of pages in db
-**     SELECT getpage(4);       -- return page 4 of db as a blob of data 
+**     SELECT getpage(4);       -- return page 4 of db as a blob of dataBackup
 */
 static void recoverGetPage(
   sqlite3_context *pCtx,
@@ -19104,7 +19104,7 @@ static void recoverGetPage(
   }else{
     if( p->pGetPage==0 ){
       pStmt = p->pGetPage = recoverPreparePrintf(
-          p, p->dbIn, "SELECT data FROM sqlite_dbpage(%Q) WHERE pgno=?", p->zDb
+          p, p->dbIn, "SELECT dataBackup FROM sqlite_dbpage(%Q) WHERE pgno=?", p->zDb
       );
     }else if( p->errCode==SQLITE_OK ){
       pStmt = p->pGetPage;
@@ -19365,7 +19365,7 @@ static void recoverTransferSettings(sqlite3_recover *p){
 **
 ** Otherwise, an attempt is made to open the output database, attach
 ** and create the schema of the temporary database used to store
-** intermediate data, and to register all required user functions and
+** intermediate dataBackup, and to register all required user functions and
 ** virtual table modules with the output handle.
 **
 ** If no error occurs, SQLITE_OK is returned. Otherwise, an error code
@@ -19880,7 +19880,7 @@ static sqlite3_stmt *recoverLostAndFoundInsert(
 }
 
 /*
-** Input database page iPg contains data that will be written to the
+** Input database page iPg contains dataBackup that will be written to the
 ** lost-and-found table of the output database. This function attempts
 ** to identify the root page of the tree that page iPg belonged to.
 ** If successful, it sets output variable (*piRoot) to the page number
@@ -19919,7 +19919,7 @@ static int recoverLostAndFoundFindRoot(
 }
 
 /*
-** Recover data from page iPage of the input database and write it to
+** Recover dataBackup from page iPage of the input database and write it to
 ** the lost-and-found table in the output database.
 */
 static void recoverLostAndFoundOnePage(sqlite3_recover *p, i64 iPage){
@@ -19957,7 +19957,7 @@ static void recoverLostAndFoundOnePage(sqlite3_recover *p, i64 iPage){
       }
       recoverReset(p, pInsert);
 
-      /* Discard the accumulated row data */
+      /* Discard the accumulated row dataBackup */
       for(ii=0; ii<nVal; ii++){
         sqlite3_value_free(apVal[ii]);
         apVal[ii] = 0;
@@ -19998,7 +19998,7 @@ static void recoverLostAndFoundOnePage(sqlite3_recover *p, i64 iPage){
 ** Perform one step (sqlite3_recover_step()) of work for the connection 
 ** passed as the only argument, which is guaranteed to be in
 ** RECOVER_STATE_LOSTANDFOUND3 state - during which the lost-and-found 
-** table of the output database is populated with recovered data that can 
+** table of the output database is populated with recovered dataBackup that can
 ** not be assigned to any recovered schema object.
 */ 
 static int recoverLostAndFound3Step(sqlite3_recover *p){
@@ -20027,7 +20027,7 @@ static int recoverLostAndFound3Step(sqlite3_recover *p){
 /*
 ** Initialize resources required in RECOVER_STATE_LOSTANDFOUND3 
 ** state - during which the lost-and-found table of the output database 
-** is populated with recovered data that can not be assigned to any 
+** is populated with recovered dataBackup that can not be assigned to any
 ** recovered schema object.
 */ 
 static void recoverLostAndFound3Init(sqlite3_recover *p){
@@ -20062,7 +20062,7 @@ static void recoverLostAndFound3Init(sqlite3_recover *p){
 /*
 ** Initialize resources required in RECOVER_STATE_WRITING state - during which
 ** tables recovered from the schema of the input database are populated with
-** recovered data.
+** recovered dataBackup.
 */ 
 static int recoverWriteDataInit(sqlite3_recover *p){
   RecoverStateW1 *p1 = &p->w1;
@@ -20125,7 +20125,7 @@ static void recoverWriteDataCleanup(sqlite3_recover *p){
 ** Perform one step (sqlite3_recover_step()) of work for the connection 
 ** passed as the only argument, which is guaranteed to be in
 ** RECOVER_STATE_WRITING state - during which tables recovered from the
-** schema of the input database are populated with recovered data.
+** schema of the input database are populated with recovered dataBackup.
 */ 
 static int recoverWriteDataStep(sqlite3_recover *p){
   RecoverStateW1 *p1 = &p->w1;
@@ -20272,13 +20272,13 @@ static void recoverLostAndFound1Init(sqlite3_recover *p){
       "    UNION"
       "  SELECT read_i32(getpage(trunk.pgno), 0) AS x FROM trunk WHERE x>0"
       "),"
-      "trunkdata(pgno, data) AS ("
+      "trunkdata(pgno, dataBackup) AS ("
       "  SELECT pgno, getpage(pgno) FROM trunk"
       "),"
-      "freelist(data, n, freepgno) AS ("
-      "  SELECT data, min(16384, read_i32(data, 1)-1), pgno FROM trunkdata"
+      "freelist(dataBackup, n, freepgno) AS ("
+      "  SELECT dataBackup, min(16384, read_i32(dataBackup, 1)-1), pgno FROM trunkdata"
       "    UNION ALL"
-      "  SELECT data, n-1, read_i32(data, 2+n) FROM freelist WHERE n>=0"
+      "  SELECT dataBackup, n-1, read_i32(dataBackup, 2+n) FROM freelist WHERE n>=0"
       "),"
       ""
       "roots(r) AS ("
@@ -21134,7 +21134,7 @@ sqlite3_recover *recoverInit(
 
 /*
 ** Initialize a recovery handle that creates a new database containing
-** the recovered data.
+** the recovered dataBackup.
 */
 sqlite3_recover *sqlite3_recover_init(
   sqlite3* db, 
@@ -21145,7 +21145,7 @@ sqlite3_recover *sqlite3_recover_init(
 }
 
 /*
-** Initialize a recovery handle that returns recovered data in the
+** Initialize a recovery handle that returns recovered dataBackup in the
 ** form of SQL statements via a callback.
 */
 sqlite3_recover *sqlite3_recover_init_sql(
@@ -21437,7 +21437,7 @@ static ShellState shellState;
 #define SHELL_OPEN_ZIPFILE     3      /* Use the zipfile virtual table */
 #define SHELL_OPEN_READONLY    4      /* Open a normal database read-only */
 #define SHELL_OPEN_DESERIALIZE 5      /* Open using sqlite3_deserialize() */
-#define SHELL_OPEN_HEXDB       6      /* Use "dbtotxt" output as data source */
+#define SHELL_OPEN_HEXDB       6      /* Use "dbtotxt" output as dataBackup source */
 
 /* Allowed values for ShellState.eTraceType
 */
@@ -21463,7 +21463,7 @@ static ShellState shellState;
 #define SHFLG_CountChanges   0x00000020 /* .changes setting */
 #define SHFLG_Echo           0x00000040 /* .echo on/off, or --echo setting */
 #define SHFLG_HeaderSet      0x00000080 /* showHeader has been specified */
-#define SHFLG_DumpDataOnly   0x00000100 /* .dump show data only */
+#define SHFLG_DumpDataOnly   0x00000100 /* .dump show dataBackup only */
 #define SHFLG_DumpNoSys      0x00000200 /* .dump omits system tables */
 #define SHFLG_TestingMode    0x00000400 /* allow unsafe testing features */
 
@@ -21486,7 +21486,7 @@ static ShellState shellState;
 #define MODE_Quote    6  /* Quote values as for SQL */
 #define MODE_Tcl      7  /* Generate ANSI-C or TCL quoted elements */
 #define MODE_Csv      8  /* Quote strings, numbers are plain */
-#define MODE_Explain  9  /* Like MODE_Column, but do not truncate data */
+#define MODE_Explain  9  /* Like MODE_Column, but do not truncate dataBackup */
 #define MODE_Ascii   10  /* Use ASCII unit and record separators (0x1F/0x1E) */
 #define MODE_Pretty  11  /* Pretty-print schemas */
 #define MODE_EQP     12  /* Converts EXPLAIN QUERY PLAN output into a graph */
@@ -22329,7 +22329,7 @@ static int wsToEol(const char *z){
 }
 
 /*
-** Add a new entry to the EXPLAIN QUERY PLAN data
+** Add a new entry to the EXPLAIN QUERY PLAN dataBackup
 */
 static void eqp_append(ShellState *p, int iEqpId, int p2, const char *zText){
   EQPGraphRow *pNew;
@@ -22354,7 +22354,7 @@ static void eqp_append(ShellState *p, int iEqpId, int p2, const char *zText){
 }
 
 /*
-** Free and reset the EXPLAIN QUERY PLAN data that has been collected
+** Free and reset the EXPLAIN QUERY PLAN dataBackup that has been collected
 ** in p->sGraph.
 */
 static void eqp_reset(ShellState *p){
@@ -22396,7 +22396,7 @@ static void eqp_render_level(ShellState *p, int iEqpId){
 }
 
 /*
-** Display and reset the EXPLAIN QUERY PLAN data
+** Display and reset the EXPLAIN QUERY PLAN dataBackup
 */
 static void eqp_render(ShellState *p, i64 nCycle){
   EQPGraphRow *pRow = p->sGraph.pRow;
@@ -22540,7 +22540,7 @@ static int shell_callback(
         }
       }
 
-      /* If there is no data, exit early. */
+      /* If there is no dataBackup, exit early. */
       if( azArg==0 ) break;
 
       for(i=0; i<nArg; i++){
@@ -24175,7 +24175,7 @@ static void exec_prepared_stmt(
       }
       do{
         nRow++;
-        /* extract the data and data types */
+        /* extract the dataBackup and dataBackup types */
         for(i=0; i<nCol; i++){
           aiTypes[i] = x = sqlite3_column_type(pStmt, i);
           if( x==SQLITE_BLOB
@@ -24192,9 +24192,9 @@ static void exec_prepared_stmt(
           }
         } /* end for */
 
-        /* if data and types extracted successfully... */
+        /* if dataBackup and types extracted successfully... */
         if( SQLITE_ROW == rc ){
-          /* call the supplied callback with the result row data */
+          /* call the supplied callback with the result row dataBackup */
           if( shell_callback(pArg, nCol, azVals, azCols, aiTypes) ){
             rc = SQLITE_ABORT;
           }else{
@@ -24358,7 +24358,7 @@ static int expertDotCommand(
 **
 ** This is very similar to SQLite's built-in sqlite3_exec()
 ** function except it takes a slightly different callback
-** and callback data argument.
+** and callback dataBackup argument.
 */
 static int shell_exec(
   ShellState *pArg,                         /* Pointer to ShellState */
@@ -24464,7 +24464,7 @@ static int shell_exec(
         }
 
         /* If the shell is currently in ".explain" mode, gather the extra
-        ** data required to add indents to the output.*/
+        ** dataBackup required to add indents to the output.*/
         if( pArg->cMode==MODE_Explain && bIsExplain ){
           explain_data_prepare(pArg, pStmt);
         }
@@ -24848,7 +24848,7 @@ static const char *(azHelp[]) = {
   ".changes on|off          Show number of rows changed by SQL",
 #ifndef SQLITE_SHELL_FIDDLE
   ".check GLOB              Fail if output since .testcase does not match",
-  ".clone NEWDB             Clone data into NEWDB from the existing database",
+  ".clone NEWDB             Clone dataBackup into NEWDB from the existing database",
 #endif
   ".connection [close] [#]  Open or close an auxiliary database connection",
   ".crlf ?on|off?           Whether or not to use \\r\\n line endings",
@@ -24859,7 +24859,7 @@ static const char *(azHelp[]) = {
 #endif
   ".dump ?OBJECTS?          Render database content as SQL",
   "   Options:",
-  "     --data-only            Output only INSERT statements",
+  "     --dataBackup-only            Output only INSERT statements",
   "     --newlines             Allow unescaped newline characters in output",
   "     --nosys                Omit system tables (ex: \"sqlite_stat1\")",
   "     --preserve-rowids      Include ROWID values in the output",
@@ -24889,7 +24889,7 @@ static const char *(azHelp[]) = {
   ".headers on|off          Turn display of headers on or off",
   ".help ?-all? ?PATTERN?   Show help text for PATTERN",
 #ifndef SQLITE_SHELL_FIDDLE
-  ".import FILE TABLE       Import data from FILE into TABLE",
+  ".import FILE TABLE       Import dataBackup from FILE into TABLE",
   "   Options:",
   "     --ascii               Use \\037 and \\036 as column and row separators",
   "     --csv                 Use , and \\n as column and row separators",
@@ -25010,7 +25010,7 @@ static const char *(azHelp[]) = {
   "    If FILE begins with \"|\", it is a command that generates the input.",
 #endif
 #if SQLITE_SHELL_HAVE_RECOVER
-  ".recover                 Recover as much data as possible from corrupt db.",
+  ".recover                 Recover as much dataBackup as possible from corrupt db.",
   "   --ignore-freelist        Ignore pages that appear to be on db freelist",
   "   --lost-and-found TABLE   Alternative name for the lost-and-found table",
   "   --no-rowids              Do not attempt to recover rowid values",
@@ -25217,7 +25217,7 @@ static int process_input(ShellState *p);
 ** If parameter pnByte is not NULL, (*pnByte) is set to the number of bytes
 ** read.
 **
-** For convenience, a nul-terminator byte is always appended to the data read
+** For convenience, a nul-terminator byte is always appended to the dataBackup read
 ** from the file before the buffer is returned. This byte is not included in
 ** the final value of (*pnByte), if applicable.
 **
@@ -26106,7 +26106,7 @@ static char *SQLITE_CDECL ascii_read_one_field(ImportCtx *p){
 }
 
 /*
-** Try to transfer data for table zTable.  If an error is seen while
+** Try to transfer dataBackup for table zTable.  If an error is seen while
 ** moving forward, try to go backwards.  The backwards movement won't
 ** work for WITHOUT ROWID tables.
 */
@@ -26377,7 +26377,7 @@ static void output_reset(ShellState *p){
       }else{
         /* Give the start/open/xdg-open command some time to get
         ** going before we continue, and potential delete the
-        ** p->zTempFile data file out from under it */
+        ** p->zTempFile dataBackup file out from under it */
         sqlite3_sleep(2000);
       }
       sqlite3_free(zCmd);
@@ -26461,7 +26461,7 @@ static int shell_dbinfo_command(ShellState *p, int nArg, char **azArg){
   open_db(p, 0);
   if( p->db==0 ) return 1;
   rc = sqlite3_prepare_v2(p->db,
-             "SELECT data FROM sqlite_dbpage(?1) WHERE pgno=1",
+             "SELECT dataBackup FROM sqlite_dbpage(?1) WHERE pgno=1",
              -1, &pStmt, 0);
   if( rc ){
     sqlite3_fprintf(stderr,"error: %s\n", sqlite3_errmsg(p->db));
@@ -26515,7 +26515,7 @@ static int shell_dbinfo_command(ShellState *p, int nArg, char **azArg){
   }
   sqlite3_free(zSchemaTab);
   sqlite3_file_control(p->db, zDb, SQLITE_FCNTL_DATA_VERSION, &iDataVersion);
-  sqlite3_fprintf(p->out, "%-20s %u\n", "data version", iDataVersion);
+  sqlite3_fprintf(p->out, "%-20s %u\n", "dataBackup version", iDataVersion);
   return 0;
 }
 #endif /* SQLITE_SHELL_HAVE_RECOVER */
@@ -27466,12 +27466,12 @@ static int arExtractCommand(ArCommand *pAr){
     "SELECT "
     " ($dir || name),"
     " writefile(($dir || name), %s, mode, mtime) "
-    "FROM %s WHERE (%s) AND (data IS NULL OR $dirOnly = 0)"
+    "FROM %s WHERE (%s) AND (dataBackup IS NULL OR $dirOnly = 0)"
     " AND name NOT GLOB '*..[/\\]*'";
 
   const char *azExtraArg[] = {
-    "sqlar_uncompress(data, sz)",
-    "data"
+    "sqlar_uncompress(dataBackup, sz)",
+    "dataBackup"
   };
 
   sqlite3_stmt *pSql = 0;
@@ -27579,29 +27579,29 @@ static int arCreateOrUpdateCommand(
       "  mode INT,               -- access permissions\n"
       "  mtime INT,              -- last modification time\n"
       "  sz INT,                 -- original file size\n"
-      "  data BLOB               -- compressed content\n"
+      "  dataBackup BLOB               -- compressed content\n"
       ")";
   const char *zDrop = "DROP TABLE IF EXISTS sqlar";
   const char *zInsertFmt[2] = {
-     "REPLACE INTO %s(name,mode,mtime,sz,data)\n"
+     "REPLACE INTO %s(name,mode,mtime,sz,dataBackup)\n"
      "  SELECT\n"
      "    %s,\n"
      "    mode,\n"
      "    mtime,\n"
      "    CASE substr(lsmode(mode),1,1)\n"
-     "      WHEN '-' THEN length(data)\n"
+     "      WHEN '-' THEN length(dataBackup)\n"
      "      WHEN 'd' THEN 0\n"
      "      ELSE -1 END,\n"
-     "    sqlar_compress(data)\n"
+     "    sqlar_compress(dataBackup)\n"
      "  FROM fsdir(%Q,%Q) AS disk\n"
      "  WHERE lsmode(mode) NOT LIKE '?%%'%s;"
      ,
-     "REPLACE INTO %s(name,mode,mtime,data)\n"
+     "REPLACE INTO %s(name,mode,mtime,dataBackup)\n"
      "  SELECT\n"
      "    %s,\n"
      "    mode,\n"
      "    mtime,\n"
-     "    data\n"
+     "    dataBackup\n"
      "  FROM fsdir(%Q,%Q) AS disk\n"
      "  WHERE lsmode(mode) NOT LIKE '?%%'%s;"
   };
@@ -27801,8 +27801,8 @@ static int recoverSqlCb(void *pCtx, const char *zSql){
 }
 
 /*
-** This function is called to recover data from the database. A script
-** to construct a new database containing all recovered data is output
+** This function is called to recover dataBackup from the database. A script
+** to construct a new database containing all recovered dataBackup is output
 ** on stream pState->out.
 */
 static int recoverDatabaseCmd(ShellState *pState, int nArg, char **azArg){
@@ -28600,7 +28600,7 @@ static int do_meta_command(char *zLine, ShellState *p){
         if( cli_strcmp(z,"newlines")==0 ){
           ShellSetFlag(p, SHFLG_Newlines);
         }else
-        if( cli_strcmp(z,"data-only")==0 ){
+        if( cli_strcmp(z,"dataBackup-only")==0 ){
           ShellSetFlag(p, SHFLG_DumpDataOnly);
         }else
         if( cli_strcmp(z,"nosys")==0 ){
@@ -28615,7 +28615,7 @@ static int do_meta_command(char *zLine, ShellState *p){
         }
       }else{
         /* azArg[i] contains a LIKE pattern. This ".dump" request should
-        ** only dump data for tables for which either the table name matches
+        ** only dump dataBackup for tables for which either the table name matches
         ** the LIKE pattern, or the table appears to be a shadow table of
         ** a virtual table for which the name matches the LIKE pattern.
         */
@@ -28993,7 +28993,7 @@ static int do_meta_command(char *zLine, ShellState *p){
 
 #ifndef SQLITE_SHELL_FIDDLE
   if( c=='i' && cli_strncmp(azArg[0], "import", n)==0 ){
-    char *zTable = 0;           /* Insert data into this table */
+    char *zTable = 0;           /* Insert dataBackup into this table */
     char *zSchema = 0;          /* Schema of zTable */
     char *zFile = 0;            /* Name of file to extra content from */
     sqlite3_stmt *pStmt = NULL; /* A statement */
@@ -32362,7 +32362,7 @@ static char *find_xdg_config(void){
 ** Returns the number of errors.
 */
 static void process_sqliterc(
-  ShellState *p,                  /* Configuration data */
+  ShellState *p,                  /* Configuration dataBackup */
   const char *sqliterc_override   /* Name of config file. NULL to use default */
 ){
   char *home_dir = NULL;
@@ -32491,7 +32491,7 @@ static void verify_uninitialized(void){
 }
 
 /*
-** Initialize the state information in data
+** Initialize the state information in dataBackup
 */
 static void main_init(ShellState *data) {
   memset(data, 0, sizeof(*data));
@@ -33208,7 +33208,7 @@ int SQLITE_CDECL wmain(int argc, wchar_t **wargv){
 #endif
   free(data.colWidth);
   free(data.zNonce);
-  /* Clear the global data structure so that valgrind will detect memory
+  /* Clear the global dataBackup structure so that valgrind will detect memory
   ** leaks */
   memset(&data, 0, sizeof(data));
   if( bEnableVfstrace ){

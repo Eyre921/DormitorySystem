@@ -17,22 +17,22 @@ public:
     // 数据库功能 // 数据库功能 // 数据库功能 // 数据库功能 // 数据库功能 // 数据库功能 // 数据库功能 // 数据库功能 // 数据库功能 //
 
     // 查询并打印
-    void Query(const string &SQL);
+    void query(const string &SQL);
 
     // 执行
     void execute(const string &SQL);
 
     // 查询但不打印
-    bool QueryExists(const string &SQL);
+    bool queryExists(const string &SQL);
 
 
     // 通用功能 // 通用功能 // 通用功能 // 通用功能 // 通用功能 // 通用功能 // 通用功能 // 通用功能 // 通用功能 // 通用功能 // 通用功能 //
 
     // 一键获取所有用户信息
-    void GetAllUsers();
+    void getAllUsers();
 
     // 获取并返回ID
-    string Get_ID();
+    string get_ID();
 
     // ID是否存在（包括管理员）
     bool IDExists(const string &studentID);
@@ -53,13 +53,13 @@ public:
                       const string &contactInfo, bool isCheckedIn, bool isAdmin);
 
     // 修改密码
-    bool UserPasswordChange(const string &userID);
+    bool userPasswordChange(const string &userID);
 
     // 是否入住
-    bool IsStudentCheckedIn(const string &studentID);
+    bool isStudentCheckedIn(const string &studentID);
 
     // 选择有效的宿舍（通过引用修改）
-    void SelectValidRoom(const string &studentID, string &dormitoryName, string &roomChoice);
+    void selectValidRoom(const string &studentID, string &dormitoryName, string &roomChoice);
 
     // 管理员菜单 // 管理员菜单 // 管理员菜单 // 管理员菜单 // 管理员菜单 // 管理员菜单 // 管理员菜单 // 管理员菜单 // 管理员菜单 //
 
@@ -83,7 +83,7 @@ public:
     void manageRooms();
 
     // 1. 查看入住信息
-    void ViewStudentsInRoom(const string &dormitoryName, const string &roomNumber);
+    void viewStudentsInRoom(const string &dormitoryName, const string &roomNumber);
 
     // 2. 删除房间
     void deleteRoom(const string &selectedRoomID);
@@ -93,7 +93,7 @@ public:
 
     // 管理用户 // 管理用户 // 管理用户 // 管理用户 // 管理用户 // 管理用户 // 管理用户 // 管理用户 // 管理用户 // 管理用户 // 管理用户 //
     // 添加用户
-    void AddUser();
+    void addUser();
 
     // 删除用户
     void deleteUser(const string &userID);
@@ -112,17 +112,17 @@ public:
     void arrangeAccommodation(const string &studentID);
 
     // 一键入住
-    void QuickArrangeAccommodation(const string &studentID, const string &dormitoryName,
+    void quickArrangeAccommodation(const string &studentID, const string &dormitoryName,
                                    const string &roomChoice, const string &note);
 
     // 2. 安排退宿
     void arrangeCheckOut(const string &studentID);
 
     // 一键退宿
-    void QuickArrangeCheckOut(const string &studentID, const string &note);
+    void quickArrangeCheckOut(const string &studentID, const string &note);
 
     // 3. 处理学生申请
-    void DealAccommodationRequests();
+    void dealAccommodationRequests();
 
     // 更新审批状态
     void updateApprovalStatus(const string &requestID, const string &status);

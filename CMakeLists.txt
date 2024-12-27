@@ -16,7 +16,6 @@ set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 include_directories(
         src
         sqlite3  # sqlite3 头文件路径
-        data
 )
 
 # 添加源文件
@@ -31,7 +30,7 @@ set(SOURCE_FILES
         src/Database.h
         src/globals.cpp
         src/globals.h
-        data/dormitory.db
+        src/dormitory.db
 )
 
 # 创建可执行文件

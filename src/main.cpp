@@ -114,7 +114,7 @@ void studentLogin()
             {
                 //进入修改密码界面
                 cout << "您的密码是默认密码，请修改\n";
-                userManager->UserPasswordChange(studentID);
+                userManager->userPasswordChange(studentID);
             }
         } else
         {
@@ -122,7 +122,7 @@ void studentLogin()
             {
                 //进入修改密码界面
                 cout << "您的密码是默认密码，请修改\n";
-                userManager->UserPasswordChange(studentID);
+                userManager->userPasswordChange(studentID);
             }
         }
         studentMenu(studentID); // 登录成功后跳转到学生菜单
@@ -184,7 +184,7 @@ void studentMenu(const string &stuID)
                 userManager->viewRequests(stuID); // 查看请求
                 break;
             case 8:
-                userManager->UserPasswordChange(stuID); // 修改密码
+                userManager->userPasswordChange(stuID); // 修改密码
                 break;
             case 0:
                 cout << "正在退出登录...\n";
@@ -277,17 +277,17 @@ void manageUsers()
         switch (choice)
         {
             case 1:
-                userManager->AddUser();
+                userManager->addUser();
                 break;
             case 2:
                 cin.ignore();
-                ID = userManager->Get_ID();
+                ID = userManager->get_ID();
                 if (ID == "exit") break;
                 userManager->deleteUser(ID);
                 break;
             case 3:
                 cin.ignore();
-                ID = userManager->Get_ID();
+                ID = userManager->get_ID();
                 if (ID == "exit") break;
                 userManager->checkUserInfo(ID);
                 break;
@@ -303,9 +303,9 @@ void manageUsers()
                 break;
             case 6:
                 cin.ignore();
-                ID = userManager->Get_ID();
+                ID = userManager->get_ID();
                 if (ID == "exit") break;
-                userManager->UserPasswordChange(ID);
+                userManager->userPasswordChange(ID);
                 break;
             case 0:
                 return;
@@ -335,9 +335,9 @@ void dormManageMenu()
                 cin.ignore();
                 while (true)
                 {
-                    ID = userManager->Get_ID();
+                    ID = userManager->get_ID();
                     // 检查是否已经入住
-                    if (userManager->IsStudentCheckedIn(ID))
+                    if (userManager->isStudentCheckedIn(ID))
                     {
                         cout << "该学生已入住，请重新选择其他学生。\n";
                         continue;
@@ -351,9 +351,9 @@ void dormManageMenu()
                 cin.ignore();
                 while (true)
                 {
-                    ID = userManager->Get_ID();
+                    ID = userManager->get_ID();
                     // 检查是否已经入住
-                    if (!userManager->IsStudentCheckedIn(ID))
+                    if (!userManager->isStudentCheckedIn(ID))
                     {
                         cout << "该学生未入住，请重新选择其他学生。\n";
                         continue;
@@ -364,7 +364,7 @@ void dormManageMenu()
                 userManager->arrangeCheckOut(ID);
                 break;
             case 3:
-                userManager->DealAccommodationRequests();
+                userManager->dealAccommodationRequests();
                 break;
             case 0:
                 return;
