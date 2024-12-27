@@ -37,7 +37,7 @@ public:
     }
 
     // 执行非查询 SQL（如 INSERT, UPDATE, DELETE）
-    [[nodiscard]] bool execute(const string &sql) const;
+    bool execute(const string &sql) const;
 
     bool Query(const string &sql);
 
@@ -45,11 +45,11 @@ public:
 
     //int getDormitoryIDByName(const string &dormitoryName);
 
-    [[nodiscard]] bool updateRoomStatus() const;
-
     bool QueryWithParams(const string &query, const std::vector<std::string> &params);
 
     void executeWithParams(const std::string &sql, const std::vector<std::string> &params);
+
+    bool updateRoomStatus() const;
 
     string getQueryResult(int columnIndex);
 };
