@@ -53,7 +53,6 @@ void handleRepairRequests();
 
 void viewDormitoryInfo(const string &stuID);
 
-
 void submitRepairRequest();
 
 void adminLogin();
@@ -83,6 +82,7 @@ int main()
     // applyMoveIn("2031");
     // applyMoveOut("2031");
     //userManager->deleteDormitory();
+    //studentMenu("t1");
     adminMenu();
     // while (true)
     // {
@@ -240,7 +240,6 @@ void adminMenu()
                 break;
             case 5:
                 dormManageMenu();
-            // TODO
                 break;
             case 0:
                 cout << "正在退出登录...\n";
@@ -581,7 +580,7 @@ void addDormitory()
     cout << "宿舍楼和房间信息添加成功！\n";
 }
 
-// void deleteDormitory()
+// void deleteDormitory_old()
 // {
 //     cin.ignore();
 //     string dormitoryName;
@@ -796,7 +795,6 @@ void viewDormitoryInfo(const string &stuID)
         }
     }
 }
-
 
 // 学生提交维修请求
 void submitRepairRequest()
