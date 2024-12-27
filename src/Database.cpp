@@ -3,31 +3,8 @@
 #include <vector>
 using namespace std;
 
-// 构造函数，打开数据库
-Database::Database(const string &dbPath)
-{
-    if (sqlite3_open(dbPath.c_str(), &db))
-    {
-        cerr << "无法打开数据库: " << sqlite3_errmsg(db) << endl;
-        db = nullptr;
-    } else
-    {
-        //cout << "数据库连接成功！" << endl;
-    }
-}
-
-// 析构函数，关闭数据库
-Database::~Database()
-{
-    if (db)
-    {
-        sqlite3_close(db);
-        cout << "数据库已关闭！" << endl;
-    }
-}
-
 // 执行非查询 SQL（如 INSERT, UPDATE, DELETE）
-bool Database::execute(const string &sql)
+bool Database::execute(const string &sql) const
 {
     if (db == nullptr)
     {
@@ -45,8 +22,7 @@ bool Database::execute(const string &sql)
     return true;
 }
 
-
-// 查询
+// 查询并打印
 bool Database::Query(const std::string &sql)
 {
     //sqlite3_stmt *stmt;
@@ -95,6 +71,7 @@ bool Database::Query(const std::string &sql)
     return true;
 }
 
+// 查询存在性
 bool Database::QueryExists(const std::string &sql)
 {
     // sqlite3_stmt *stmt;
@@ -140,89 +117,7 @@ bool Database::QueryExists(const std::string &sql)
     return true;
 }
 
-int Database::getDormitoryIDByName(const string &dormitoryName)
-{
-    //sqlite3_stmt *stmt;
-    string sql = "SELECT dormitoryID FROM dormitories WHERE name = ?";
-
-    // 准备 SQL 查询语句
-    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, 0) != SQLITE_OK)
-    {
-        cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;
-        return -1; // 返回无效ID
-    }
-
-    // 绑定参数（宿舍楼名称）
-    sqlite3_bind_text(stmt, 1, dormitoryName.c_str(), -1, SQLITE_STATIC);
-
-    // 执行查询并获取结果
-    int dormitoryID = -1; // 默认为 -1，表示未找到
-    if (sqlite3_step(stmt) == SQLITE_ROW)
-    {
-        dormitoryID = sqlite3_column_int(stmt, 0); // 获取查询结果中的 dormitoryID
-    }
-
-    // 清理
-    sqlite3_finalize(stmt);
-
-    return dormitoryID;
-}
-
-bool Database::hasStudentsInDormitoryRooms(const string &checkRoomsSql)
-{
-    //sqlite3_stmt *stmt;
-    int studentCount = 0;
-
-    // 执行 SQL 查询，检查是否有学生入住
-    if (sqlite3_prepare_v2(db, checkRoomsSql.c_str(), -1, &stmt, 0) != SQLITE_OK)
-    {
-        cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;
-        return false;
-    }
-
-    // 执行查询并获取结果
-    while (sqlite3_step(stmt) == SQLITE_ROW)
-    {
-        studentCount++;
-    }
-
-    // 如果 studentCount > 0，表示有学生入住
-    sqlite3_finalize(stmt);
-    return studentCount > 0;
-}
-
-string Database::getQueryResult(int columnIndex)
-{
-    const char *text = (const char *) sqlite3_column_text(stmt, columnIndex);
-    return text ? text : ""; // 如果没有数据则返回空字符串
-}
-
-bool Database::updateRoomStatus()
-{
-    // SQL 语句：更新 rooms 表的 occupied 字段
-    const char *sql = R"(
-            UPDATE rooms
-            SET occupied = (
-                SELECT COUNT(*)
-                FROM student_rooms
-                WHERE student_rooms.roomID = rooms.roomID
-            )
-        )";
-
-    char *errMsg = nullptr;
-    int rc = sqlite3_exec(db, sql, nullptr, nullptr, &errMsg);
-    if (rc != SQLITE_OK)
-    {
-        //std::cerr << "更新房间状态失败: " << errMsg << std::endl;
-        sqlite3_free(errMsg);
-        return false;
-    }
-
-    //std::cout << "房间占用人数更新成功。" << std::endl;
-    return true;
-}
-
-
+// 带参查询
 bool Database::QueryWithParams(const string &query, const std::vector<std::string> &params)
 {
     // 准备查询语句
@@ -254,6 +149,7 @@ bool Database::QueryWithParams(const string &query, const std::vector<std::strin
     return true;
 }
 
+// 带参执行
 void Database::executeWithParams(const std::string &sql, const std::vector<std::string> &params)
 {
     // 准备 SQL 语句
@@ -287,35 +183,92 @@ void Database::executeWithParams(const std::string &sql, const std::vector<std::
     sqlite3_finalize(stmt);
 }
 
-bool Database::QueryWithIntParams(const string &query, const vector<int> &params)
+// 通过宿舍名获得ID
+// int Database::getDormitoryIDByName(const string &dormitoryName)
+// {
+//     //sqlite3_stmt *stmt;
+//     string sql = "SELECT dormitoryID FROM dormitories WHERE name = ?";
+//
+//     // 准备 SQL 查询语句
+//     if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, 0) != SQLITE_OK)
+//     {
+//         cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;
+//         return -1; // 返回无效ID
+//     }
+//
+//     // 绑定参数（宿舍楼名称）
+//     sqlite3_bind_text(stmt, 1, dormitoryName.c_str(), -1, SQLITE_STATIC);
+//
+//     // 执行查询并获取结果
+//     int dormitoryID = -1; // 默认为 -1，表示未找到
+//     if (sqlite3_step(stmt) == SQLITE_ROW)
+//     {
+//         dormitoryID = sqlite3_column_int(stmt, 0); // 获取查询结果中的 dormitoryID
+//     }
+//
+//     // 清理
+//     sqlite3_finalize(stmt);
+//
+//     return dormitoryID;
+// }
+
+// bool Database::hasStudentsInDormitoryRooms(const string &checkRoomsSql)
+// {
+//     //sqlite3_stmt *stmt;
+//     int studentCount = 0;
+//
+//     // 执行 SQL 查询，检查是否有学生入住
+//     if (sqlite3_prepare_v2(db, checkRoomsSql.c_str(), -1, &stmt, 0) != SQLITE_OK)
+//     {
+//         cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;
+//         return false;
+//     }
+//
+//     // 执行查询并获取结果
+//     while (sqlite3_step(stmt) == SQLITE_ROW)
+//     {
+//         studentCount++;
+//     }
+//
+//     // 如果 studentCount > 0，表示有学生入住
+//     sqlite3_finalize(stmt);
+//     return studentCount > 0;
+// }
+
+// 获取查询结果
+string Database::getQueryResult(int columnIndex)
 {
-    // 准备查询语句
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, 0) != SQLITE_OK)
+    const char *text = reinterpret_cast<const char *>(sqlite3_column_text(stmt, columnIndex));
+    return text ? text : ""; // 如果没有数据则返回空字符串
+}
+
+// 自动更新房间占用人数
+bool Database::updateRoomStatus() const
+{
+    // SQL 语句：更新 rooms 表的 occupied 字段
+    const char *sql = R"(
+            UPDATE rooms
+            SET occupied = (
+                SELECT COUNT(*)
+                FROM student_rooms
+                WHERE student_rooms.roomID = rooms.roomID
+            )
+        )";
+
+    char *errMsg = nullptr;
+    int rc = sqlite3_exec(db, sql, nullptr, nullptr, &errMsg);
+    if (rc != SQLITE_OK)
     {
-        cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;
+        //std::cerr << "更新房间状态失败: " << errMsg << std::endl;
+        sqlite3_free(errMsg);
         return false;
     }
 
-    // 绑定参数（这里绑定的是整数类型的参数）
-    for (size_t i = 0; i < params.size(); ++i)
-    {
-        if (sqlite3_bind_int(stmt, i + 1, params[i]) != SQLITE_OK)
-        {
-            cout << "Failed to bind params: " << sqlite3_errmsg(db) << endl;
-            sqlite3_finalize(stmt);
-            return false;
-        }
-    }
-
-    // 执行查询
-    if (sqlite3_step(stmt) != SQLITE_ROW)
-    {
-        cerr << "No rows found" << endl;
-        sqlite3_finalize(stmt);
-        return false;
-    }
-
+    //std::cout << "房间占用人数更新成功。" << std::endl;
     return true;
 }
+
+
+
 
 

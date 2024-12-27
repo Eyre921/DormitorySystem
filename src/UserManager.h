@@ -21,16 +21,21 @@ public:
     bool registerUser(const string &userID, const string &password, const string &name,
                       const string &gender, const string &contactInfo, bool isCheckedIn, bool isAdmin);
 
+    void addDormitory();
+
+    void AddUser();
+
+    void studentRegister();
+
     void execute(const string &SQL);
 
     // 获取所有用户
-    void getAllUsers();
+    void GetAllUsers();
 
     void Query(const string &SQL);
 
-    bool queryExists(const string &SQL);
+    bool QueryExists(const string &SQL);
 
-    bool QueryExists(const string &sql);
 
     bool dormitoryExistsByName(const string &dormitoryName);
 
