@@ -18,8 +18,8 @@ public:
     bool loginUser(const string &userID, const string &password, const string &isAdmin);
 
     // 用户注册
-    bool registerUser(const std::string &userID, const std::string &password, const std::string &name,
-                      const std::string &gender, const std::string &contactInfo, bool isCheckedIn, bool isAdmin);
+    bool registerUser(const string &userID, const string &password, const string &name,
+                      const string &gender, const string &contactInfo, bool isCheckedIn, bool isAdmin);
 
     void execute(const string &SQL);
 
@@ -30,7 +30,7 @@ public:
 
     bool queryExists(const string &SQL);
 
-    bool QueryExists(const std::string &sql);
+    bool QueryExists(const string &sql);
 
     bool dormitoryExistsByName(const string &dormitoryName);
 
@@ -73,35 +73,39 @@ public:
     void DealAccommodationRequests();
 
     // 处理通过的申请
-    void approveRequest(const std::string &requestID);
+    void approveRequest(const string &requestID);
 
     // 处理拒绝的申请
-    void rejectRequest(const std::string &requestID);
+    void rejectRequest(const string &requestID);
 
     // 更新审批状态
-    void updateApprovalStatus(const std::string &requestID, const std::string &status);
+    void updateApprovalStatus(const string &requestID, const string &status);
 
     // 处理入住申请
-    void handleCheckInRequest(const std::string &requestID);
+    void handleCheckInRequest(const string &requestID);
 
     // 处理换宿申请
-    void handleRoomChangeRequest(const std::string &requestID);
+    void handleRoomChangeRequest(const string &requestID);
 
     // 处理退宿申请
-    void handleCheckOutRequest(const std::string &requestID);
+    void handleCheckOutRequest(const string &requestID);
 
     // 验证待处理的申请ID（是否存在且状态为“待审批”）
-    void viewAccommodationRequests(const std::string &requestID = "");
+    void viewAccommodationRequests(const string &requestID = "");
 
     void deleteDormitory();
 
-    void deleteRoom(int dormitoryID);
+    void deleteRoom(const string &selectedRoomID);
 
-    void checkRoomOccupancy(int dormitoryID, const string &roomNumber);
+    bool checkRoomOccupancy(const string &dormitoryName, const string &roomNumber);
 
     void viewAllDormitories();
 
+    void viewAllRooms(const string &dormitoryID);
+
     void ViewStudentsInRoom(const string &dormitoryID, const string &roomNumber);
+
+    void modifyRoomInfo(const string &selectedRoomID, int capacity);
 
     void manageRooms();
 

@@ -86,6 +86,7 @@ int main()
     //userManager->deleteDormitory();
     //studentMenu("t2");
     adminMenu();
+    //userManager->manageRooms();
     // while (true)
     // {
     //     cout << "\n---- 主菜单 ----\n";
@@ -505,37 +506,8 @@ void manageDormitories()
             case 3:
                 userManager->viewAllDormitories();
                 break;
-            case 0:
-                return;
-            default:
-                cout << "无效选择，请重新输入。\n";
-        }
-    }
-}
-
-void mamageRooms()
-{
-    int choice;
-    while (true)
-    {
-        cout << "\n---- 管理房间 ----\n";
-        cout << "1. 查看房间信息\n";
-        cout << "2. 删除房间\n";
-        cout << "3. 修改房间信息\n";
-        cout << "0. 返回上一级\n";
-        cout << "请输入你的选择: ";
-        cin >> choice;
-
-        switch (choice)
-        {
-            case 1:
-
-                break;
-            case 2:
-
-                break;
-            case 3:
-
+            case 4:
+                userManager->manageRooms();
                 break;
             case 0:
                 return;
@@ -544,6 +516,7 @@ void mamageRooms()
         }
     }
 }
+
 
 void addDormitory()
 {
