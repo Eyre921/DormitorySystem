@@ -10,8 +10,7 @@ UserManager::UserManager() : db("dormitory.db")
     db.updateRoomStatus();
     // cout << "数据库链接成功" << endl;
     // cout << "数据库状态更新成功" << endl;
-    // 数据库链接成功
-    // 直接在这里指定数据库路径
+
     // 在这里，可以进行数据库的初始化（例如创建表等操作）
     // if (!db.execute(
     //     "CREATE TABLE IF NOT EXISTS users (userID TEXT PRIMARY KEY, name TEXT, gender TEXT, password TEXT, contactInfo TEXT, isCheckedIn INTEGER DEFAULT 0, isAdmin INTEGER DEFAULT 0);"))
@@ -1359,6 +1358,41 @@ void UserManager::viewAccommodationRequests(const string &requestID)
     // 直接调用 db.Query() 执行拼接后的查询
 }
 
+// 4. 查看入住退宿记录
+void UserManager::viewCheckInOutRecords(const string &studentID)
+{
+    string sql;
+
+    if (studentID.empty())
+    {
+        // 如果没有提供学生ID，查询所有记录
+        sql = "SELECT recordID AS 记录ID, "
+                "studentID AS 学生ID, "
+                "roomID AS 房间ID, "
+                "eventTime AS 事件时间, "
+                "recordType AS 记录类型, "
+                "note AS 备注 "
+                "FROM check_in_out_records;";
+    } else
+    {
+        // 如果提供了学生ID，查询该学生的所有记录
+        sql = "SELECT recordID AS 记录ID, "
+              "studentID AS 学生ID, "
+              "roomID AS 房间ID, "
+              "eventTime AS 事件时间, "
+              "recordType AS 记录类型, "
+              "note AS 备注 "
+              "FROM check_in_out_records "
+              "WHERE studentID = '" + studentID + "';";
+    }
+
+    // 执行查询
+    if (!db.query(sql))
+    {
+        cout << "您查询的 '" << studentID << "' 无记录。" << endl;
+    }
+}
+
 
 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 //
 
@@ -1427,6 +1461,39 @@ void UserManager::viewDormitoryInfo(const string &stuID)
     }
 }
 
+// 检查是否有待审批的申请
+bool UserManager::hasPendingApplication(const string &studentID)
+{
+    // 构造SQL查询语句，拼接学生ID来查询该学生是否有待审批的申请
+    string query = "SELECT COUNT(*) FROM accommodation_requests "
+                   "WHERE studentID = '" + studentID + "' "
+                   "AND status = '待审批';";
+
+    // 执行查询
+    db.queryExists(query);
+
+    // 如果查询结果返回的是一行数据
+    if (sqlite3_step(db.stmt) == SQLITE_ROW)
+    {
+        int pendingApplications = stoi(db.getQueryResult(0)); // 获取待审批的申请数量
+
+        // 如果待审批的申请数量大于0，表示该学生有待审批的申请
+        if (pendingApplications > 0)
+        {
+            //cout << "学生 " << studentID << " 有待审批的申请。\n";
+            return true;
+        } else
+        {
+            //cout << "学生 " << studentID << " 没有待审批的申请。\n";
+            return false;
+        }
+    }
+
+    // 如果查询失败
+    cout << "查询失败，无法获取数据。\n";
+    return false;
+}
+
 // 2. 申请入住
 void UserManager::applyMoveIn(const string &stuID)
 {
@@ -1480,9 +1547,56 @@ void UserManager::requestRoomChange(const string &studentID)
 }
 
 // 5. 提交维修请求
-void UserManager::submitRepairRequest(const string &stuID)
+void UserManager::createRepairRequest(const string &studentID)
 {
-    string a = stuID;
+    // 查询该学生所在的房间号
+    cin.ignore(); // 清除输入缓存
+    string queryRoom = "SELECT r.roomNumber "
+                       "FROM rooms r "
+                       "JOIN student_rooms sr ON r.roomID = sr.roomID "
+                       "WHERE sr.studentID = '" + studentID + "';";
+
+    db.query(queryRoom);
+
+    // 获取房间号
+    string roomNumber;
+    if (sqlite3_step(db.stmt) == SQLITE_ROW)
+    {
+        roomNumber = db.getQueryResult(0); // 获取房间号
+    } else
+    {
+        cout << "未找到该学生的房间号。\n";
+        return;
+    }
+
+    // 获取报修描述和类型
+    string description, repairType;
+
+    // 获取报修类型
+    cout << "请选择报修类型（泥、木、水、电、设备、其它）: ";
+    cin >> repairType;
+
+    // 检查报修类型是否合法
+    if (repairType != "泥" && repairType != "木" && repairType != "水" && repairType != "电" && repairType != "设备" &&
+        repairType != "其它")
+    {
+        cout << "无效的报修类型。请重新输入有效的类型。\n";
+        return;
+    }
+    // 获取报修描述
+    cout << "请输入报修描述: ";
+    cin.ignore();
+    getline(cin, description);
+    // 构建SQL插入语句
+    string sql = "INSERT INTO repair_requests (studentID, roomID, description, repairType) "
+                 "VALUES ('" + studentID + "', "
+                 "(SELECT roomID FROM rooms WHERE roomNumber = '" + roomNumber + "' LIMIT 1), "
+                 "'" + description + "', '" + repairType + "');";
+
+    // 执行SQL语句
+    db.execute(sql);
+
+    cout << "报修记录已成功提交。\n";
 }
 
 // 6. 查看通知
@@ -1491,7 +1605,7 @@ void UserManager::viewNotifications(const string &stuID)
     string a = stuID;
 }
 
-// 7. 查看请求
+// 7. 查看自己所有请求
 void UserManager::viewRequests(const string &stuID)
 {
     string sql =
@@ -1501,6 +1615,28 @@ void UserManager::viewRequests(const string &stuID)
             "FROM accommodation_requests "
             "WHERE studentID = '" + stuID + "' "
             "ORDER BY requestTime DESC;";
+    db.query(sql);
+}
+
+// 查看未审批的请求
+void UserManager::viewApprovingRequests(const string &stuID)
+{
+    // 构造SQL查询语句，查询待审批的申请
+    string sql =
+            "SELECT requestID AS \"申请ID\", "
+            "       requestType AS \"申请类型\", "
+            "       status AS \"申请状态\", "
+            "       dormitoryName AS \"宿舍楼名称\", "
+            "       roomNumber AS \"房间号\", "
+            "       requestTime AS \"申请时间\", "
+            "       approveTime AS \"审批时间\", "
+            "       note AS \"备注\" "
+            "FROM accommodation_requests "
+            "WHERE studentID = '" + stuID + "' "
+            "AND status = '待审批' " // 仅查询待审批的申请
+            "ORDER BY requestTime DESC;"; // 按申请时间降序排列
+
+    // 执行查询
     db.query(sql);
 }
 

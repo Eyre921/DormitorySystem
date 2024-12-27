@@ -46,34 +46,23 @@ CREATE TABLE check_in_out_records
 );
 
 
-
-CREATE TABLE accommodation_requests
+CREATE TABLE repair_requests
 (
-    requestID     INTEGER PRIMARY KEY AUTOINCREMENT,                                               -- 申请ID（自增）
-    studentID     TEXT                                                 NOT NULL,                   -- 学生ID（外键）
-    dormitoryName TEXT,                                                                            -- 申请宿舍楼名称（用于换宿）
-    roomNumber    TEXT,                                                                            -- 申请房间号（用于换宿）
-    requestType   TEXT CHECK (requestType IN ('入住', '换宿', '退宿')) NOT NULL,                   -- 申请类型（入住、换宿、退宿）
-    requestTime   DATETIME                                              DEFAULT CURRENT_TIMESTAMP, -- 申请时间（默认当前时间）
-    approveTime   DATETIME                                              DEFAULT NULL,
-    status        TEXT CHECK (status IN ('待审批', '已审批', '已拒绝')) DEFAULT '待审批',          -- 申请状态（待审批、已审批、已拒绝）
-    note          TEXT,                                                                            -- 备注（可选，存储任何附加信息）
-    FOREIGN KEY (studentID) REFERENCES users (userID)                                              -- 外键关联到用户表
+    repairID    INTEGER PRIMARY KEY AUTOINCREMENT,                                            -- 报修ID（自增）
+    studentID   TEXT                                                                NOT NULL, -- 学生ID（外键，关联users表）
+    roomID      INTEGER                                                             NOT NULL, -- 房间ID（外键，关联rooms表）
+    description TEXT                                                                NOT NULL, -- 详细描述
+    repairTime  DATETIME                                    DEFAULT CURRENT_TIMESTAMP,        -- 报修时间，默认为当前时间
+    repairType  TEXT CHECK (repairType IN ('泥', '木', '水', '电', '设备', '其它')) NOT NULL, -- 报修类型
+    status      TEXT CHECK (status IN ('未处理', '已处理')) DEFAULT '未处理',                 -- 报修状态（未处理、已处理）
+    approveTime DATETIME,                                                                     -- 审批时间，默认为NULL
+    handleTime  DATETIME                                    DEFAULT CURRENT_TIMESTAMP,        -- 处理时间，默认为当前时间
+    FOREIGN KEY (studentID) REFERENCES users (userID),                                        -- 外键关联到用户表
+    FOREIGN KEY (roomID) REFERENCES rooms (roomID)                                            -- 外键关联到房间表
 );
 
 
 
--- CREATE TABLE repair_requests
--- (
---     requestID     INTEGER PRIMARY KEY AUTOINCREMENT, -- 请求ID（自增）
---     studentID     TEXT    NOT NULL,                  -- 学生ID（外键）
---     roomID        INTEGER NOT NULL,                  -- 房间ID（外键）
---     description   TEXT    NOT NULL,                  -- 维修描述
---     status        TEXT DEFAULT '待处理',             -- 请求状态（待处理、处理中、已完成）
---     dateSubmitted TEXT DEFAULT CURRENT_TIMESTAMP,    -- 提交日期（默认当前时间）
---     FOREIGN KEY (studentID) REFERENCES users (userID),
---     FOREIGN KEY (roomID) REFERENCES rooms (roomID)
--- );
 -- CREATE TABLE notifications
 -- (
 --     notificationID INTEGER PRIMARY KEY AUTOINCREMENT, -- 通知ID（自增）

@@ -16,6 +16,8 @@ void studentLoginMenu();
 
 void studentMenu(const string &stuID);
 
+void applyAccommodationChange(const string &stuID);
+
 void adminLogin();
 
 void adminMenu();
@@ -140,13 +142,11 @@ void studentMenu(const string &stuID)
     {
         cout << "\n---- 学生菜单 ----\n";
         cout << "1. 查看宿舍楼和房间信息\n";
-        cout << "2. 申请入住\n";
-        cout << "3. 申请退宿\n";
-        cout << "4. 请求换宿\n";
-        cout << "5. 提交维修请求\n";
-        cout << "6. 查看通知\n";
-        cout << "7. 查看请求\n";
-        cout << "8. 修改密码\n";
+        cout << "2. 申请住宿调整\n";
+        cout << "3. 提交维修请求\n";
+        cout << "4. 查看通知\n";
+        cout << "5. 查看请求\n";
+        cout << "6. 修改密码\n";
         cout << "0. 退出登录\n";
         cout << "请输入你的选择: ";
         cin >> choice;
@@ -166,28 +166,77 @@ void studentMenu(const string &stuID)
                 userManager->viewDormitoryInfo(stuID); // 查看宿舍楼和房间信息
                 break;
             case 2:
-                userManager->applyMoveIn(stuID); // 申请入住
+                applyAccommodationChange(stuID); // 申请住宿调整
                 break;
             case 3:
-                userManager->applyMoveOut(stuID); // 申请退宿
+                if (!userManager->isStudentCheckedIn(stuID))
+                {
+                    cout << "您未入住！" << endl;
+                    break;
+                }
+                userManager->createRepairRequest(stuID); // 提交维修请求
                 break;
             case 4:
-                userManager->requestRoomChange(stuID); // 请求换宿
-                break;
-            case 5:
-                userManager->submitRepairRequest(stuID); // 提交维修请求
-                break;
-            case 6:
                 userManager->viewNotifications(stuID); // 查看通知
                 break;
-            case 7:
+            case 5:
                 userManager->viewRequests(stuID); // 查看请求
                 break;
-            case 8:
+            case 6:
                 userManager->userPasswordChange(stuID); // 修改密码
                 break;
             case 0:
                 cout << "正在退出登录...\n";
+                return;
+            default:
+                cout << "无效选择，请重新输入。\n";
+        }
+    }
+}
+
+void applyAccommodationChange(const string &stuID)
+{
+    if (userManager->hasPendingApplication(stuID))
+    {
+        cout << "您还有待审批的请求！" << endl;
+        userManager->viewApprovingRequests(stuID);
+        return;
+    }
+    int choice;
+    while (true)
+    {
+        cout << "\n---- 申请宿舍调整 ----\n";
+
+        cout << "1. 申请入住\n";
+        cout << "2. 申请退宿\n";
+        cout << "3. 请求换宿\n";
+
+        cout << "0. 退出\n";
+        cout << "请输入你的选择: ";
+        cin >> choice;
+
+        // 清除输入缓冲区，以防止输入错误导致无限循环
+        if (cin.fail())
+        {
+            cin.clear(); // 清除错误标志
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 忽略错误输入
+            cout << "输入无效，请输入数字。\n";
+            continue;
+        }
+
+        switch (choice)
+        {
+            case 1:
+                userManager->applyMoveIn(stuID); // 申请入住
+                break;
+            case 2:
+                userManager->applyMoveOut(stuID); // 申请退宿
+                break;
+            case 3:
+                userManager->requestRoomChange(stuID); // 请求换宿
+                break;
+            case 0:
+                cout << "已返回。\n";
                 return;
             default:
                 cout << "无效选择，请重新输入。\n";
@@ -322,10 +371,11 @@ void dormManageMenu()
     int choice;
     while (true)
     {
-        cout << "\n---- 宿舍管理 ----\n";
+        cout << "\n---- 住宿管理 ----\n";
         cout << "1. 安排住宿\n";
         cout << "2. 安排退宿\n";
         cout << "3. 处理学生申请\n";
+        cout << "4. 查看住宿记录\n";
         cout << "0. 返回上一级\n";
         cout << "请输入你的选择: ";
         cin >> choice;
@@ -366,6 +416,12 @@ void dormManageMenu()
             case 3:
                 userManager->dealAccommodationRequests();
                 break;
+            case 4:
+                cin.ignore();
+                cout << "请输入您想查询的学生学号（若不输入则查询所有记录）" << endl;
+                getline(cin, ID);
+                userManager->viewCheckInOutRecords(ID);
+
             case 0:
                 return;
             default:

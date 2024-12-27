@@ -130,6 +130,9 @@ public:
     // 查看申请（输入为空则查询所有，输入为指定则查询指定）
     void viewAccommodationRequests(const string &requestID = "");
 
+    // 查看住宿记录
+    void viewCheckInOutRecords(const string &studentID = "");
+
 
     // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 //
 
@@ -138,6 +141,8 @@ public:
 
     // 1. 查看宿舍楼和房间信息
     void viewDormitoryInfo(const string &stuID);
+
+    bool hasPendingApplication(const string &studentID);
 
     // 2. 申请入住
     void applyMoveIn(const string &stuID);
@@ -149,7 +154,7 @@ public:
     void requestRoomChange(const string &studentID);
 
     // 5. 提交维修请求
-    void submitRepairRequest(const string &stuID);
+    void createRepairRequest(const string &studentID);
 
     // 6. 查看通知
     void viewNotifications(const string &stuID);
@@ -157,7 +162,7 @@ public:
     // 7. 查看请求
     void viewRequests(const string &stuID);
 
-    // 检查用户是否存在
+    void viewApprovingRequests(const string &stuID);
 };
 
 #endif // USERMANAGER_H
