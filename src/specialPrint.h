@@ -15,11 +15,11 @@ void gotoxy(int x, int y);
 
 int randint_range(int n, int m);
 
-void loading(string str, int width, int dash);
+void loading(const string &str, int width, int dash);
 
-void SlowPrint(string str, int width, int align);
+void SlowPrint(const string &str, int width, int align);
 
-void MenuPrint(string str, int width);
+void MenuPrint(const string &str, int width);
 
 void openPrint();
 

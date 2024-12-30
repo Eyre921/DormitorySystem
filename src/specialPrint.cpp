@@ -6,7 +6,8 @@
 using namespace std;
 
 //无闪屏清屏
-void gotoxy(int x, int y) {
+void gotoxy(int x, int y)
+{
     HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
     COORD pos;
     pos.X = x;
@@ -15,54 +16,64 @@ void gotoxy(int x, int y) {
 }
 
 //产生n~m间的随机数（包括m和n）
-int randint_range(int n, int m) {
-    double base = ((double) rand()) / RAND_MAX;
-    int res = n + (base * (double) (m - n + 1));
+int randint_range(int n, int m)
+{
+    double base = static_cast<double>(rand()) / RAND_MAX;
+    int res = base * static_cast<double>(m - n + 1) + n;
     return res;
 }
 
 //加载界面
-void loading(string str, int width, int dash) {
+void loading(const string &str, int width, int dash)
+{
     int len = str.size();
     string tempSpace;
-    for (int i = 1; i <= (width - len * 0.67) / 2; i++) {
+    for (int i = 1; i <= (width - len * 0.67) / 2; i++)
+    {
         tempSpace += " ";
     }
     string Str = tempSpace + str + tempSpace;
     string tempDash = "+";
-    for (int i = 1; i <= width - 2; i++) {
+    for (int i = 1; i <= width - 2; i++)
+    {
         tempDash += "-";
     }
     tempDash += "+";
     int full = width - 2;
     int index = 0;
-    while (index <= full) {
+    while (index <= full)
+    {
         //		printf("%s\n",Str.c_str());
         //		printf("%s\n",tempDash.c_str());
         cout << Str << endl;
         cout << tempDash << endl;
         tempSpace = "";
         string tempStr;
-        for (int i = 1; i <= index; i++) {
+        for (int i = 1; i <= index; i++)
+        {
             tempStr += "#";
         }
-        for (int i = 1; i <= full - index; i++) {
+        for (int i = 1; i <= full - index; i++)
+        {
             tempSpace += " ";
         }
         //		printf("|%s%s|\n",tempStr.c_str(),tempSpace.c_str());
         //		printf("%s\n",tempDash.c_str());
         cout << "|" << tempStr << tempSpace << "|" << endl;
         cout << tempDash << endl;
-        if (index == full) {
+        if (index == full)
+        {
             Sleep(1000);
             break;
         }
         int step = randint_range(1, 5);
         index += step;
-        if (index < full) {
+        if (index < full)
+        {
             Sleep(dash);
             gotoxy(0, 0);
-        } else if (index >= full) {
+        } else if (index >= full)
+        {
             index = full;
             gotoxy(0, 0);
         }
@@ -70,53 +81,65 @@ void loading(string str, int width, int dash) {
 }
 
 //缓慢打印
-void SlowPrint(string str, int width, int align) {
+void SlowPrint(const string &str, int width, int align)
+{
     //align:对齐方式（-1为左对齐，0为居中对齐，1为右对齐）
     int len = str.size();
     string tempStr;
     string tempSpace;
-    for (int i = 1; i <= (width - len * 0.66) / 2.0; i++) {
+    for (int i = 1; i <= (width - len * 0.66) / 2.0; i++)
+    {
         tempSpace += " ";
     }
-    if (align == -1) {
+    if (align == -1)
+    {
         tempStr = str;
-    } else if (align == 0) {
+    } else if (align == 0)
+    {
         tempStr = tempSpace + str + tempSpace;
-    } else if (align == 1) {
+    } else if (align == 1)
+    {
         tempStr = tempSpace + tempSpace + str;
     }
-    for (int i = 0; i < tempStr.size(); i++) {
-        cout << tempStr[i];
+    for (char i: tempStr)
+    {
+        cout << i;
         Sleep(30);
     }
-    if (align == 0 || align == 1) {
+    if (align == 0 || align == 1)
+    {
         cout << endl;
     }
 }
 
 //菜单打印
-void MenuPrint(string str, int width) {
-    if (str == "UP") {
-        string tempStr;
+void MenuPrint(const string &str, int width)
+{
+    if (str == "UP")
+    {
         string tempDash;
-        for (int i = 1; i <= width - 3; i++) {
+        for (int i = 1; i <= width - 3; i++)
+        {
             tempDash += "─";
         }
-        tempStr = "╭" + tempDash + "╮";
+        string tempStr = "╭" + tempDash + "╮";
         cout << tempStr << endl;
-    } else if (str == "DOWN") {
-        string tempStr;
+    } else if (str == "DOWN")
+    {
         string tempDash;
-        for (int i = 1; i <= width - 3; i++) {
+        for (int i = 1; i <= width - 3; i++)
+        {
             tempDash += "─";
         }
-        tempStr = "╰" + tempDash + "╯";
+        string tempStr = "╰" + tempDash + "╯";
         cout << tempStr << endl;
-    } else {
+    } else
+    {
         string tempStr = "[ " + str + " ]";
         string tempSpace;
         int len = tempStr.size();
-        for (int i = 1; i <= (width - len * 0.67 - 2) / 2 - 1; i++) {
+        for (int i = 1; i <= (width - len * 0.67 - 2) / 2 - 1; i++)
+        {
             tempSpace += " ";
         }
         tempStr = "│" + tempSpace + tempStr + tempSpace + "│";
@@ -126,7 +149,8 @@ void MenuPrint(string str, int width) {
 }
 
 //启动开屏显示
-void openPrint() {
+void openPrint()
+{
     cout << R"(
  __        __   _                            _
  \ \      / /__| | ___ ___  _ __ ___   ___  | |_ ___
