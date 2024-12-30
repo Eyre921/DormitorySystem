@@ -31,6 +31,8 @@ set(SOURCE_FILES
         src/globals.cpp
         src/globals.h
         src/dormitory.db
+        src/specialPrint.cpp
+        src/specialPrint.h
 )
 
 # 创建可执行文件
