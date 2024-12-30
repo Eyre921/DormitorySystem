@@ -3,8 +3,6 @@
 #include <limits>
 #include <unordered_map>
 #include <unordered_set>
-
-#include "specialPrint.h"
 using namespace std;
 /*
 以下是对当前文件的代码找茬：
@@ -726,14 +724,6 @@ void UserManager::manageRooms()
 
         while (true)
         {
-            SlowPrint("●管理房间●", 30, 0);
-            MenuPrint("UP", 30);
-            MenuPrint("1、查看入住信息", 30);
-            MenuPrint("2、删除房间", 30);
-            MenuPrint("3、修改房间信息", 30);
-            MenuPrint("0、返回上一级", 30);
-            MenuPrint("DOWN", 30);
-            SlowPrint("请输入您的选择：", 30, -1);
             cout << "\n---- 管理房间 ----\n";
             cout << "1. 查看入住信息\n";
             cout << "2. 删除房间\n";
@@ -1289,20 +1279,13 @@ ORDER BY ar.requestTime DESC;
             }
             //cout << studentName << " " << studentID << " " << dormitoryName << " " << roomNumber << " " << endl;
             // 请求ID有效，提示管理员选择审批操作
-            SlowPrint("●选择审批操作●", 30, 0);
-            MenuPrint("UP", 30);
-            MenuPrint("1、通过", 30);
-            MenuPrint("2、不通过", 30);
-            MenuPrint("3、返回", 30);
-            MenuPrint("DOWN", 30);
-            SlowPrint("请输入您的选择：", 30, -1);
-            // cout << "\n选择审批操作：\n";
-            // cout << "1. 通过\n";
-            // cout << "2. 不通过\n";
-            // cout << "3. 返回\n";
-            //
-            //
-            // cout << "请输入选择：";
+            cout << "\n选择审批操作：\n";
+            cout << "1. 通过\n";
+            cout << "2. 不通过\n";
+            cout << "3. 返回\n";
+
+
+            cout << "请输入选择：";
             int choice = getChoice();
             cin.ignore();
             // 处理选择
@@ -1550,33 +1533,22 @@ void UserManager::handleRepairRequests()
 void UserManager::studentRegister()
 {
     string studentID, password, name, gender, contactInfo;
-    SlowPrint("●学生注册●", 30, 0);
-    //cout << "\n---- 学生注册 ----\n";
-    //cout << "请输入学号: ";
-    SlowPrint("请输入学号: ", 30, -1);
+    cout << "\n---- 学生注册 ----\n";
+    cout << "请输入学号: ";
     cin >> studentID;
-    SlowPrint("请输入密码: ", 30, -1);
-    //cout << "请输入密码: ";
+    cout << "请输入密码: ";
     cin >> password;
-    SlowPrint("请输入姓名: ", 30, -1);
-    //cout << "请输入姓名: ";
+    cout << "请输入姓名: ";
     cin >> name;
-    SlowPrint("请输入性别: ", 30, -1);
-    //cout << "请输入性别: ";
+    cout << "请输入性别: ";
     while (gender != "男" && gender != "女")
     {
         cout << "请输入性别(男/女): ";
         cin >> gender;
     }
-    SlowPrint("请输入联系方式: ", 30, -1);
-    //cout << "请输入联系方式: ";
+    cout << "请输入联系方式: ";
     cin >> contactInfo;
     registerUser(studentID, password, name, gender, contactInfo, false, false);
-    system("cls");
-    loading("正在注册中", 50, 100);
-    SlowPrint("注册成功！", 50, 0);
-    Sleep(3000);
-    system("cls");
 }
 
 // 1. 查看宿舍楼和房间信息
@@ -1805,3 +1777,5 @@ void UserManager::viewApprovingRequests(const string &stuID)
     // 执行查询
     db.query(sql);
 }
+
+
