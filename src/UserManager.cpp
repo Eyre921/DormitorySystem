@@ -1,4 +1,6 @@
 #include "UserManager.h"
+
+#include <conio.h>
 #include <iostream>
 #include <limits>
 #include <unordered_map>
@@ -6,28 +8,6 @@
 
 #include "specialPrint.h"
 using namespace std;
-/*
-以下是对当前文件的代码找茬：
-在分析了UserManager.cpp源代码后，我发现了以下可能存在的问题，这些问题涉及漏洞、缺陷、性能、安全和代码质量等方面。以下是按问题分类的详细列表：
-
-1. 安全问题
-SQL注入风险：代码中大量使用字符串拼接来构建SQL查询语句，如get_ID()、loginUser()等函数。这种做法容易导致SQL注入攻击。应使用参数化查询来替代字符串拼接。
-明文存储密码：在registerUser()和userPasswordChange()函数中，密码以明文形式存储在数据库中。应使用安全的哈希算法（如bcrypt）对密码进行加密存储。
-缺少输入验证：许多函数如get_ID()、loginUser()等，对用户输入的验证不足，可能导致意外的程序行为或安全漏洞。应加强对用户输入的验证和消毒。
-2. 性能问题
-频繁的数据库查询：在deleteDormitory()和viewAllRooms()等函数中，存在多次嵌套的数据库查询操作，这可能会影响性能。应考虑减少数据库查询次数，或使用更高效的查询方法。
-不必要的数据加载：在某些情况下，如getAllUsers()函数，可能会加载大量不必要的数据。应根据实际需要优化数据加载策略，例如使用分页加载。
-3. 代码质量
-代码重复：多个函数中存在重复代码，如数据库查询操作在许多地方重复出现。应将重复的代码提取成独立的函数或方法，以提高代码的可维护性和可读性。
-错误处理不足：代码中的错误处理较为简单，如在execute()函数中，如果SQL执行失败，仅输出错误信息。应改进错误处理机制，如抛出异常或返回错误码，以便更好地控制程序流程。
-缺乏注释和文档：代码中缺少必要的注释和文档，尤其是对于复杂的逻辑和算法部分。应增加代码注释和文档，以提高代码的可读性和可维护性。
-4. 功能缺陷
-数据库连接管理：代码中没有明确显示如何管理数据库连接，如在程序异常退出时如何确保数据库连接被正确关闭。应确保数据库连接的正确管理和释放，以防止资源泄漏。
-5. 设计问题
-单一职责原则违反：UserManager类承担了过多的职责，包括用户管理、数据库操作、输入输出处理等。应考虑将这些职责分离到不同的类或模块中，以提高代码的模块化和可测试性。
-紧耦合：UserManager类与数据库操作类紧密耦合，不利于单元测试和代码复用。应考虑引入接口或使用依赖注入等设计模式来降低耦合度。
-以上是对UserManager.cpp源代码的初步分析结果，建议根据上述问题进行详细的代码审查和测试，以确保代码的安全性、性能和可维护性。
- */
 
 
 // 构造函数，自动连接数据库
@@ -734,12 +714,12 @@ void UserManager::manageRooms()
             MenuPrint("0、返回上一级", 30);
             MenuPrint("DOWN", 30);
             SlowPrint("请输入您的选择：", 30, -1);
-            cout << "\n---- 管理房间 ----\n";
-            cout << "1. 查看入住信息\n";
-            cout << "2. 删除房间\n";
-            cout << "3. 修改房间信息\n";
-            cout << "0. 返回上一级\n";
-            cout << "请输入你的选择: ";
+            // cout << "\n---- 管理房间 ----\n";
+            // cout << "1. 查看入住信息\n";
+            // cout << "2. 删除房间\n";
+            // cout << "3. 修改房间信息\n";
+            // cout << "0. 返回上一级\n";
+            // cout << "请输入你的选择: ";
             int choice = getChoice();
 
             switch (choice)
@@ -1051,17 +1031,19 @@ void UserManager::checkUserInfoALL()
             "    u.gender AS 性别,           -- 学生性别\n"
             "    u.password AS 密码,           -- 学生密码\n"
             "    u.contactInfo AS 联系方式,           -- 学生联系方式\n"
-            "    d.name AS 宿舍楼,           -- 宿舍楼名称\n"
-            "    r.roomNumber AS 房间号        -- 房间号\n"
+            "    COALESCE(d.name, 'NULL') AS 宿舍楼,           -- 宿舍楼名称，如果没有宿舍返回NULL\n"
+            "    COALESCE(r.roomNumber, 'NULL') AS 房间号        -- 房间号，如果没有房间返回NULL\n"
             "FROM "
-            "    student_rooms sr\n"
-            "JOIN "
-            "    rooms r ON sr.roomID = r.roomID   -- 连接房间表\n"
-            "JOIN "
-            "    dormitories d ON r.dormitoryID = d.dormitoryID -- 连接宿舍楼表\n"
-            "JOIN "
-            "    users u ON sr.studentID = u.userID -- 连接学生表\n"
+            "    users u\n"
+            "LEFT JOIN "
+            "    student_rooms sr ON u.userID = sr.studentID   -- 左连接学生表与学生宿舍表\n"
+            "LEFT JOIN "
+            "    rooms r ON sr.roomID = r.roomID   -- 左连接房间表\n"
+            "LEFT JOIN "
+            "    dormitories d ON r.dormitoryID = d.dormitoryID -- 左连接宿舍楼表\n"
             ";";
+
+
     // 调用Query方法，执行SQL查询
     query(sql);
 }
@@ -1460,6 +1442,34 @@ void UserManager::viewCheckInOutRecords(const string &studentID)
     }
 }
 
+// 5. 查看没有入住的学生
+void UserManager::checkUserNotCheckedIn()
+{
+    string sql = "SELECT "
+            "    u.userID AS 学号,           -- 学生学号\n"
+            "    u.name AS 姓名,           -- 学生名称\n"
+            "    u.gender AS 性别,           -- 学生性别\n"
+            "    u.password AS 密码,           -- 学生密码\n"
+            "    u.contactInfo AS 联系方式,           -- 学生联系方式\n"
+            "    COALESCE(d.name, 'NULL') AS 宿舍楼,           -- 宿舍楼名称，如果没有宿舍返回NULL\n"
+            "    COALESCE(r.roomNumber, 'NULL') AS 房间号        -- 房间号，如果没有房间返回NULL\n"
+            "FROM "
+            "    users u\n"
+            "LEFT JOIN "
+            "    student_rooms sr ON u.userID = sr.studentID   -- 左连接学生表与学生宿舍表\n"
+            "LEFT JOIN "
+            "    rooms r ON sr.roomID = r.roomID   -- 左连接房间表\n"
+            "LEFT JOIN "
+            "    dormitories d ON r.dormitoryID = d.dormitoryID -- 左连接宿舍楼表\n"
+            "WHERE "
+            "    sr.studentID IS NULL  -- 筛选没有入住的学生\n"
+            "    AND u.isAdmin = 0;    -- 筛选出不是管理员的学生\n";
+
+
+    // 调用Query方法，执行SQL查询
+    query(sql);
+}
+
 // 处理维修请求 // 处理维修请求 // 处理维修请求 // 处理维修请求 // 处理维修请求 // 处理维修请求 // 处理维修请求 // 处理维修请求 //
 void UserManager::handleRepairRequests()
 {
@@ -1543,10 +1553,125 @@ void UserManager::handleRepairRequests()
     }
 }
 
+// 入住报表
+void UserManager::generateAccommodationRateReport()
+{
+    int timeChoice;
+
+    cout << "\n请选择生成报表的时间范围：\n";
+    cout << "1. 当前月\n";
+    cout << "2. 当前年\n";
+    cout << "请输入选择：";
+
+    while (true)
+    {
+        cin >> timeChoice;
+        if (timeChoice < 1 || timeChoice > 2)
+        {
+            cout << "无效选择，请重新输入：";
+            continue;
+        }
+        if (cin.fail()) // 清除输入缓冲区
+        {
+            cin.clear(); // 清除错误标志
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 忽略错误输入
+            cout << "输入无效，请输入有效数字：";
+            continue;
+        }
+        break;
+    }
+
+
+    string sql;
+    if (timeChoice == 1)
+    {
+        // 获取当前月的住宿率报表 SQL 查询
+        sql = R"(
+        SELECT d.name   AS 宿舍楼名称,
+       -- 统计当前月已入住的学生人数，确保每个学生只计算一次
+       COUNT(DISTINCT CASE
+                          WHEN strftime('%Y-%m', co.eventTime) = strftime('%Y-%m', 'now')
+                              AND co.recordType = '入住'
+                              THEN co.studentID
+           END) AS 当前月已入住人数,
+       -- 通过子查询单独计算宿舍楼的总房间容量，避免因JOIN导致的重复计算
+       rc.总房间容量,
+       -- 计算入住率：已入住人数 / 总房间容量，并保留两位小数
+       ROUND(
+               COUNT(DISTINCT CASE
+                                  WHEN strftime('%Y-%m', co.eventTime) = strftime('%Y-%m', 'now')
+                                      AND co.recordType = '入住'
+                                      THEN co.studentID
+                   END) * 1.0 / rc.总房间容量,
+               2
+       )        AS 入住率
+FROM dormitories d
+         -- 子查询：计算每个宿舍楼的总房间容量
+         LEFT JOIN (SELECT dormitoryID,
+                           SUM(capacity) AS 总房间容量
+                    FROM rooms
+                    GROUP BY dormitoryID) rc ON d.dormitoryID = rc.dormitoryID
+    -- 连接 rooms 和 check_in_out_records 表，用于统计入住人数
+         LEFT JOIN rooms r ON d.dormitoryID = r.dormitoryID
+         LEFT JOIN check_in_out_records co ON r.roomID = co.roomID
+GROUP BY d.dormitoryID; -- 按宿舍楼分组，确保宿舍楼数据汇总
+    )";
+    } else if (timeChoice == 2)
+    {
+        // 获取当前年入住率报表 SQL 查询
+        sql = R"(
+        SELECT
+            d.name AS 宿舍楼名称,
+            -- 统计当前年度已入住的学生人数，确保每个学生只计算一次
+            COUNT(DISTINCT CASE
+                WHEN strftime('%Y', co.eventTime) = strftime('%Y', 'now')
+                     AND co.recordType = '入住'
+                THEN co.studentID
+            END) AS 当前年度已入住人数,
+            -- 通过子查询单独计算宿舍楼的总房间容量，避免因JOIN导致的重复计算
+            rc.总房间容量,
+            -- 计算入住率：已入住人数 / 总房间容量，并保留两位小数
+            ROUND(
+                COUNT(DISTINCT CASE
+                    WHEN strftime('%Y', co.eventTime) = strftime('%Y', 'now')
+                         AND co.recordType = '入住'
+                    THEN co.studentID
+                END) * 1.0 / rc.总房间容量,
+                2
+            ) AS 入住率
+        FROM dormitories d
+        -- 子查询：计算每个宿舍楼的总房间容量
+        LEFT JOIN (
+            SELECT
+                dormitoryID,
+                SUM(capacity) AS 总房间容量
+            FROM rooms
+            GROUP BY dormitoryID
+        ) rc ON d.dormitoryID = rc.dormitoryID
+        -- 连接 rooms 和 check_in_out_records 表，用于统计入住记录
+        LEFT JOIN rooms r ON d.dormitoryID = r.dormitoryID
+        LEFT JOIN check_in_out_records co ON r.roomID = co.roomID
+        GROUP BY d.dormitoryID;  -- 按宿舍楼分组，确保宿舍楼数据汇总
+    )";
+    }
+    system("cls");
+    loading("正在查询中", 50, 10);
+    SlowPrint("查询完成", 50, 0);
+    Sleep(100);
+    cout << "\n---- 入住率报表 ----\n";
+    query(sql);
+    SlowPrint("请按任意键继续", 30, -1);
+    getch();
+    system("cls");
+    // 模拟查询并打印结果
+}
+
 
 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 //
 
 // 学生注册
+
+
 void UserManager::studentRegister()
 {
     string studentID, password, name, gender, contactInfo;

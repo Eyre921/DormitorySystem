@@ -1,7 +1,6 @@
 //
 // Created by CQL on 24-12-28.
 //
-
 #include "specialPrint.h"
 using namespace std;
 
@@ -27,6 +26,7 @@ int randint_range(int n, int m)
 void loading(const string &str, int width, int dash)
 {
     int len = str.size();
+
     string tempSpace;
     for (int i = 1; i <= (width - len * 0.67) / 2; i++)
     {
@@ -104,7 +104,7 @@ void SlowPrint(const string &str, int width, int align)
     for (char i: tempStr)
     {
         cout << i;
-        Sleep(30);
+        Sleep(1);
     }
     if (align == 0 || align == 1)
     {
@@ -145,7 +145,7 @@ void MenuPrint(const string &str, int width)
         tempStr = "│" + tempSpace + tempStr + tempSpace + "│";
         cout << tempStr << endl;
     }
-    Sleep(150);
+    Sleep(10);
 }
 
 //启动开屏显示
@@ -171,5 +171,5 @@ void openPrint()
  |___/\__, |___/\__\___|_| |_| |_|
       |___/
 	)";
-    Sleep(3000);
+    Sleep(1500);
 }

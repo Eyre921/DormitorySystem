@@ -66,8 +66,7 @@ int main()
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
     srand((unsigned) time(NULL)); //根据当前时间来生成随机数
-
-    loading("正在启动宿舍管理系统", 50, 100);
+    loading("正在启动宿舍管理系统", 50, 30);
     system("cls");
     openPrint();
     system("CLS");
@@ -179,7 +178,7 @@ void studentLogin()
             }
         }
         system("cls");
-        loading("正在登录中", 50, 100);
+        loading("正在登录中", 50, 20);
         SlowPrint("登录成功！", 50, 0);
         Sleep(2000);
         system("cls");
@@ -370,7 +369,7 @@ void adminLogin()
     if (userManager->loginUser(adminID, password, "1"))
     {
         system("cls");
-        loading("正在登录中", 50, 100);
+        loading("正在登录中", 50, 30);
         SlowPrint("登录成功!", 50, 0);
         Sleep(2000);
         system("cls");
@@ -424,7 +423,7 @@ void adminMenu()
                 break;
             case 3:
                 system("cls");
-                generateReports(); // 生成报表
+                generateReports();
                 SlowPrint("请按任意键继续", 30, -1);
                 getch();
                 system("cls");
@@ -527,7 +526,7 @@ void manageUsers()
                 break;
             case 5:
                 system("cls");
-                loading("正在查询中", 50, 100);
+                loading("正在查询中", 50, 10);
                 SlowPrint("查询完成", 50, 0);
                 Sleep(500);
                 system("cls");
@@ -568,6 +567,7 @@ void dormManageMenu()
         MenuPrint("2、安排退宿", 30);
         MenuPrint("3、处理学生申请", 30);
         MenuPrint("4、查看住宿记录", 30);
+        MenuPrint("5、查看所有未入住学生", 30);
         MenuPrint("0、返回上一级", 30);
         MenuPrint("DOWN", 30);
         SlowPrint("请输入您的选择：", 30, -1);
@@ -642,6 +642,14 @@ void dormManageMenu()
                 getch();
                 system("cls");
                 break;
+            case 5:
+                system("cls");
+                SlowPrint("当前操作：查看未入住的学生\n", 100, -1);
+                userManager->checkUserNotCheckedIn();
+                SlowPrint("请按任意键继续", 30, -1);
+                getch();
+                system("cls");
+                break;
             case 0:
                 system("cls");
                 return;
@@ -669,16 +677,13 @@ void generateReports()
         // cout << "3. 返回上一级\n";
         // cout << "请输入你的选择: ";
         int choice = getChoice();
-
         switch (choice)
         {
             case 1:
-                // TODO: 生成宿舍使用情况报表
-                cout << "生成宿舍使用情况报表 - 功能开发中。\n";
+                userManager->viewAllDormitories();
                 break;
             case 2:
-                // TODO: 生成入住率报表
-                cout << "生成入住率报表 - 功能开发中。\n";
+                userManager->generateAccommodationRateReport();
                 break;
             case 3:
                 return;
@@ -733,7 +738,7 @@ void manageDormitories()
                 break;
             case 3:
                 system("cls");
-                loading("正在加载中", 50, 100);
+                loading("正在加载中", 50, 40);
                 SlowPrint("加载完成", 50, 0);
                 Sleep(500);
                 system("cls");

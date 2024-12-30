@@ -2,30 +2,7 @@
 #include <cstdlib>  // for system()
 #include <vector>
 using namespace std;
-/*
-以下是对当前文件的代码找茬：
-对提供的Database.cpp源代码进行分析，可以发现以下几类问题：
 
-1. 安全问题
-SQL注入风险：在execute函数中直接执行传入的SQL字符串，没有对输入进行任何验证或清理，这可能导致SQL注入攻击。
-未初始化的指针：在多个函数中使用了未初始化的sqlite3_stmt *stmt指针（例如query、queryExists、queryWithParams等函数），这可能导致未定义行为。
-2. 性能问题
-重复的SQL准备和执行：在多个函数中重复执行类似的SQL准备和执行逻辑，这可能导致不必要的性能开销。可以考虑将这些逻辑封装成一个通用的函数以提高代码的可重用性和性能。
-不必要的字符串转换：在queryWithParams和executeWithParams函数中，将std::string转换为C风格字符串(c_str())可能会带来不必要的性能开销，尤其是在大量数据处理时。
-3. 代码质量问题
-未使用的变量：在queryExists函数中，columnName和columnValue被获取但未使用，这可能是代码冗余。
-不一致的错误处理：在不同的函数中，错误处理方式不一致。有些函数使用cerr输出错误信息，而有些函数使用cout。建议统一错误处理方式。
-缺少资源释放：在query、queryExists、queryWithParams和executeWithParams函数中，如果sqlite3_prepare_v2失败，stmt指针未被释放。虽然这些情况下stmt未被赋值，但最好确保所有路径都正确地释放资源。
-硬编码的SQL语句：在updateRoomStatus函数中，SQL语句是硬编码的，这不利于维护和修改。建议将SQL语句外部化，例如使用配置文件或常量。
-4. 潜在的逻辑缺陷
-sqlite3_finalize调用位置不当：在query和queryExists函数中，sqlite3_finalize(stmt)的调用位置在返回语句之后，这将导致它永远不会被执行。应将其放在合适的位置以确保资源被正确释放。
-错误的返回逻辑：在query函数中，如果查询成功但没有返回任何行（即result == SQLITE_DONE），函数返回false，这可能与预期不符。应根据具体业务逻辑调整返回值。
-5. 其他建议
-使用智能指针：考虑使用智能指针（如std::unique_ptr）来管理sqlite3_stmt资源，以避免手动管理内存和减少内存泄漏的风险。
-增加日志记录：在关键操作（如SQL执行、错误处理）处增加日志记录，有助于后期的调试和问题排查。
-代码注释和文档：增加代码注释和文档，特别是对于复杂的逻辑部分，以便其他开发者理解和维护代码。
-以上是对Database.cpp源代码的详细分析和建议，希望对改进代码质量和安全性有所帮助。
- */
 // 执行非查询 SQL（如 INSERT, UPDATE, DELETE）
 bool Database::execute(const string &sql) const
 {
