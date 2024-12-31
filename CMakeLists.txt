@@ -12,6 +12,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 
+## 设置构建类型为 Release
+#set(CMAKE_BUILD_TYPE Release)
+#
+## 或者设置 CMake 默认的构建选项为优化
+#set(CMAKE_CXX_FLAGS_RELEASE "-O3")  # O3 是最高级别的优化
+
 # 添加包含目录
 include_directories(
         src
@@ -30,7 +36,8 @@ set(SOURCE_FILES
         src/Database.h
         src/globals.cpp
         src/globals.h
-        src/dormitory.db
+        src/specialPrint.cpp
+        src/specialPrint.h
 )
 
 # 创建可执行文件

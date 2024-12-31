@@ -1,0 +1,64 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "DormitoryManagementSystem",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "DormitoryManagementSystem::@6890427a1f51a3e7e1df",
+<<<<<<<< HEAD:cmake-build-debug/.cmake/api/v1/reply/codemodel-v2-52d76cbf63dcb6caf9fb.json
+					"jsonFile" : "target-DormitoryManagementSystem-Debug-48b33caa166f46bba4f3.json",
+========
+					"jsonFile" : "target-DormitoryManagementSystem-Debug-c051eadbbeef4a95e1de.json",
+>>>>>>>> Slow:cmake-build-debug/.cmake/api/v1/reply/codemodel-v2-b1178ef20931dba39799.json
+					"name" : "DormitoryManagementSystem",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/Eyre/C++/DormitorySystem/cmake-build-debug",
+		"source" : "D:/Eyre/C++/DormitorySystem"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

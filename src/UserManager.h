@@ -75,6 +75,9 @@ public:
     // 查看所有宿舍楼信息
     void viewAllDormitories();
 
+    // 修改宿舍信息
+    void modifyDormitoryInfo();
+
     // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 //
 
     // 查看选定宿舍楼的所有房间信息和入住学生
@@ -134,7 +137,11 @@ public:
     // 查看住宿记录
     void viewCheckInOutRecords(const string &studentID = "");
 
+    void checkUserNotCheckedIn();
+
     void handleRepairRequests();
+
+    void generateAccommodationRateReport();
 
     // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 // 学生菜单 //
 
