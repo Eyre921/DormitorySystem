@@ -5,7 +5,7 @@
 using namespace std;
 
 //无闪屏清屏
-void gotoxy(int x, int y)
+void clearScreen(int x, int y)
 {
     HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
     COORD pos;
@@ -15,7 +15,7 @@ void gotoxy(int x, int y)
 }
 
 //产生n~m间的随机数（包括m和n）
-int randint_range(int n, int m)
+int randIntRange(int n, int m)
 {
     double base = static_cast<double>(rand()) / RAND_MAX;
     int res = base * static_cast<double>(m - n + 1) + n;
@@ -66,22 +66,22 @@ void loading(const string &str, int width, int dash)
             Sleep(1000);
             break;
         }
-        int step = randint_range(1, 5);
+        int step = randIntRange(1, 5);
         index += step;
         if (index < full)
         {
             Sleep(dash);
-            gotoxy(0, 0);
+            clearScreen(0, 0);
         } else if (index >= full)
         {
             index = full;
-            gotoxy(0, 0);
+            clearScreen(0, 0);
         }
     }
 }
 
 //缓慢打印
-void SlowPrint(const string &str, int width, int align)
+void slowPrint(const string &str, int width, int align)
 {
     //align:对齐方式（-1为左对齐，0为居中对齐，1为右对齐）
     int len = str.size();
@@ -113,7 +113,7 @@ void SlowPrint(const string &str, int width, int align)
 }
 
 //菜单打印
-void MenuPrint(const string &str, int width)
+void menuPrint(const string &str, int width)
 {
     if (str == "UP")
     {

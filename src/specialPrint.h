@@ -11,15 +11,15 @@
 using namespace std;
 
 
-void gotoxy(int x, int y);
+void clearScreen(int x, int y);
 
-int randint_range(int n, int m);
+int randIntRange(int n, int m);
 
 void loading(const string &str, int width, int dash);
 
-void SlowPrint(const string &str, int width, int align);
+void slowPrint(const string &str, int width, int align);
 
-void MenuPrint(const string &str, int width);
+void menuPrint(const string &str, int width);
 
 void openPrint();
 

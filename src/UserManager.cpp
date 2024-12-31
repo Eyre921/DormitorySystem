@@ -778,14 +778,14 @@ void UserManager::manageRooms()
 
         while (true)
         {
-            SlowPrint("●管理房间●", 30, 0);
-            MenuPrint("UP", 30);
-            MenuPrint("1、查看入住信息", 30);
-            MenuPrint("2、删除房间", 30);
-            MenuPrint("3、修改房间信息", 30);
-            MenuPrint("0、返回上一级", 30);
-            MenuPrint("DOWN", 30);
-            SlowPrint("请输入您的选择：", 30, -1);
+            slowPrint("●管理房间●", 30, 0);
+            menuPrint("UP", 30);
+            menuPrint("1、查看入住信息", 30);
+            menuPrint("2、删除房间", 30);
+            menuPrint("3、修改房间信息", 30);
+            menuPrint("0、返回上一级", 30);
+            menuPrint("DOWN", 30);
+            slowPrint("请输入您的选择：", 30, -1);
             // cout << "\n---- 管理房间 ----\n";
             // cout << "1. 查看入住信息\n";
             // cout << "2. 删除房间\n";
@@ -1343,13 +1343,13 @@ ORDER BY ar.requestTime DESC;
             }
             //cout << studentName << " " << studentID << " " << dormitoryName << " " << roomNumber << " " << endl;
             // 请求ID有效，提示管理员选择审批操作
-            SlowPrint("●选择审批操作●", 30, 0);
-            MenuPrint("UP", 30);
-            MenuPrint("1、通过", 30);
-            MenuPrint("2、不通过", 30);
-            MenuPrint("3、返回", 30);
-            MenuPrint("DOWN", 30);
-            SlowPrint("请输入您的选择：", 30, -1);
+            slowPrint("●选择审批操作●", 30, 0);
+            menuPrint("UP", 30);
+            menuPrint("1、通过", 30);
+            menuPrint("2、不通过", 30);
+            menuPrint("3、返回", 30);
+            menuPrint("DOWN", 30);
+            slowPrint("请输入您的选择：", 30, -1);
             // cout << "\n选择审批操作：\n";
             // cout << "1. 通过\n";
             // cout << "2. 不通过\n";
@@ -1728,11 +1728,11 @@ GROUP BY d.dormitoryID; -- 按宿舍楼分组，确保宿舍楼数据汇总
     }
     system("cls");
     loading("正在查询中", 50, 10);
-    SlowPrint("查询完成", 50, 0);
+    slowPrint("查询完成", 50, 0);
     Sleep(100);
     cout << "\n---- 入住率报表 ----\n";
     query(sql);
-    SlowPrint("请按任意键继续", 30, -1);
+    slowPrint("请按任意键继续", 30, -1);
     getch();
     system("cls");
     // 模拟查询并打印结果
@@ -1747,31 +1747,31 @@ GROUP BY d.dormitoryID; -- 按宿舍楼分组，确保宿舍楼数据汇总
 void UserManager::studentRegister()
 {
     string studentID, password, name, gender, contactInfo;
-    SlowPrint("●学生注册●", 30, 0);
+    slowPrint("●学生注册●", 30, 0);
     //cout << "\n---- 学生注册 ----\n";
     //cout << "请输入学号: ";
-    SlowPrint("请输入学号: ", 30, -1);
+    slowPrint("请输入学号: ", 30, -1);
     cin >> studentID;
-    SlowPrint("请输入密码: ", 30, -1);
+    slowPrint("请输入密码: ", 30, -1);
     //cout << "请输入密码: ";
     cin >> password;
-    SlowPrint("请输入姓名: ", 30, -1);
+    slowPrint("请输入姓名: ", 30, -1);
     //cout << "请输入姓名: ";
     cin >> name;
-    SlowPrint("请输入性别: ", 30, -1);
+    slowPrint("请输入性别: ", 30, -1);
     //cout << "请输入性别: ";
     while (gender != "男" && gender != "女")
     {
         cout << "请输入性别(男/女): ";
         cin >> gender;
     }
-    SlowPrint("请输入联系方式: ", 30, -1);
+    slowPrint("请输入联系方式: ", 30, -1);
     //cout << "请输入联系方式: ";
     cin >> contactInfo;
     registerUser(studentID, password, name, gender, contactInfo, false, false);
     system("cls");
     loading("正在注册中", 50, 100);
-    SlowPrint("注册成功！", 50, 0);
+    slowPrint("注册成功！", 50, 0);
     Sleep(3000);
     system("cls");
 }
