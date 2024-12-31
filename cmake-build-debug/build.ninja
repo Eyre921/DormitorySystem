@@ -12,7 +12,7 @@
 
 # =============================================================================
 # Project: DormitoryManagementSystem
-# Configurations: Debug
+# Configurations: Release
 # =============================================================================
 
 #############################################
@@ -24,7 +24,7 @@ ninja_required_version = 1.5
 #############################################
 # Set configuration variable for custom commands.
 
-CONFIGURATION = Debug
+CONFIGURATION = Release
 # =============================================================================
 # Include auxiliary files.
 
@@ -49,44 +49,44 @@ cmake_ninja_workdir = D$:/Eyre/C++/DormitorySystem/cmake-build-debug/
 
 build cmake_object_order_depends_target_DormitoryManagementSystem: phony || .
 
-build CMakeFiles/DormitoryManagementSystem.dir/sqlite3/sqlite3.c.obj: C_COMPILER__DormitoryManagementSystem_unscanned_Debug D$:/Eyre/C++/DormitorySystem/sqlite3/sqlite3.c || cmake_object_order_depends_target_DormitoryManagementSystem
+build CMakeFiles/DormitoryManagementSystem.dir/sqlite3/sqlite3.c.obj: C_COMPILER__DormitoryManagementSystem_unscanned_Release D$:/Eyre/C++/DormitorySystem/sqlite3/sqlite3.c || cmake_object_order_depends_target_DormitoryManagementSystem
   DEP_FILE = CMakeFiles\DormitoryManagementSystem.dir\sqlite3\sqlite3.c.obj.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -O3 -DNDEBUG -fdiagnostics-color=always
   INCLUDES = -ID:/Eyre/C++/DormitorySystem/src -ID:/Eyre/C++/DormitorySystem/sqlite3
   OBJECT_DIR = CMakeFiles\DormitoryManagementSystem.dir
   OBJECT_FILE_DIR = CMakeFiles\DormitoryManagementSystem.dir\sqlite3
 
-build CMakeFiles/DormitoryManagementSystem.dir/src/main.cpp.obj: CXX_COMPILER__DormitoryManagementSystem_unscanned_Debug D$:/Eyre/C++/DormitorySystem/src/main.cpp || cmake_object_order_depends_target_DormitoryManagementSystem
+build CMakeFiles/DormitoryManagementSystem.dir/src/main.cpp.obj: CXX_COMPILER__DormitoryManagementSystem_unscanned_Release D$:/Eyre/C++/DormitorySystem/src/main.cpp || cmake_object_order_depends_target_DormitoryManagementSystem
   DEP_FILE = CMakeFiles\DormitoryManagementSystem.dir\src\main.cpp.obj.d
-  FLAGS = -Wall -Wextra -g -std=gnu++1z -fdiagnostics-color=always
+  FLAGS = -Wall -Wextra -O3 -std=gnu++1z -fdiagnostics-color=always
   INCLUDES = -ID:/Eyre/C++/DormitorySystem/src -ID:/Eyre/C++/DormitorySystem/sqlite3
   OBJECT_DIR = CMakeFiles\DormitoryManagementSystem.dir
   OBJECT_FILE_DIR = CMakeFiles\DormitoryManagementSystem.dir\src
 
-build CMakeFiles/DormitoryManagementSystem.dir/src/UserManager.cpp.obj: CXX_COMPILER__DormitoryManagementSystem_unscanned_Debug D$:/Eyre/C++/DormitorySystem/src/UserManager.cpp || cmake_object_order_depends_target_DormitoryManagementSystem
+build CMakeFiles/DormitoryManagementSystem.dir/src/UserManager.cpp.obj: CXX_COMPILER__DormitoryManagementSystem_unscanned_Release D$:/Eyre/C++/DormitorySystem/src/UserManager.cpp || cmake_object_order_depends_target_DormitoryManagementSystem
   DEP_FILE = CMakeFiles\DormitoryManagementSystem.dir\src\UserManager.cpp.obj.d
-  FLAGS = -Wall -Wextra -g -std=gnu++1z -fdiagnostics-color=always
+  FLAGS = -Wall -Wextra -O3 -std=gnu++1z -fdiagnostics-color=always
   INCLUDES = -ID:/Eyre/C++/DormitorySystem/src -ID:/Eyre/C++/DormitorySystem/sqlite3
   OBJECT_DIR = CMakeFiles\DormitoryManagementSystem.dir
   OBJECT_FILE_DIR = CMakeFiles\DormitoryManagementSystem.dir\src
 
-build CMakeFiles/DormitoryManagementSystem.dir/src/Database.cpp.obj: CXX_COMPILER__DormitoryManagementSystem_unscanned_Debug D$:/Eyre/C++/DormitorySystem/src/Database.cpp || cmake_object_order_depends_target_DormitoryManagementSystem
+build CMakeFiles/DormitoryManagementSystem.dir/src/Database.cpp.obj: CXX_COMPILER__DormitoryManagementSystem_unscanned_Release D$:/Eyre/C++/DormitorySystem/src/Database.cpp || cmake_object_order_depends_target_DormitoryManagementSystem
   DEP_FILE = CMakeFiles\DormitoryManagementSystem.dir\src\Database.cpp.obj.d
-  FLAGS = -Wall -Wextra -g -std=gnu++1z -fdiagnostics-color=always
+  FLAGS = -Wall -Wextra -O3 -std=gnu++1z -fdiagnostics-color=always
   INCLUDES = -ID:/Eyre/C++/DormitorySystem/src -ID:/Eyre/C++/DormitorySystem/sqlite3
   OBJECT_DIR = CMakeFiles\DormitoryManagementSystem.dir
   OBJECT_FILE_DIR = CMakeFiles\DormitoryManagementSystem.dir\src
 
-build CMakeFiles/DormitoryManagementSystem.dir/src/globals.cpp.obj: CXX_COMPILER__DormitoryManagementSystem_unscanned_Debug D$:/Eyre/C++/DormitorySystem/src/globals.cpp || cmake_object_order_depends_target_DormitoryManagementSystem
+build CMakeFiles/DormitoryManagementSystem.dir/src/globals.cpp.obj: CXX_COMPILER__DormitoryManagementSystem_unscanned_Release D$:/Eyre/C++/DormitorySystem/src/globals.cpp || cmake_object_order_depends_target_DormitoryManagementSystem
   DEP_FILE = CMakeFiles\DormitoryManagementSystem.dir\src\globals.cpp.obj.d
-  FLAGS = -Wall -Wextra -g -std=gnu++1z -fdiagnostics-color=always
+  FLAGS = -Wall -Wextra -O3 -std=gnu++1z -fdiagnostics-color=always
   INCLUDES = -ID:/Eyre/C++/DormitorySystem/src -ID:/Eyre/C++/DormitorySystem/sqlite3
   OBJECT_DIR = CMakeFiles\DormitoryManagementSystem.dir
   OBJECT_FILE_DIR = CMakeFiles\DormitoryManagementSystem.dir\src
 
-build CMakeFiles/DormitoryManagementSystem.dir/src/specialPrint.cpp.obj: CXX_COMPILER__DormitoryManagementSystem_unscanned_Debug D$:/Eyre/C++/DormitorySystem/src/specialPrint.cpp || cmake_object_order_depends_target_DormitoryManagementSystem
+build CMakeFiles/DormitoryManagementSystem.dir/src/specialPrint.cpp.obj: CXX_COMPILER__DormitoryManagementSystem_unscanned_Release D$:/Eyre/C++/DormitorySystem/src/specialPrint.cpp || cmake_object_order_depends_target_DormitoryManagementSystem
   DEP_FILE = CMakeFiles\DormitoryManagementSystem.dir\src\specialPrint.cpp.obj.d
-  FLAGS = -Wall -Wextra -g -std=gnu++1z -fdiagnostics-color=always
+  FLAGS = -Wall -Wextra -O3 -std=gnu++1z -fdiagnostics-color=always
   INCLUDES = -ID:/Eyre/C++/DormitorySystem/src -ID:/Eyre/C++/DormitorySystem/sqlite3
   OBJECT_DIR = CMakeFiles\DormitoryManagementSystem.dir
   OBJECT_FILE_DIR = CMakeFiles\DormitoryManagementSystem.dir\src
@@ -97,18 +97,18 @@ build CMakeFiles/DormitoryManagementSystem.dir/src/specialPrint.cpp.obj: CXX_COM
 
 
 #############################################
-# Link the executable DormitoryManagementSystem_d.exe
+# Link the executable DormitoryManagementSystem_release.exe
 
-build DormitoryManagementSystem_d.exe: CXX_EXECUTABLE_LINKER__DormitoryManagementSystem_Debug CMakeFiles/DormitoryManagementSystem.dir/sqlite3/sqlite3.c.obj CMakeFiles/DormitoryManagementSystem.dir/src/main.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/UserManager.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/Database.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/globals.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/specialPrint.cpp.obj
-  FLAGS = -Wall -Wextra -g
+build DormitoryManagementSystem_release.exe: CXX_EXECUTABLE_LINKER__DormitoryManagementSystem_Release CMakeFiles/DormitoryManagementSystem.dir/sqlite3/sqlite3.c.obj CMakeFiles/DormitoryManagementSystem.dir/src/main.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/UserManager.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/Database.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/globals.cpp.obj CMakeFiles/DormitoryManagementSystem.dir/src/specialPrint.cpp.obj
+  FLAGS = -Wall -Wextra -O3
   LINK_FLAGS = -static-libgcc -static-libstdc++
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\DormitoryManagementSystem.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_FILE = DormitoryManagementSystem_d.exe
-  TARGET_IMPLIB = libDormitoryManagementSystem_d.dll.a
-  TARGET_PDB = DormitoryManagementSystem_d.exe.dbg
+  TARGET_FILE = DormitoryManagementSystem_release.exe
+  TARGET_IMPLIB = libDormitoryManagementSystem_release.dll.a
+  TARGET_PDB = DormitoryManagementSystem_release.exe.dbg
 
 
 #############################################
@@ -136,7 +136,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 # Target aliases.
 
-build DormitoryManagementSystem: phony DormitoryManagementSystem_d.exe
+build DormitoryManagementSystem: phony DormitoryManagementSystem_release.exe
 
 # =============================================================================
 # Folder targets.
@@ -146,7 +146,7 @@ build DormitoryManagementSystem: phony DormitoryManagementSystem_d.exe
 #############################################
 # Folder: D:/Eyre/C++/DormitorySystem/cmake-build-debug
 
-build all: phony DormitoryManagementSystem_d.exe
+build all: phony DormitoryManagementSystem_release.exe
 
 # =============================================================================
 # Built-in targets
