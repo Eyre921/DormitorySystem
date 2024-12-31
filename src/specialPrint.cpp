@@ -167,6 +167,14 @@ string passwordHide(string tips) {
             for (int i = 1; i <= len; i++) {
                 cout << "*";
             }
+        } else if (c == 46 || c == 8) {
+            clearScreen(0, 0);
+            len--;
+            password.pop_back();
+            cout << tips;
+            for (int i = 1; i <= len; i++) {
+                cout << "*";
+            }
         } else {
             len++;
             password += c;
