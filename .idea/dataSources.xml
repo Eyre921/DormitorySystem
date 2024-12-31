@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="dormitory.db" uuid="f5b0d976-03c2-48d5-a8b2-7dd46d02a08e">
-      <driver-ref>sqlite.xerial</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:D:\Eyre\C++\DormitorySystem\src\dormitory.db</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
     <data-source source="LOCAL" name="dormitory" uuid="00b63bd0-959b-463b-bf5b-d3cbc8db77c6">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>

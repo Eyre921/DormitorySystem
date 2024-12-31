@@ -90,18 +90,18 @@ bool Database::queryExists(const std::string &sql)
     if (result == SQLITE_ROW)
     {
         // 获取列数
-        int columnCount = sqlite3_column_count(stmt);
+        //int columnCount = sqlite3_column_count(stmt);
 
         // 打印查询结果
 
         while (result == SQLITE_ROW)
         {
-            for (int i = 0; i < columnCount; ++i)
-            {
-                const char *columnName = sqlite3_column_name(stmt, i); // 获取列名
-                const char *columnValue = reinterpret_cast<const char *>(sqlite3_column_text(stmt, i)); // 获取列值
-            }
-            //cout << endl; // 打印一行数据后换行
+            // for (int i = 0; i < columnCount; ++i)
+            // {
+            //     const char *columnName = sqlite3_column_name(stmt, i); // 获取列名
+            //     const char *columnValue = reinterpret_cast<const char *>(sqlite3_column_text(stmt, i)); // 获取列值
+            // }
+            // //cout << endl; // 打印一行数据后换行
             result = sqlite3_step(stmt); // 继续执行下一行
         }
         return true;
