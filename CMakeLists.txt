@@ -30,7 +30,6 @@ set(SOURCE_FILES
         src/Database.h
         src/globals.cpp
         src/globals.h
-        src/dormitory.db
         src/specialPrint.cpp
         src/specialPrint.h
 )
