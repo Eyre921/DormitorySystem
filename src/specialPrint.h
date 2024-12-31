@@ -4,10 +4,11 @@
 
 #ifndef SPECIALPRINT_H
 #define SPECIALPRINT_H
-
+#include<conio.h>
 #include<bits/stdc++.h>
 #include<windows.h>
 #include<cstdlib>
+
 using namespace std;
 
 
@@ -22,5 +23,7 @@ void slowPrint(const string &str, int width, int align);
 void menuPrint(const string &str, int width);
 
 void openPrint();
+
+string passwordHide(string tips);
 
 #endif //SPECIALPRINT_H

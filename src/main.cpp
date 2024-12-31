@@ -32,15 +32,12 @@ void generateReports();
 
 void dormManageMenu();
 
-int getChoice()
-{
+int getChoice() {
     int choice;
 
-    while (true)
-    {
+    while (true) {
         cin >> choice;
-        if (choice > 11)
-        {
+        if (choice > 11) {
             cout << "输入无效，请输入有效数字：";
             continue;
         }
@@ -61,8 +58,7 @@ int getChoice()
 //studentMenu("t2");
 
 // 主程序入口
-int main()
-{
+int main() {
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
     srand((unsigned) time(NULL)); //根据当前时间来生成随机数
@@ -70,8 +66,7 @@ int main()
     system("cls");
     openPrint();
     system("CLS");
-    while (true)
-    {
+    while (true) {
         slowPrint("●主菜单●", 30, 0);
         menuPrint("UP", 30);
         menuPrint("1、学生菜单", 30);
@@ -86,8 +81,7 @@ int main()
         // cout << "请输入你的选择: ";
         int choice = getChoice();
 
-        switch (choice)
-        {
+        switch (choice) {
             case 1:
                 system("cls");
                 studentLoginMenu(); // 学生登录
@@ -108,8 +102,7 @@ int main()
 }
 
 // 学生登录菜单
-void studentLoginMenu()
-{
+void studentLoginMenu() {
     slowPrint("●学生菜单●", 30, 0);
     menuPrint("UP", 30);
     menuPrint("1、学生登录", 30);
@@ -124,8 +117,7 @@ void studentLoginMenu()
     // cout << "请输入你的选择: ";
     int choice = getChoice();
 
-    switch (choice)
-    {
+    switch (choice) {
         case 1:
             system("cls");
             studentLogin(); // 学生登录
@@ -144,34 +136,32 @@ void studentLoginMenu()
 }
 
 // 学生登录
-void studentLogin()
-{
+void studentLogin() {
     string studentID, password;
     slowPrint("●学生登录●", 30, 0);
     //cout << "\n---- 学生登录 ----\n";
     slowPrint("请输入学号: ", 30, -1);
     //cout << "请输入学号: ";
     cin >> studentID;
-    slowPrint("请输入密码: ", 30, -1);
+    slowPrint("请输入密码(输入*可以查看被隐藏的密码,回车确认): ", 30, -1);
     //cout << "请输入密码: ";
-    cin >> password;
+    clearScreen(0, 0);
+    // cout<<"         ●学生登录●\n请输入学号："+studentID+"请输入密码(输入*可以查看被隐藏的密码): " ;
+    // system("cls");
+    password = passwordHide("         ●学生登录●\n请输入学号：" + studentID + "\n请输入密码(输入*可以查看被隐藏的密码,回车确认): ");
+    cout << endl;
 
     // 调用 UserManager 中的 loginUser 方法，验证登录
-    if (userManager->loginUser(studentID, password, "0"))
-    {
+    if (userManager->loginUser(studentID, password, "0")) {
         size_t str_len = studentID.size();
-        if (str_len < 6)
-        {
-            if (studentID == password)
-            {
+        if (str_len < 6) {
+            if (studentID == password) {
                 //进入修改密码界面
                 cout << "您的密码是默认密码，请修改\n";
                 userManager->userPasswordChange(studentID);
             }
-        } else
-        {
-            if (studentID.substr(str_len - 6, 6) == password)
-            {
+        } else {
+            if (studentID.substr(str_len - 6, 6) == password) {
                 //进入修改密码界面
                 cout << "您的密码是默认密码，请修改\n";
                 userManager->userPasswordChange(studentID);
@@ -183,17 +173,17 @@ void studentLogin()
         Sleep(2000);
         system("cls");
         studentMenu(studentID); // 登录成功后跳转到学生菜单
-    } else
-    {
+    } else {
         cout << "学号或密码错误！\n";
+        Sleep(1000);
+        system("cls");
+        return;
     }
 }
 
 // 学生菜单
-void studentMenu(const string &stuID)
-{
-    while (true)
-    {
+void studentMenu(const string &stuID) {
+    while (true) {
         slowPrint("●学生菜单●", 40, 0);
         menuPrint("UP", 40);
         menuPrint("1、查看宿舍楼和房间信息", 40);
@@ -219,8 +209,7 @@ void studentMenu(const string &stuID)
         // 清除输入缓冲区，以防止输入错误导致无限循环
 
 
-        switch (choice)
-        {
+        switch (choice) {
             case 1:
                 system("cls");
                 userManager->viewDormitoryInfo(stuID); // 查看宿舍楼和房间信息
@@ -236,8 +225,7 @@ void studentMenu(const string &stuID)
                 system("cls");
                 break;
             case 3:
-                if (!userManager->isStudentCheckedIn(stuID))
-                {
+                if (!userManager->isStudentCheckedIn(stuID)) {
                     cout << "您未入住！" << endl;
                     system("cls");
                     break;
@@ -281,12 +269,9 @@ void studentMenu(const string &stuID)
     }
 }
 
-void applyAccommodationChange(const string &stuID)
-{
-    while (true)
-    {
-        if (userManager->hasPendingApplication(stuID))
-        {
+void applyAccommodationChange(const string &stuID) {
+    while (true) {
+        if (userManager->hasPendingApplication(stuID)) {
             cout << "您还有待审批的请求！" << endl;
             userManager->viewApprovingRequests(stuID);
             return;
@@ -310,16 +295,14 @@ void applyAccommodationChange(const string &stuID)
         int choice = getChoice();
 
         // 清除输入缓冲区，以防止输入错误导致无限循环
-        if (cin.fail())
-        {
+        if (cin.fail()) {
             cin.clear(); // 清除错误标志
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 忽略错误输入
             cout << "输入无效，请输入数字。\n";
             continue;
         }
 
-        switch (choice)
-        {
+        switch (choice) {
             case 1:
                 system("cls");
                 userManager->applyMoveIn(stuID); // 申请入住
@@ -354,37 +337,33 @@ void applyAccommodationChange(const string &stuID)
 }
 
 // 管理员登录
-void adminLogin()
-{
+void adminLogin() {
     string adminID, password;
     slowPrint("●管理员登录●", 30, 0);
-    //cout << "\n---- 管理员登录 ----\n";
     slowPrint("请输入管理员账号: ", 30, -1);
-    //cout << "请输入管理员账号: ";
     cin >> adminID;
-    slowPrint("请输入密码: ", 30, -1);
-    //cout << "请输入密码: ";
-    cin >> password;
+    slowPrint("请输入密码(输入*可以查看被隐藏的密码,回车确认): ", 30, -1);
+    clearScreen(0, 0);
+    password = passwordHide("        ●管理员登录●\n请输入管理员账号：" + adminID + "\n请输入密码(输入*可以查看被隐藏的密码,回车确认): ");
+    cout << endl;
 
-    if (userManager->loginUser(adminID, password, "1"))
-    {
+    if (userManager->loginUser(adminID, password, "1")) {
         system("cls");
         loading("正在登录中", 50, 30);
         slowPrint("登录成功!", 50, 0);
         Sleep(2000);
         system("cls");
         adminMenu();;
-    } else
-    {
+    } else {
         cout << "账号或密码错误！\n";
+        Sleep(1000);
+        system("cls");
     }
 }
 
 // 管理员菜单
-void adminMenu()
-{
-    while (true)
-    {
+void adminMenu() {
+    while (true) {
         slowPrint("●管理员菜单●", 30, 0);
         menuPrint("UP", 30);
         menuPrint("1、舍楼管理中心", 30);
@@ -405,8 +384,7 @@ void adminMenu()
         // cout << "请输入你的选择: ";
         int choice = getChoice();
 
-        switch (choice)
-        {
+        switch (choice) {
             case 1:
                 system("cls");
                 manageDormitories(); // 管理宿舍楼
@@ -452,12 +430,10 @@ void adminMenu()
 }
 
 // 管理用户
-void manageUsers()
-{
+void manageUsers() {
     string ID;
 
-    while (true)
-    {
+    while (true) {
         slowPrint("●管理用户●", 40, 0);
         menuPrint("UP", 40);
         menuPrint("1、添加用户", 40);
@@ -480,8 +456,7 @@ void manageUsers()
         // cout << "请输入你的选择: ";
         int choice = getChoice();
 
-        switch (choice)
-        {
+        switch (choice) {
             case 1:
                 system("cls");
                 slowPrint("当前操作：添加用户\n", 100, -1);
@@ -556,11 +531,9 @@ void manageUsers()
 }
 
 // 住宿管理中心
-void dormManageMenu()
-{
+void dormManageMenu() {
     string ID;
-    while (true)
-    {
+    while (true) {
         slowPrint("●住宿管理●", 30, 0);
         menuPrint("UP", 30);
         menuPrint("1、安排住宿", 30);
@@ -579,18 +552,15 @@ void dormManageMenu()
         // cout << "0. 返回上一级\n";
         // cout << "请输入你的选择: ";
         int choice = getChoice();
-        switch (choice)
-        {
+        switch (choice) {
             case 1:
                 system("cls");
                 slowPrint("当前操作：安排住宿\n", 100, -1);
                 cin.ignore();
-                while (true)
-                {
+                while (true) {
                     ID = userManager->get_ID();
                     // 检查是否已经入住
-                    if (userManager->isStudentCheckedIn(ID))
-                    {
+                    if (userManager->isStudentCheckedIn(ID)) {
                         cout << "该学生已入住，请重新选择其他学生。\n";
                         continue;
                     }
@@ -606,12 +576,10 @@ void dormManageMenu()
                 system("cls");
                 slowPrint("当前操作：安排退宿\n", 100, -1);
                 cin.ignore();
-                while (true)
-                {
+                while (true) {
                     ID = userManager->get_ID();
                     // 检查是否已经入住
-                    if (!userManager->isStudentCheckedIn(ID))
-                    {
+                    if (!userManager->isStudentCheckedIn(ID)) {
                         cout << "该学生未入住，请重新选择其他学生。\n";
                         continue;
                     }
@@ -660,10 +628,8 @@ void dormManageMenu()
 }
 
 // 生成报表
-void generateReports()
-{
-    while (true)
-    {
+void generateReports() {
+    while (true) {
         slowPrint("●生成报表●", 40, 0);
         menuPrint("UP", 40);
         menuPrint("1、生成宿舍使用情况报表", 40);
@@ -677,8 +643,7 @@ void generateReports()
         // cout << "3. 返回上一级\n";
         // cout << "请输入你的选择: ";
         int choice = getChoice();
-        switch (choice)
-        {
+        switch (choice) {
             case 1:
                 userManager->viewAllDormitories();
                 break;
@@ -695,10 +660,8 @@ void generateReports()
 
 
 // 管理宿舍楼
-void manageDormitories()
-{
-    while (true)
-    {
+void manageDormitories() {
+    while (true) {
         slowPrint("●管理宿舍楼●", 30, 0);
         menuPrint("UP", 30);
         menuPrint("1、添加宿舍楼", 30);
@@ -718,8 +681,7 @@ void manageDormitories()
         // cout << "请输入你的选择: ";
         int choice = getChoice();
 
-        switch (choice)
-        {
+        switch (choice) {
             case 1:
                 system("cls");
                 slowPrint("当前操作：添加宿舍楼\n", 100, -1);

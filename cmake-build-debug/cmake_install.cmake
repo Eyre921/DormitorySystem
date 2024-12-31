@@ -1,4 +1,4 @@
-# Install script for directory: D:/Eyre/C++/DormitorySystem
+# Install script for directory: D:/Clion/dorm
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,7 +34,7 @@ endif()
 
 # Set path to fallback-tool for dependency-resolution.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "D:/Program Files/MinGW/bin/objdump.exe")
+  set(CMAKE_OBJDUMP "D:/Program Files (x86)/Dev-Cpp/MinGW64/bin/objdump.exe")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -52,6 +52,6 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-  file(WRITE "D:/Eyre/C++/DormitorySystem/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+  file(WRITE "D:/Clion/dorm/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()
