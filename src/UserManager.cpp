@@ -113,6 +113,7 @@ bool UserManager::studentExistsByID(const string &ID)
     return db.queryExists(sql);
 }
 
+// 得到宿舍ID
 int UserManager::getDormitoryIDByName(const string &dormitoryName)
 {
     string queryDormitory = "SELECT dormitoryID FROM dormitories WHERE name = '" + dormitoryName + "'";
@@ -560,6 +561,77 @@ void UserManager::viewAllDormitories()
     // 执行SQL语句
     db.query(sql);
 }
+
+// 修改宿舍信息
+void UserManager::modifyDormitoryInfo()
+{
+    viewAllDormitories();
+    string dormitoryName;
+    string newDormitoryName, newPosition;
+
+    while (true)
+    {
+        // 循环获取管理员输入的宿舍楼名称
+        cout << "请输入要修改的宿舍楼名称（输入'exit'退出）：";
+        cin >> dormitoryName;
+
+        // 如果输入 "exit"，则退出
+        if (dormitoryName == "exit")
+        {
+            cout << "已退出修改宿舍楼信息。\n";
+            return;
+        }
+
+        // 检查宿舍楼是否存在
+        if (!dormitoryExistsByName(dormitoryName))
+        {
+            cout << "未找到该宿舍楼，请重新输入。\n";
+            continue; // 继续循环，要求重新输入宿舍楼名称
+        }
+
+        // 获取宿舍楼ID
+        int dormitoryID = getDormitoryIDByName(dormitoryName);
+
+        // 提供修改内容选择
+        cout << "请选择要修改的内容:\n";
+        cout << "1. 修改宿舍楼名称\n";
+        cout << "2. 修改宿舍楼位置\n";
+        cout << "请输入选项 (1-2): ";
+        int choice;
+        cin >> choice;
+
+        string sql = "UPDATE dormitories SET ";
+
+        // 根据用户选择修改相应的字段
+        switch (choice)
+        {
+            case 1:
+                cout << "请输入新的宿舍楼名称: ";
+                cin >> newDormitoryName;
+                sql += "name = '" + newDormitoryName + "' ";
+                cout << "修改宿舍楼名称为 " << newDormitoryName << " 成功\n";
+                break;
+            case 2:
+                cout << "请输入新的宿舍楼位置: ";
+                cin >> newPosition;
+                sql += "position = '" + newPosition + "' ";
+                cout << "修改宿舍楼位置为 " << newPosition << " 成功\n";
+                break;
+            default:
+                cout << "无效的选项!\n";
+                return;
+        }
+
+        // 附加 WHERE 子句，确保只更新指定的宿舍楼
+        sql += "WHERE dormitoryID = " + to_string(dormitoryID) + ";";
+
+        // 执行更新语句
+        db.execute(sql);
+        cout << "宿舍楼信息修改成功。\n";
+        break; // 修改成功后跳出循环
+    }
+}
+
 
 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 // 房间管理 //
 
@@ -1553,7 +1625,7 @@ void UserManager::handleRepairRequests()
     }
 }
 
-// 入住报表
+// 入住报表 // 入住报表 // 入住报表 // 入住报表 // 入住报表 // 入住报表 // 入住报表 // 入住报表 // 入住报表 // 入住报表 // 入住报表 //
 void UserManager::generateAccommodationRateReport()
 {
     int timeChoice;

@@ -66,6 +66,8 @@ int main()
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
     srand((unsigned) time(NULL)); //根据当前时间来生成随机数
+
+
     loading("正在启动宿舍管理系统", 50, 30);
     system("cls");
     openPrint();
@@ -704,7 +706,8 @@ void manageDormitories()
         MenuPrint("1、添加宿舍楼", 30);
         MenuPrint("2、删除宿舍楼", 30);
         MenuPrint("3、查看宿舍楼信息", 30);
-        MenuPrint("4、房间管理", 30);
+        MenuPrint("4、修改宿舍楼信息", 30);
+        MenuPrint("5、房间管理", 30);
         MenuPrint("0、返回上一级", 30);
         MenuPrint("DOWN", 30);
         SlowPrint("请输入您的选择：", 30, -1);
@@ -748,6 +751,14 @@ void manageDormitories()
                 system("cls");
                 break;
             case 4:
+                system("cls");
+                SlowPrint("当前操作：修改宿舍楼信息\n", 100, -1);
+                userManager->modifyDormitoryInfo();
+                SlowPrint("请按任意键继续", 30, -1);
+                getch();
+                system("cls");
+                break;
+            case 5:
                 system("cls");
                 SlowPrint("当前操作：房间管理\n", 100, -1);
                 userManager->manageRooms();
