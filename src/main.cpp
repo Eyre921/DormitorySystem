@@ -66,8 +66,6 @@ int main()
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
     srand((unsigned) time(NULL)); //根据当前时间来生成随机数
-
-
     loading("正在启动宿舍管理系统", 50, 30);
     system("cls");
     openPrint();
@@ -241,6 +239,7 @@ void studentMenu(const string &stuID)
                 if (!userManager->isStudentCheckedIn(stuID))
                 {
                     cout << "您未入住！" << endl;
+                    system("cls");
                     break;
                 }
                 system("cls");
@@ -284,15 +283,14 @@ void studentMenu(const string &stuID)
 
 void applyAccommodationChange(const string &stuID)
 {
-    if (userManager->hasPendingApplication(stuID))
-    {
-        cout << "您还有待审批的请求！" << endl;
-        userManager->viewApprovingRequests(stuID);
-        return;
-    }
-
     while (true)
     {
+        if (userManager->hasPendingApplication(stuID))
+        {
+            cout << "您还有待审批的请求！" << endl;
+            userManager->viewApprovingRequests(stuID);
+            return;
+        }
         slowPrint("●申请宿舍调整●", 30, 0);
         menuPrint("UP", 30);
         menuPrint("1、申请入住", 30);

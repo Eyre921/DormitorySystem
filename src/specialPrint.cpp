@@ -3,7 +3,7 @@
 //
 #include "specialPrint.h"
 using namespace std;
-
+const int menu_print_speed = 50;
 //无闪屏清屏
 void clearScreen(int x, int y)
 {
@@ -145,7 +145,7 @@ void menuPrint(const string &str, int width)
         tempStr = "│" + tempSpace + tempStr + tempSpace + "│";
         cout << tempStr << endl;
     }
-    Sleep(10);
+    Sleep(menu_print_speed);
 }
 
 //启动开屏显示

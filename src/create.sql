@@ -38,7 +38,7 @@ CREATE TABLE check_in_out_records
     recordID   INTEGER PRIMARY KEY AUTOINCREMENT,                    -- 记录ID（自增）
     studentID  TEXT                                        NOT NULL, -- 学生ID（外键）
     roomID     INTEGER                                     NOT NULL, -- 房间ID（外键）
-    eventTime  DATETIME DEFAULT CURRENT_TIMESTAMP,                   -- 事件时间（无论是入住还是退宿）
+    eventTime  DATETIME DEFAULT datetime('now', 'localtime'),        -- 事件时间（无论是入住还是退宿）
     recordType TEXT CHECK (recordType IN ('入住', '退宿')) NOT NULL, -- 记录类型（入住或退宿）
     note       TEXT,                                                 -- 备注（可选，存储任何附加信息）
     FOREIGN KEY (studentID) REFERENCES users (userID),               -- 外键关联到用户表
@@ -48,17 +48,16 @@ CREATE TABLE check_in_out_records
 
 CREATE TABLE repair_requests
 (
-    repairID    INTEGER PRIMARY KEY AUTOINCREMENT,                                            -- 报修ID（自增）
-    studentID   TEXT                                                                NOT NULL, -- 学生ID（外键，关联users表）
-    roomID      INTEGER                                                             NOT NULL, -- 房间ID（外键，关联rooms表）
-    description TEXT                                                                NOT NULL, -- 详细描述
-    repairTime  DATETIME                                    DEFAULT CURRENT_TIMESTAMP,        -- 报修时间，默认为当前时间
-    repairType  TEXT CHECK (repairType IN ('泥', '木', '水', '电', '设备', '其它')) NOT NULL, -- 报修类型
-    status      TEXT CHECK (status IN ('未处理', '已处理')) DEFAULT '未处理',                 -- 报修状态（未处理、已处理）
-    approveTime DATETIME,                                                                     -- 审批时间，默认为NULL
-    handleTime  DATETIME                                    DEFAULT CURRENT_TIMESTAMP,        -- 处理时间，默认为当前时间
-    FOREIGN KEY (studentID) REFERENCES users (userID),                                        -- 外键关联到用户表
-    FOREIGN KEY (roomID) REFERENCES rooms (roomID)                                            -- 外键关联到房间表
+    repairID    INTEGER PRIMARY KEY AUTOINCREMENT,                                                -- 报修ID（自增）
+    studentID   TEXT                                                                NOT NULL,     -- 学生ID（外键，关联users表）
+    roomID      INTEGER                                                             NOT NULL,     -- 房间ID（外键，关联rooms表）
+    description TEXT                                                                NOT NULL,     -- 详细描述
+    repairTime  DATETIME                                    DEFAULT datetime('now', 'localtime'), -- 报修时间，默认为当前时间
+    repairType  TEXT CHECK (repairType IN ('泥', '木', '水', '电', '设备', '其它')) NOT NULL,     -- 报修类型
+    status      TEXT CHECK (status IN ('未处理', '已处理')) DEFAULT '未处理',                     -- 报修状态（未处理、已处理）
+    handleTime  DATETIME                                    DEFAULT datetime('now', 'localtime'), -- 处理时间，默认为当前时间
+    FOREIGN KEY (studentID) REFERENCES users (userID),                                            -- 外键关联到用户表
+    FOREIGN KEY (roomID) REFERENCES rooms (roomID)                                                -- 外键关联到房间表
 );
 
 

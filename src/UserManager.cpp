@@ -199,8 +199,9 @@ bool UserManager::userPasswordChange(const string &userID)
     cout << "请输入新密码:";
     cin >> newPassword;
     // 构造插入语句
-    string sql = "UPDATE users SET password = '" + newPassword + "' WHERE userID = " + userID + ";";
+    string sql = "UPDATE users SET password = '" + newPassword + "' WHERE userID = '" + userID + "';";
     // 尝试执行插入操作
+    cout << sql << endl;
     if (db.execute(sql))
     {
         cout << "密码修改成功！\n";
@@ -1146,7 +1147,7 @@ void UserManager::quickArrangeAccommodation(const string &studentID, const strin
     execute(insert_room);
 
     string recordType = "入住"; // 固定为入住操作
-    string eventTime = "CURRENT_TIMESTAMP"; // 默认使用当前时间
+    string eventTime = "datetime('now', 'localtime')"; // 默认使用当前时间
 
     // 插入入住记录
     // 获取备注信息
@@ -1228,7 +1229,7 @@ void UserManager::quickArrangeCheckOut(const string &studentID, const string &no
     // 4. 获取退宿备注信息
 
     // 获取当前时间作为退宿时间
-    string eventTime = "CURRENT_TIMESTAMP"; // 使用数据库的时间
+    string eventTime = "datetime('now', 'localtime')"; // 使用数据库的时间
 
     // 5. 获取房间ID，确保返回有效值
     string getRoomIDQuery = "SELECT r.roomID FROM rooms r "
@@ -1252,7 +1253,8 @@ void UserManager::quickArrangeCheckOut(const string &studentID, const string &no
 
     // 6. 插入退宿记录到 check_in_out_records 表
     string insertCheckOutQuery = "INSERT INTO check_in_out_records (studentID, roomID, eventTime, recordType, note) "
-                                 "VALUES ('" + studentID + "', " + to_string(roomID) + ", CURRENT_TIMESTAMP, '退宿', '" +
+                                 "VALUES ('" + studentID + "', " + to_string(roomID) +
+                                 ", datetime('now', 'localtime'), '退宿', '" +
                                  note + "');";
 
     execute(insertCheckOutQuery);
@@ -1416,7 +1418,7 @@ void UserManager::updateApprovalStatus(const string &requestID, const string &st
 {
     // 更新审批状态的函数，修改申请记录的状态
     string updateQuery =
-            "UPDATE accommodation_requests SET status = ?, approveTime = CURRENT_TIMESTAMP WHERE requestID = ?";
+            "UPDATE accommodation_requests SET status = ?, approveTime = datetime('now', 'localtime') WHERE requestID = ?";
     db.executeWithParams(updateQuery, {status, requestID});
 }
 
@@ -1590,7 +1592,7 @@ void UserManager::handleRepairRequests()
     {
         // 7. 更新报修请求的状态为 '已处理'，并记录处理时间
         string updateRepairRequestSQL = "UPDATE repair_requests "
-                                        "SET status = '已处理', handleTime = CURRENT_TIMESTAMP "
+                                        "SET status = '已处理', handleTime = datetime('now', 'localtime') "
                                         "WHERE repairID = '" + selectedRepairID + "';";
         db.execute(updateRepairRequestSQL);
 
@@ -1628,6 +1630,7 @@ void UserManager::handleRepairRequests()
 // 入住报表 // 入住报表 // 入住报表 // 入住报表 // 入住报表 // 入住报表 // 入住报表 // 入住报表 // 入住报表 // 入住报表 // 入住报表 //
 void UserManager::generateAccommodationRateReport()
 {
+    system("cls");
     int timeChoice;
 
     cout << "\n请选择生成报表的时间范围：\n";
@@ -1650,6 +1653,7 @@ void UserManager::generateAccommodationRateReport()
             cout << "输入无效，请输入有效数字：";
             continue;
         }
+
         break;
     }
 
@@ -1730,6 +1734,8 @@ GROUP BY d.dormitoryID; -- 按宿舍楼分组，确保宿舍楼数据汇总
     loading("正在查询中", 50, 10);
     slowPrint("查询完成", 50, 0);
     Sleep(100);
+    system("cls");
+    system("cls");
     cout << "\n---- 入住率报表 ----\n";
     query(sql);
     slowPrint("请按任意键继续", 30, -1);
@@ -1946,10 +1952,11 @@ void UserManager::createRepairRequest(const string &studentID)
     cin.ignore();
     getline(cin, description);
     // 构建SQL插入语句
-    string sql = "INSERT INTO repair_requests (studentID, roomID, description, repairType) "
+    string sql = "INSERT INTO repair_requests (studentID, roomID, description, repairType, repairTime) "
                  "VALUES ('" + studentID + "', "
                  "(SELECT roomID FROM rooms WHERE roomNumber = '" + roomNumber + "' LIMIT 1), "
-                 "'" + description + "', '" + repairType + "');";
+                 "'" + description + "', '" + repairType + "', datetime('now', 'localtime'));";
+
 
     // 执行SQL语句
     db.execute(sql);
@@ -1966,6 +1973,7 @@ void UserManager::createRepairRequest(const string &studentID)
 void UserManager::viewNotifications(const string &stuID)
 {
     string a = stuID;
+    cout << "您的通知在赶来的路上~" << endl;
 }
 
 // 7. 查看自己所有请求
