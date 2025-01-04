@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "DormitoryManagementSystem_d.exe"
+			"path" : "DormitoryManagementSystem_release.exe"
 		},
 		{
-			"path" : "DormitoryManagementSystem_d.pdb"
+			"path" : "DormitoryManagementSystem_release.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -45,18 +45,18 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g -fdiagnostics-color=always"
+					"fragment" : "-O3 -DNDEBUG -fdiagnostics-color=always"
 				}
 			],
 			"includes" : 
 			[
 				{
 					"backtrace" : 2,
-					"path" : "D:/Eyre/C++/DormitorySystem/src"
+					"path" : "D:/Eyre/C++/DormitoryManagementSystem/src"
 				},
 				{
 					"backtrace" : 2,
-					"path" : "D:/Eyre/C++/DormitorySystem/sqlite3"
+					"path" : "D:/Eyre/C++/DormitoryManagementSystem/sqlite3"
 				}
 			],
 			"language" : "C",
@@ -69,18 +69,18 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : " -Wall -Wextra -g -std=gnu++1z -fdiagnostics-color=always"
+					"fragment" : " -Wall -Wextra -O3 -std=gnu++1z -fdiagnostics-color=always"
 				}
 			],
 			"includes" : 
 			[
 				{
 					"backtrace" : 2,
-					"path" : "D:/Eyre/C++/DormitorySystem/src"
+					"path" : "D:/Eyre/C++/DormitoryManagementSystem/src"
 				},
 				{
 					"backtrace" : 2,
-					"path" : "D:/Eyre/C++/DormitorySystem/sqlite3"
+					"path" : "D:/Eyre/C++/DormitoryManagementSystem/sqlite3"
 				}
 			],
 			"language" : "CXX",
@@ -108,7 +108,7 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "-Wall -Wextra -g",
+				"fragment" : "-Wall -Wextra -O3",
 				"role" : "flags"
 			},
 			{
@@ -123,7 +123,7 @@
 		"language" : "CXX"
 	},
 	"name" : "DormitoryManagementSystem",
-	"nameOnDisk" : "DormitoryManagementSystem_d.exe",
+	"nameOnDisk" : "DormitoryManagementSystem_release.exe",
 	"paths" : 
 	{
 		"build" : ".",

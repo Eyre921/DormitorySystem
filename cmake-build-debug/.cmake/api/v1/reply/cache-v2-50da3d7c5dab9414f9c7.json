@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "d:/Eyre/C++/DormitorySystem/cmake-build-debug"
+			"value" : "d:/Eyre/C++/DormitoryManagementSystem/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -575,7 +575,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "D:/Eyre/C++/DormitorySystem/cmake-build-debug/CMakeFiles/pkgRedirects"
+			"value" : "D:/Eyre/C++/DormitoryManagementSystem/cmake-build-debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -647,7 +647,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "D:/Eyre/C++/DormitorySystem"
+			"value" : "D:/Eyre/C++/DormitoryManagementSystem"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1279,7 +1279,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "D:/Eyre/C++/DormitorySystem/cmake-build-debug"
+			"value" : "D:/Eyre/C++/DormitoryManagementSystem/cmake-build-debug"
 		},
 		{
 			"name" : "DormitoryManagementSystem_IS_TOP_LEVEL",
@@ -1303,7 +1303,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "D:/Eyre/C++/DormitorySystem"
+			"value" : "D:/Eyre/C++/DormitoryManagementSystem"
 		},
 		{
 			"name" : "_CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED",

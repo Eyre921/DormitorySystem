@@ -1,18 +1,10 @@
 # ninja log v6
-10	1808	7577084866365840	CMakeFiles/DormitoryManagementSystem.dir/src/UserManager.cpp.obj	80c28c49369011d2
-12	393	7577084866385814	CMakeFiles/DormitoryManagementSystem.dir/src/globals.cpp.obj	76dd518d0857e730
-6	1212	7577084866325902	CMakeFiles/DormitoryManagementSystem.dir/src/main.cpp.obj	aea2ce2d08e9d6a7
-28	2942	7575042847553543	CMakeFiles/DormitoryManagementSystem.dir/src/specialPrint.cpp.obj	233735770bea64f
-6	39354	7573349475510504	CMakeFiles/DormitoryManagementSystem.dir/sqlite3/sqlite3.c.obj	d60ae5cbd7dfac2
-2	216	7577085069945719	build.ninja	87311108787cef01
-4958	5244	7573226528872412	DormitoryManagementSystem_d.exe	2b8082d64960500e
-24	926	7573349475704243	CMakeFiles/DormitoryManagementSystem.dir/src/Database.cpp.obj	70d8d0bcbc568924
-1808	2150	7577084884353525	DormitoryManagementSystem_release.exe	e1d781061d4b6d4
-2	760	7577085069945719	build.ninja	87311108787cef01
-8	374	7577085070213294	CMakeFiles/DormitoryManagementSystem.dir/src/Database.cpp.obj	fe406a309efdb1b8
-10	477	7577085070238552	CMakeFiles/DormitoryManagementSystem.dir/src/globals.cpp.obj	e7c4d2a9b6325f2e
-12	1005	7577085070258625	CMakeFiles/DormitoryManagementSystem.dir/src/specialPrint.cpp.obj	d60fc45bf932fa71
-4	1053	7577085070183311	CMakeFiles/DormitoryManagementSystem.dir/src/main.cpp.obj	b40a676cf3ef131f
 6	1596	7577085070193290	CMakeFiles/DormitoryManagementSystem.dir/src/UserManager.cpp.obj	13995db40f92811e
+10	477	7577085070238552	CMakeFiles/DormitoryManagementSystem.dir/src/globals.cpp.obj	e7c4d2a9b6325f2e
+4	1053	7577085070183311	CMakeFiles/DormitoryManagementSystem.dir/src/main.cpp.obj	b40a676cf3ef131f
+12	1005	7577085070258625	CMakeFiles/DormitoryManagementSystem.dir/src/specialPrint.cpp.obj	d60fc45bf932fa71
 2	5353	7577085070153264	CMakeFiles/DormitoryManagementSystem.dir/sqlite3/sqlite3.c.obj	ec382966919b9435
+2	760	7577090309509885	build.ninja	87311108787cef01
 5353	5660	7577085123670567	DormitoryManagementSystem_d.exe	2b8082d64960500e
+8	374	7577085070213294	CMakeFiles/DormitoryManagementSystem.dir/src/Database.cpp.obj	fe406a309efdb1b8
+1808	2150	7577084884353525	DormitoryManagementSystem_release.exe	e1d781061d4b6d4
